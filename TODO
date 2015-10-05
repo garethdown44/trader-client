@@ -1,0 +1,53 @@
+== further thoughts ==
+
+- clients need to connect, then send state. it should remove the state when they disconnect
+- clients should send all data to the telemetry server
+- the server will just publish a snapshot
+
+
+== telemetry server ==
+
+- starts
+- holds state of all clients in memory
+- when the dashboard connects, it just pushes the relevant bits to it
+- perhaps it could hold it in mongo if it's easier, but have a look in the docs
+
+
+== cib launchpad client ==
+
+- if it's not connected, it attempts to connect to telemetry server every 10 seconds
+- when connected it sends a basic 'running', the telemetry server holds this in memory
+
+{ messagetype: 'running', data: 
+  {
+    uptime: '512321', // milliseconds
+    uid: '887228'
+  }}
+
+- whenever there's an error the client adds to the telemetry state and sends it again
+
+telemetryState.addError('something went wrong', stacktrace);
+
+_state.push({type: 'error', message: 'something went wrong', time: '32'}, stackTrace: '');
+
+// todo: check that the state doesn't get too big
+telemetry.send(_state); 
+
+
+- the client holds telemetry state, this will be sent to the telemetry server whenever a connection is made. i can test this easily with nodejs processes
+
+
+== support ui ==
+
+- asks the telemetry server for the current state
+- it should be possible to cancel an error, this will send a message back to the client to tell it to clear it's telemetry state
+
+
+== notes ==
+
+- the telemetry server could use meteor but not actually store anything, it could just hold it in memory
+- it would just use meteor because it would be quick to get all the comms with the UI up and running quickly
+- it handles all the reconnection stuff without having to write any code
+- find the meteor and react tutorial
+- think about what happens when a network connection is dropped - i.e. one of the clients just disappears
+- for now just do all the react components for the dashboard
