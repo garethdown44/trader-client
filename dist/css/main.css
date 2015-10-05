@@ -3,3 +3,45 @@
 .error {
   color: red
 }
+
+body {
+  background-color: #002b36;
+  font-family: Proxima Nova, Helvetica, Arial;
+}
+
+.background {
+  background-color: #002b36;
+}
+
+.tile {
+  background-color: #073642;
+  margin: 5px;
+}
+
+.tile-title {
+  color: #fdf6e3;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+.tile-content {
+  color: #93a1a1;
+}
+
+.one-way-price {
+  text-transform: uppercase;
+}
+
+.one-way-price.buy {
+  color: #268bd2;  
+}
+
+.one-way-price.sell {
+  color: #2aa198;
+}
+
+.big-figures {
+  color: #fdf6e3;
+  font-size: 250%;
+  margin: 0 2px 0 2px;
+}

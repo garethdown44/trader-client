@@ -1,18 +1,30 @@
 const Rx = require('rx');
+const debug = require('debug')('trader:streamingprices:oanda');
 
-//const url2 = "http://stream-sandbox.oanda.com/v1/prices?accountId=12345&instruments=EUR_GBP";
+let streams = {};
 
-var getStream = ccyCpl => Rx.Observable.create(obs => {
+module.exports = ccyCpl => {
 
-  const url1 = "http://stream-sandbox.oanda.com/v1/prices?accountId=12345&instruments=EUR_USD";
+  return createStream(ccyCpl).publish().refCount();
+
+};
+
+const createStream = ccyCpl => Rx.Observable.create(obs => {
+
+  debug(`createStream(${ccyCpl}) - entry`);
+
+  const ccyParts = splitAt(ccyCpl, 3);
+
+  const formattedCcyCpl = `${ccyParts[0]}_${ccyParts[1]}`; 
+
+  debug('formattedCcyCpl: ' + formattedCcyCpl);
+
+  const url1 = `http://stream-sandbox.oanda.com/v1/prices?accountId=12345&instruments=${formattedCcyCpl}`;
 
   var xhr = new XMLHttpRequest();
   xhr.open("GET", url1, true)
 
   xhr.onprogress = function () {
-    // console.log('********');
-    // console.log("PROGRESS:", xhr);
-    // console.log("PROGRESS:", xhr.response);
 
     let text = xhr.responseText;
 
@@ -29,10 +41,12 @@ var getStream = ccyCpl => Rx.Observable.create(obs => {
         return;
       }
 
-      console.log(text);
+      debug('unparsed tick: ' + text);
 
       try {
         let obj = JSON.parse(text);  
+
+        debug('parsed tick: ' + obj);
         obs.onNext(obj.tick);
       } catch (e) {
         
@@ -44,4 +58,6 @@ var getStream = ccyCpl => Rx.Observable.create(obs => {
 
 });
 
-module.exports = getStream;
+function splitAt(value, index) {
+    return [value.substr(0, index), value.substr(index)];
+}
