@@ -5,6 +5,9 @@
   "main": "server.js",
   "author": "Gareth Down",
   "repository": "https://github.com/garethdown44/coffee-reactify-boilerplate",
+  "scripts": {
+      "postinstall": "gulp"
+    },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.9.0",
