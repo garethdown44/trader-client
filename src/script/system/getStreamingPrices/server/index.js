@@ -1,7 +1,8 @@
 const io = require('socket.io-client');
 const Rx = require('rx');
+const config = require('../../config');
 
-let socket = io.connect('http://localhost:8080/');
+let socket = io.connect(config.streamingPriceUrl);
 
 const stream = Rx.Observable.create(obs => {
   socket.on('tick', function (tick) {
