@@ -1,6 +1,6 @@
 let config = {};
 
-if (window.location.indexOf('herokuapp') != -1)
+if (window.location.href.indexOf('herokuapp') != -1)
   config.streamingPriceUrl = 'http://trader-server.herokuapp.com'; 
 else
   config.streamingPriceUrl = 'http://localhost:8080';
