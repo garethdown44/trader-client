@@ -25,8 +25,8 @@ var Component = React.createClass({
                 <PriceTileList />
               </div>
 
-              <div className='col-lg-2'>
-                <h2>Quick prices</h2>
+              <div className='col-lg-2 quick-prices'>
+                <h4 className='side-heading'>Quick prices</h4>
                 <table>
                   {<StreamingPriceRow ccyCpl='EURUSD' />
                   }

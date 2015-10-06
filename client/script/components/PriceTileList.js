@@ -35,8 +35,6 @@ module.exports = React.createClass({
 
     let view = this.state.loading ? (<Loading />) : this.renderTiles();
 
-    return <div className='container'>
-             <div className='row'>{view}</div>
-           </div>;
+    return <div className='row'>{view}</div>;
   }
 });

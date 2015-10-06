@@ -15,7 +15,7 @@ body {
 
 .tile {
   background-color: #073642;
-  margin: 5px;
+  /*margin: 5px;*/
 }
 
 .tile-title {
@@ -29,7 +29,12 @@ body {
 }
 
 .one-way-price {
+  cursor: pointer;
   text-transform: uppercase;
+}
+
+.one-way-price:hover {
+  background-color: #cb4b16;  
 }
 
 .one-way-price.buy {
@@ -40,8 +45,64 @@ body {
   color: #2aa198;
 }
 
+.one-way-price.buy:hover {
+  color: #fdf6e3;  
+}
+
+.one-way-price.sell {
+  color: #2aa198;
+}
+
+.one-way-price.sell:hover {
+  color: #fdf6e3;
+}
+
 .big-figures {
   color: #fdf6e3;
   font-size: 250%;
-  margin: 0 2px 0 2px;
+  /*margin: 0 2px 0 2px;*/
+}
+
+.side-heading {
+  color: #fdf6e3;
+  text-transform: uppercase;
+}
+
+.quick-prices {
+  color: #839496;
+}
+
+.notional-ccy {
+  color: #b58900;
+}
+
+.notional {
+  margin-left: 5px;
+  background-color: transparent;
+  border-style: none;
+  display: inline-block;
+  width: 100px;
+  color: #657b83;
+}
+
+.spread {
+  display: inline-block;
+}
+
+.up {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 5px 5px 5px;
+  border-color: transparent transparent #859900 transparent;
+  display: inline-block;
+}
+
+.down {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #dc322f transparent transparent transparent;
+  display: inline-block;
 }

@@ -16,7 +16,7 @@ module.exports = React.createClass({
 
     let first = priceStr.substr(0,4);
     let bigFigures = priceStr.substr(4, 2);
-    let tenthOfPips = priceStr.substr(6);
+    let tenthOfPips = priceStr.substr(6) || 0;
 
     let state = {
       first: first,
@@ -30,13 +30,13 @@ module.exports = React.createClass({
   render: function() {
 
     let classes = 
-      ['col-md-1',
-      'one-way-price', 
+      ['col-md-6',
+      'one-way-price',
       this.props.side].join(' ');
 
     return  <div className={classes}>
               <div>{this.props.side}</div>
-              <span className='price'>
+              <span onClick={() => this.props.execute(this.props.price)}>
                 <span>{this.state.first}</span>
                 <span className='big-figures'>{this.state.bigFigures}</span>
                 <span>{this.state.tenthOfPips}</span>
