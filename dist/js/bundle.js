@@ -52742,10 +52742,6 @@ var Value = React.createClass({
       value = valueAtTimeOfTrade - valueNow;
     }
 
-    // if (!value) {
-    //   value = 0;
-    // }
-
     this.setState({ value: value.toFixed(0) });
   },
 
@@ -52897,24 +52893,6 @@ module.exports = React.createClass({
     );
   }
 });
-/*<tr>
- <td>6 Oct 2015</td>
- <td><span className='sell'>sell</span></td>
- <td>EURUSD</td>
- <td>1,500,000</td>
- <td>1.1234</td>
- <td><StreamingValue notional={1500000} direction='buy' rate={1.1234} ccyCpl='EURUSD' /></td>
- <td>Done</td>
-</tr>
- <tr>
- <td>6 Oct 2015</td>
- <td><span className='buy'>buy</span></td>
- <td>EURUSD</td>
- <td>1,000,000</td>
- <td>1.3455</td>
- <td><StreamingValue notional={1000000} direction='buy' rate={1.3455} ccyCpl='EURUSD' /></td>
- <td>Done</td>
-</tr>*/
 
 },{"../system/blotter":233,"./StreamingPriceReceiver":231,"debug":16,"moment":20,"react":175}],226:[function(require,module,exports){
 'use strict';
