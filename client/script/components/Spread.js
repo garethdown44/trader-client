@@ -17,6 +17,14 @@ module.exports = React.createClass({
   },
 
   render: function() {
-    return (<div className={'spread ' + this.state.direction}>{this.state.spread}</div>);
+
+    let upStyle = this.state.direction == 'up' ? { visibility: 'visible' } : {visibility: 'hidden' };
+    let downStyle = this.state.direction == 'down' ? { visibility: 'visible' } : {visibility: 'hidden' };
+
+    return (<div className='spread'>
+              <div className='spread-up' style={upStyle} />
+              <div className='spread-value'>{this.state.spread}</div>
+              <div className='spread-down' style={downStyle} />
+            </div>);
   }
 });

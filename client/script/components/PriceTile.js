@@ -43,36 +43,31 @@ module.exports = React.createClass({
       return <div className='tile col-md-2'>executing...</div>;
     }
 
-    return (<div className='tile col-md-2'>
-              <div className='tile-content'>
+    return (<div className='tile'>
                 <div className='tile-title'>{this.props.ccyCpl}</div>
 
                 <div>
-                  <div className='row'>
-
-                    <OneWayPrice side='sell'
-                                 price={this.state.bid}
-                                 execute={() => this.execute('sell', this.props.ccyCpl, this.state.bid, this.state.notional)} />
-
-                    <OneWayPrice side='buy'
-                                 price={this.state.ask} />
-                  </div>
+                  <OneWayPrice side='sell'
+                               price={this.state.bid}
+                               execute={() => this.execute('sell', this.props.ccyCpl, this.state.bid, this.state.notional)} />
 
                   <div className='spread'>
                     <Spread bid={this.state.bid} 
                             ask={this.state.ask} />
                   </div>
 
-                  <div className='row'>
-                    <span className='notional-ccy'>{this.state.firstCcy}</span>
-                    <input type="text" 
-                           value={this.state.notional} 
-                           onChange={this.notionalChanged}
-                           className='notional' />
-                  </div>
+                  <OneWayPrice side='buy'
+                               price={this.state.ask} />
                 </div>
-              </div>
-          </div>);
+                
+                <div className='notional-container'>
+                  <span className='notional-ccy'>{this.state.firstCcy}</span>
+                  <input type="text" 
+                         value={this.state.notional} 
+                         onChange={this.notionalChanged}
+                         className='notional' />
+                </div>
+            </div>);
   }
 });
 

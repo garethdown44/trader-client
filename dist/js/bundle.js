@@ -258,7 +258,7 @@ module.exports = React.createClass({
   getInitialState: function getInitialState() {
     return {
       first: '0.00',
-      bigFigure: '00',
+      bigFigures: '00',
       tenthOfPips: '0'
     };
   },
@@ -283,7 +283,7 @@ module.exports = React.createClass({
   render: function render() {
     var _this = this;
 
-    var classes = ['col-md-6', 'one-way-price', this.props.side].join(' ');
+    var classes = ['one-way-price', this.props.side].join(' ');
 
     return React.createElement(
       'div',
@@ -412,49 +412,41 @@ module.exports = React.createClass({
 
     return React.createElement(
       'div',
-      { className: 'tile col-md-2' },
+      { className: 'tile' },
       React.createElement(
         'div',
-        { className: 'tile-content' },
+        { className: 'tile-title' },
+        this.props.ccyCpl
+      ),
+      React.createElement(
+        'div',
+        null,
+        React.createElement(OneWayPrice, { side: 'sell',
+          price: this.state.bid,
+          execute: function () {
+            return _this2.execute('sell', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
+          } }),
         React.createElement(
           'div',
-          { className: 'tile-title' },
-          this.props.ccyCpl
+          { className: 'spread' },
+          React.createElement(Spread, { bid: this.state.bid,
+            ask: this.state.ask })
         ),
+        React.createElement(OneWayPrice, { side: 'buy',
+          price: this.state.ask })
+      ),
+      React.createElement(
+        'div',
+        { className: 'notional-container' },
         React.createElement(
-          'div',
-          null,
-          React.createElement(
-            'div',
-            { className: 'row' },
-            React.createElement(OneWayPrice, { side: 'sell',
-              price: this.state.bid,
-              execute: function () {
-                return _this2.execute('sell', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
-              } }),
-            React.createElement(OneWayPrice, { side: 'buy',
-              price: this.state.ask })
-          ),
-          React.createElement(
-            'div',
-            { className: 'spread' },
-            React.createElement(Spread, { bid: this.state.bid,
-              ask: this.state.ask })
-          ),
-          React.createElement(
-            'div',
-            { className: 'row' },
-            React.createElement(
-              'span',
-              { className: 'notional-ccy' },
-              this.state.firstCcy
-            ),
-            React.createElement('input', { type: 'text',
-              value: this.state.notional,
-              onChange: this.notionalChanged,
-              className: 'notional' })
-          )
-        )
+          'span',
+          { className: 'notional-ccy' },
+          this.state.firstCcy
+        ),
+        React.createElement('input', { type: 'text',
+          value: this.state.notional,
+          onChange: this.notionalChanged,
+          className: 'notional' })
       )
     );
   }
@@ -543,10 +535,20 @@ module.exports = React.createClass({
   },
 
   render: function render() {
+
+    var upStyle = this.state.direction == 'up' ? { visibility: 'visible' } : { visibility: 'hidden' };
+    var downStyle = this.state.direction == 'down' ? { visibility: 'visible' } : { visibility: 'hidden' };
+
     return React.createElement(
       'div',
-      { className: 'spread ' + this.state.direction },
-      this.state.spread
+      { className: 'spread' },
+      React.createElement('div', { className: 'spread-up', style: upStyle }),
+      React.createElement(
+        'div',
+        { className: 'spread-value' },
+        this.state.spread
+      ),
+      React.createElement('div', { className: 'spread-down', style: downStyle })
     );
   }
 });

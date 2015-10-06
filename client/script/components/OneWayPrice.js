@@ -5,7 +5,7 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       first: '0.00',
-      bigFigure: '00',
+      bigFigures: '00',
       tenthOfPips: '0'
     };
   },
@@ -30,9 +30,7 @@ module.exports = React.createClass({
   render: function() {
 
     let classes = 
-      ['col-md-6',
-      'one-way-price',
-      this.props.side].join(' ');
+      ['one-way-price', this.props.side].join(' ');
 
     return  <div className={classes}>
               <div>{this.props.side}</div>
