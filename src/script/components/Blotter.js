@@ -1,6 +1,8 @@
 const React = require('react');
-
 const StreamingPriceReceiver = require('./StreamingPriceReceiver');
+const blotter = require('../system/blotter');
+const moment = require('moment');
+const debug = require('debug')('trader:blotter');
 
 var Value = React.createClass({
 
@@ -10,11 +12,18 @@ var Value = React.createClass({
 
   componentWillReceiveProps: function(newProps) {
     let value;
+    let valueAtTimeOfTrade = newProps.rate * newProps.notional;
+    let valueNow = newProps.bid * newProps.notional;
+
     if (newProps.direction == 'buy') {
-      let valueAtTimeOfTrade = newProps.rate * newProps.notional;
-      let valueNow = newProps.bid * newProps.notional;
       value = valueNow - valueAtTimeOfTrade;
+    } else if (newProps.direction == 'sell') {
+      value = valueAtTimeOfTrade - valueNow;
     }
+
+    // if (!value) {
+    //   value = 0;
+    // }
 
     this.setState({value: value.toFixed(0)});
   },
@@ -30,11 +39,48 @@ var Value = React.createClass({
 var StreamingValue = StreamingPriceReceiver(Value);
 
 module.exports = React.createClass({
+
   getInitialState: function() {
-    return {trades: [], loading: true};
+    return {positions: [], loading: true};
+  },
+
+  componentDidMount: function() {
+    this.subscription = blotter.subscribe(position => {
+
+      debug(position);
+      let positions = this.state.positions;
+      positions.push(position);
+      this.setState({positions: positions});
+    });
+  },
+
+  componentWillUnmount: function() {
+    this.subscription.dispose();
+  },
+
+  renderRows: function(rows) {
+
+    return rows.map(row => {
+
+      return (<tr>
+              <td>{moment(row.date).format('D MMM YYYY h:mm:ss')}</td>
+              <td><span className={row.direction}>{row.direction}</span></td>
+              <td>{row.ccyCpl}</td>
+              <td>{row.notional}</td>
+              <td>{row.rate}</td>
+              <td><StreamingValue notional={row.notional} 
+                                  direction={row.direction} 
+                                  rate={row.rate} 
+                                  ccyCpl={row.ccyCpl} /></td>
+              <td>{row.status}</td>
+            </tr>);
+    });
   },
 
   render: function() {
+
+    let rows = this.renderRows(this.state.positions);
+
     return (<table className='table'>
               <thead>
                 <tr>
@@ -49,7 +95,8 @@ module.exports = React.createClass({
               </thead>
 
               <tbody>
-                <tr>
+                {rows}
+                {/*<tr>
                   <td>6 Oct 2015</td>
                   <td><span className='sell'>sell</span></td>
                   <td>EURUSD</td>
@@ -67,7 +114,7 @@ module.exports = React.createClass({
                   <td>1.3455</td>
                   <td><StreamingValue notional={1000000} direction='buy' rate={1.3455} ccyCpl='EURUSD' /></td>
                   <td>Done</td>
-                </tr>
+                </tr>*/}
               </tbody>
 
             </table>);
