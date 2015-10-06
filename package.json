@@ -6,7 +6,6 @@
   "author": "Gareth Down",
   "repository": "https://github.com/garethdown44/trader-client",
   "scripts": {
-    "postinstall": "gulp"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
