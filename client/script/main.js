@@ -14,7 +14,7 @@ const PriceTileList = require('./components/PriceTileList');
 const Blotter = require('./components/Blotter');
 
 window.myDebug = require('debug');
-window.myDebug.enable('trader:server:*');
+window.myDebug.enable('trader:*');
 
 var Component = React.createClass({
   render: function() {
@@ -25,7 +25,7 @@ var Component = React.createClass({
               <div className='col-lg-12 tiles'>
                 <PriceTileList />
               </div>
-              
+
             </div>
 
             <div className='blotter row'>

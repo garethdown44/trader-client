@@ -6,7 +6,8 @@ module.exports = React.createClass({
     return {
       first: '0.00',
       bigFigures: '00',
-      tenthOfPips: '0'
+      tenthOfPips: '0',
+      nonTradeable: true
     };
   },
 
@@ -21,7 +22,8 @@ module.exports = React.createClass({
     let state = {
       first: first,
       bigFigures: bigFigures,
-      tenthOfPips: tenthOfPips
+      tenthOfPips: tenthOfPips,
+      nonTradeable: newProps.nonTradeable
     }
 
     this.setState(state);
@@ -29,8 +31,10 @@ module.exports = React.createClass({
 
   render: function() {
 
+    let tradeable = this.state.nonTradeable ? 'non-tradeable' : '';
+
     let classes = 
-      ['one-way-price', this.props.side].join(' ');
+      ['one-way-price', tradeable, this.props.side].join(' ');
 
     return  <div className={classes}>
               <div>{this.props.side}</div>

@@ -7,11 +7,12 @@ const debug = require('debug')('trader:components:PriceTile');
 module.exports = React.createClass({
 
   getInitialState: function() {
-    return { executing: false, notional: 1000000, firstCcy: this.props.ccyCpl.substr(0, 3) };
+    return { executing: false, notional: 1000000, firstCcy: this.props.ccyCpl.substr(0, 3), tradeable: false };
   },
 
   componentWillReceiveProps: function(newProps) {
-    this.setState({bid: newProps.bid, ask: newProps.ask});
+    debug(newProps);
+    this.setState({bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable});
   },
 
   notionalChanged: function(e) {
@@ -29,6 +30,9 @@ module.exports = React.createClass({
 
   execute: function(action, ccyCpl, rate, notional) {
 
+    if (this.state.executing)
+      return;
+
     this.setState({executing: true});
 
     executeTrade(action, ccyCpl, rate, notional, () => {
@@ -39,8 +43,10 @@ module.exports = React.createClass({
 
   render: function() {
 
-    if (this.state.executing) {
-      return <div className='tile col-md-2'>executing...</div>;
+    let nonTradeable = false;
+
+    if (this.state.executing || !this.state.tradeable) {
+      nonTradeable = true;
     }
 
     return (<div className='tile'>
@@ -49,7 +55,8 @@ module.exports = React.createClass({
                 <div>
                   <OneWayPrice side='sell'
                                price={this.state.bid}
-                               execute={() => this.execute('sell', this.props.ccyCpl, this.state.bid, this.state.notional)} />
+                               execute={() => this.execute('sell', this.props.ccyCpl, this.state.bid, this.state.notional)}
+                               nonTradeable={nonTradeable} />
 
                   <div className='spread'>
                     <Spread bid={this.state.bid} 
@@ -57,7 +64,9 @@ module.exports = React.createClass({
                   </div>
 
                   <OneWayPrice side='buy'
-                               price={this.state.ask} />
+                               price={this.state.ask}
+                               execute={() => this.execute('buy', this.props.ccyCpl, this.state.bid, this.state.notional)}
+                               nonTradeable={nonTradeable} />
                 </div>
                 
                 <div className='notional-container'>

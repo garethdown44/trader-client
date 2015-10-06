@@ -17,7 +17,7 @@ var PriceTileList = require('./components/PriceTileList');
 var Blotter = require('./components/Blotter');
 
 window.myDebug = require('debug');
-window.myDebug.enable('trader:server:*');
+window.myDebug.enable('trader:*');
 
 var Component = React.createClass({
   displayName: 'Component',
@@ -245,7 +245,8 @@ module.exports = React.createClass({
     return {
       first: '0.00',
       bigFigures: '00',
-      tenthOfPips: '0'
+      tenthOfPips: '0',
+      nonTradeable: true
     };
   },
 
@@ -260,7 +261,8 @@ module.exports = React.createClass({
     var state = {
       first: first,
       bigFigures: bigFigures,
-      tenthOfPips: tenthOfPips
+      tenthOfPips: tenthOfPips,
+      nonTradeable: newProps.nonTradeable
     };
 
     this.setState(state);
@@ -269,7 +271,9 @@ module.exports = React.createClass({
   render: function render() {
     var _this = this;
 
-    var classes = ['one-way-price', this.props.side].join(' ');
+    var tradeable = this.state.nonTradeable ? 'non-tradeable' : '';
+
+    var classes = ['one-way-price', tradeable, this.props.side].join(' ');
 
     return React.createElement(
       'div',
@@ -354,11 +358,12 @@ module.exports = React.createClass({
   displayName: 'exports',
 
   getInitialState: function getInitialState() {
-    return { executing: false, notional: 1000000, firstCcy: this.props.ccyCpl.substr(0, 3) };
+    return { executing: false, notional: 1000000, firstCcy: this.props.ccyCpl.substr(0, 3), tradeable: false };
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-    this.setState({ bid: newProps.bid, ask: newProps.ask });
+    debug(newProps);
+    this.setState({ bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable });
   },
 
   notionalChanged: function notionalChanged(e) {
@@ -377,6 +382,8 @@ module.exports = React.createClass({
   execute: function execute(action, ccyCpl, rate, notional) {
     var _this = this;
 
+    if (this.state.executing) return;
+
     this.setState({ executing: true });
 
     executeTrade(action, ccyCpl, rate, notional, function () {
@@ -388,12 +395,10 @@ module.exports = React.createClass({
   render: function render() {
     var _this2 = this;
 
-    if (this.state.executing) {
-      return React.createElement(
-        'div',
-        { className: 'tile col-md-2' },
-        'executing...'
-      );
+    var nonTradeable = false;
+
+    if (this.state.executing || !this.state.tradeable) {
+      nonTradeable = true;
     }
 
     return React.createElement(
@@ -411,7 +416,8 @@ module.exports = React.createClass({
           price: this.state.bid,
           execute: function () {
             return _this2.execute('sell', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
-          } }),
+          },
+          nonTradeable: nonTradeable }),
         React.createElement(
           'div',
           { className: 'spread' },
@@ -419,7 +425,11 @@ module.exports = React.createClass({
             ask: this.state.ask })
         ),
         React.createElement(OneWayPrice, { side: 'buy',
-          price: this.state.ask })
+          price: this.state.ask,
+          execute: function () {
+            return _this2.execute('buy', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
+          },
+          nonTradeable: nonTradeable })
       ),
       React.createElement(
         'div',
@@ -560,19 +570,20 @@ module.exports = function (Child) {
 
         debug('price ticked: ', p);
 
-        _this.setState({ bid: p.bid, ask: p.ask });
+        _this.setState({ bid: p.bid, ask: p.ask, tradeable: true });
       });
     },
 
     getInitialState: function getInitialState() {
-      return { isTradeablePrice: false, bid: 0.00, ask: 0.00 };
+      return { tradeable: false, bid: 0.00, ask: 0.00 };
     },
 
     render: function render() {
       debug('render');
       debug(this.state);
       return React.createElement(Child, _extends({}, this.props, { bid: this.state.bid,
-        ask: this.state.ask }));
+        ask: this.state.ask,
+        tradeable: this.state.tradeable }));
     }
   });
 };

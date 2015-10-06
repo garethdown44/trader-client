@@ -11,18 +11,19 @@ module.exports = Child => React.createClass({
 
       debug('price ticked: ', p);
 
-      this.setState({bid: p.bid, ask: p.ask});
+      this.setState({bid: p.bid, ask: p.ask, tradeable: true});
     });
   },
 
   getInitialState: function() {
-    return { isTradeablePrice: false, bid: 0.00, ask: 0.00 };
+    return { tradeable: false, bid: 0.00, ask: 0.00 };
   },
 
   render: function() {
     debug('render');
     debug(this.state);
     return <Child {...this.props} bid={this.state.bid} 
-                                  ask={this.state.ask} />;
+                                  ask={this.state.ask}
+                                  tradeable={this.state.tradeable} />;
   }
 });

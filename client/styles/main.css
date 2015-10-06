@@ -69,6 +69,10 @@ body {
   padding-top: 7px;
 }
 
+.tile:hover .notional {
+  color: white;
+}
+
 .one-way-price.buy {
   color: #268bd2;  
   right: 10px;
@@ -103,8 +107,14 @@ body {
   border: 1px solid white;
 }
 
-.one-way-price.non-tradeable {
-  color: gray;
+.one-way-price.non-tradeable, .one-way-price.non-tradeable > span > span.big-figures {
+  color: #aaa;
+}
+
+.one-way-price.non-tradeable:hover {
+  color: #aaa;
+  background-color: #888;
+  cursor: wait;
 }
 
 .big-figures {
