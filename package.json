@@ -5,8 +5,6 @@
   "main": "server.js",
   "author": "Gareth Down",
   "repository": "https://github.com/garethdown44/trader-client",
-  "scripts": {
-  },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.9.0",

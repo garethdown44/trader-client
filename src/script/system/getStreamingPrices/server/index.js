@@ -1,6 +1,6 @@
 const io = require('socket.io-client');
 const Rx = require('rx');
-const config = require('../../config');
+const config = require('../../../config');
 
 let socket = io.connect(config.streamingPriceUrl);
 
