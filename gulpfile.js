@@ -10,11 +10,11 @@ var nodemon     = require('nodemon');
 
 // Input file.
 watchify.args.debug = true;
-var bundler = watchify(browserify('./client/script/main.js', watchify.args));
+var bundler = watchify(browserify('./src/script/main.js', watchify.args));
 
 // Babel transform
 bundler.transform(babelify.configure({
-    sourceMapRelative: 'client/script'
+    sourceMapRelative: 'src/script'
 }));
 
 // On updates recompile
@@ -45,12 +45,12 @@ gulp.task('bundle', function () {
 
 var CSS_DEST = 'dist/css/'
 gulp.task('css', function() {
-  gulp.src('client/styles/**/*.css')
+  gulp.src('src/styles/**/*.css')
     .pipe(gulp.dest(CSS_DEST));
 });
 
 gulp.task('views', function() {
-  gulp.src('client/*.html').pipe(gulp.dest('dist/'));
+  gulp.src('src/*.html').pipe(gulp.dest('dist/'));
 });
 
 /**
@@ -60,13 +60,13 @@ gulp.task('default', ['views', 'bundle'], function () {
   browserSync.init({
       server: "./dist"
   });
-  gulp.watch([ 'client/styles/**/*.css' ], [ 'css' ]);
+  gulp.watch([ 'src/styles/**/*.css' ], [ 'css' ]);
 });
 
 // gulp.task('serve', function() {
 //   nodemon({
 //     script: 'server.coffee',
 //     ext: 'json js coffee',
-//     ignore: [ 'dist/*', 'client/*' ] })
+//     ignore: [ 'dist/*', 'src/*' ] })
 //     .on('change', function() {})
 //     .on('restart', function() { console.log('Restarted webserver') }) });
