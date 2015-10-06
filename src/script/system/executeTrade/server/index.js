@@ -25,7 +25,7 @@ module.exports = (action, ccyCpl, rate, notional, success, error) => {
     error();
   };
 
-  let url = 'http://localhost:8080/trades/execute';
+  let url = config.serverUrl + '/trades/execute';
 
   debug('POST:', url, payload);
 

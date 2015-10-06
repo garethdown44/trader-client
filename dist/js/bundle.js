@@ -50066,7 +50066,7 @@ module.exports = function (Child) {
 
 var config = {};
 
-if (window.location.href.indexOf('herokuapp') != -1) config.streamingPriceUrl = 'http://trader-server.herokuapp.com';else config.streamingPriceUrl = 'http://localhost:8080';
+if (window.location.href.indexOf('herokuapp') != -1) config.serverUrl = 'http://trader-server.herokuapp.com';else config.serverUrl = 'http://localhost:8080';
 
 config.streamingPrices = 'server'; // (server,fake,oanda)
 
@@ -50107,7 +50107,7 @@ module.exports = function (action, ccyCpl, rate, notional, success, error) {
     error();
   };
 
-  var url = 'http://localhost:8080/trades/execute';
+  var url = config.serverUrl + '/trades/execute';
 
   debug('POST:', url, payload);
 
@@ -50133,7 +50133,7 @@ var io = require('socket.io-client');
 var Rx = require('rx');
 var config = require('../../../config');
 
-var socket = io.connect(config.streamingPriceUrl);
+var socket = io.connect(config.serverUrl);
 
 var stream = Rx.Observable.create(function (obs) {
   socket.on('tick', function (tick) {
