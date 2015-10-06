@@ -231,4 +231,7 @@ body {
 .positive {
   background-color: #859900;
   padding: 2px;
+  width: 80px;
+  text-align: center;
+  display: inline-block;
 }

@@ -49541,7 +49541,7 @@ var Value = React.createClass({
       value = valueNow - valueAtTimeOfTrade;
     }
 
-    this.setState({ value: value });
+    this.setState({ value: value.toFixed(0) });
   },
 
   render: function render() {
@@ -49603,7 +49603,7 @@ module.exports = React.createClass({
           React.createElement(
             'th',
             null,
-            'Value'
+            'PnL'
           ),
           React.createElement(
             'th',
@@ -49640,17 +49640,17 @@ module.exports = React.createClass({
           React.createElement(
             'td',
             null,
-            '1,000,000'
+            '1,500,000'
           ),
           React.createElement(
             'td',
             null,
-            '1.3455'
+            '1.1234'
           ),
           React.createElement(
             'td',
             null,
-            React.createElement(Value, { notional: 1000000, direction: 'buy', rate: 1.3455, bid: 1.3567 })
+            React.createElement(StreamingValue, { notional: 1500000, direction: 'buy', rate: 1.1234, ccyCpl: 'EURUSD' })
           ),
           React.createElement(
             'td',
@@ -50082,6 +50082,9 @@ module.exports = require('./server');
 
 var debug = require('debug')('trader:server:executeTrade');
 var $ = require('jquery');
+var config = require('../../../config');
+
+var url = config.serverUrl + '/trades/execute';
 
 module.exports = function (action, ccyCpl, rate, notional, success, error) {
 
@@ -50107,8 +50110,6 @@ module.exports = function (action, ccyCpl, rate, notional, success, error) {
     error();
   };
 
-  var url = config.serverUrl + '/trades/execute';
-
   debug('POST:', url, payload);
 
   $.ajax({
@@ -50121,7 +50122,7 @@ module.exports = function (action, ccyCpl, rate, notional, success, error) {
   });
 };
 
-},{"debug":16,"jquery":19}],234:[function(require,module,exports){
+},{"../../../config":231,"debug":16,"jquery":19}],234:[function(require,module,exports){
 'use strict';
 
 var Rx = require('rx');

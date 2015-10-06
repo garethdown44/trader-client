@@ -16,7 +16,7 @@ var Value = React.createClass({
       value = valueNow - valueAtTimeOfTrade;
     }
 
-    this.setState({value: value});
+    this.setState({value: value.toFixed(0)});
   },
 
   render: function() {
@@ -43,7 +43,7 @@ module.exports = React.createClass({
                   <th>CCY</th>
                   <th>Notional</th>
                   <th>Rate</th>
-                  <th>Value</th>
+                  <th>PnL</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -53,9 +53,9 @@ module.exports = React.createClass({
                   <td>6 Oct 2015</td>
                   <td><span className='sell'>sell</span></td>
                   <td>EURUSD</td>
-                  <td>1,000,000</td>
-                  <td>1.3455</td>
-                  <td><Value notional={1000000} direction='buy' rate={1.3455} bid={1.3567} /></td>
+                  <td>1,500,000</td>
+                  <td>1.1234</td>
+                  <td><StreamingValue notional={1500000} direction='buy' rate={1.1234} ccyCpl='EURUSD' /></td>
                   <td>Done</td>
                 </tr>
 
