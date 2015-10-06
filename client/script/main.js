@@ -22,17 +22,10 @@ var Component = React.createClass({
 
             <div className='row'>
 
-              <div className='col-lg-10'>
+              <div className='col-lg-12 tiles'>
                 <PriceTileList />
               </div>
-
-              <div className='col-lg-2 quick-prices'>
-                <h4 className='side-heading'>Quick prices</h4>
-                <table>
-                  <StreamingPriceRow ccyCpl='EURUSD' />
-                </table>
-              </div>
-
+              
             </div>
 
             <div className='blotter row'>

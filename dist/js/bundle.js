@@ -31,22 +31,8 @@ var Component = React.createClass({
         { className: 'row' },
         React.createElement(
           'div',
-          { className: 'col-lg-10' },
+          { className: 'col-lg-12 tiles' },
           React.createElement(PriceTileList, null)
-        ),
-        React.createElement(
-          'div',
-          { className: 'col-lg-2 quick-prices' },
-          React.createElement(
-            'h4',
-            { className: 'side-heading' },
-            'Quick prices'
-          ),
-          React.createElement(
-            'table',
-            null,
-            React.createElement(StreamingPriceRow, { ccyCpl: 'EURUSD' })
-          )
         )
       ),
       React.createElement(
@@ -670,12 +656,8 @@ module.exports = function (ccyCpl) {
 
 module.exports.get = function (callback) {
 
-  var data = { tiles: [{ ccyCpl: 'EURUSD' }] };
+  var data = { tiles: [{ ccyCpl: 'EURUSD' }, { ccyCpl: 'EURGBP' }, { ccyCpl: 'AUDCHF' }, { ccyCpl: 'GBPCHF' }, { ccyCpl: 'AUDUSD' }] };
 
-  // {ccyCpl: 'EURGBP'},
-  // {ccyCpl: 'AUDCHF'},
-  // {ccyCpl: 'GBPCHF'},
-  // {ccyCpl: 'AUDUSD'},
   callback(data);
 };
 
