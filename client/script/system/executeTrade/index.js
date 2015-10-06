@@ -1,1 +1,1 @@
-module.exports = require('./fake');
+module.exports = require('./server');

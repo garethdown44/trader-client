@@ -16,6 +16,9 @@ body {
 .tile {
   background-color: #073642;
   /*margin: 5px;*/
+
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#073642+0,586e75+100 */
+  
 }
 
 .tile-title {
@@ -34,7 +37,8 @@ body {
 }
 
 .one-way-price:hover {
-  background-color: #cb4b16;  
+  background: none;
+  background-color: #cb4b16;
 }
 
 .one-way-price.buy {
@@ -105,4 +109,37 @@ body {
   border-width: 5px 5px 0 5px;
   border-color: #dc322f transparent transparent transparent;
   display: inline-block;
+}
+
+.blotter {
+  background-color: #000;
+  color: #eee8d5;
+}
+
+.blotter .table {
+  text-transform: uppercase;
+}
+
+.blotter .table th, .blotter .table td {
+  width: 14%;
+}
+
+.blotter .buy {
+  background-color: #d33682;
+  padding: 2px;
+}
+
+.blotter .sell {
+  background-color: #6c71c4;
+  padding: 2px;
+}
+
+.negative {
+  background-color: #dc322f;
+  padding: 2px;
+}
+
+.positive {
+  background-color: #859900;
+  padding: 2px;
 }

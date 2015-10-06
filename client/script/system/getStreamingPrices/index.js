@@ -1,1 +1,1 @@
-module.exports = require('./oanda');
+module.exports = require('./server');

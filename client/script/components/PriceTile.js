@@ -2,6 +2,7 @@ const React = require('react');
 const executeTrade = require('../system/executeTrade');
 const OneWayPrice = require('./OneWayPrice');
 const Spread = require('./Spread');
+const debug = require('debug')('trader:components:PriceTile');
 
 module.exports = React.createClass({
 
@@ -26,11 +27,12 @@ module.exports = React.createClass({
     this.setState({notional: val});
   },
 
-  execute: function(action, price, amount) {
+  execute: function(action, ccyCpl, rate, notional) {
 
     this.setState({executing: true});
 
-    executeTrade(action, price, amount, () => {
+    executeTrade(action, ccyCpl, rate, notional, () => {
+      debug(ccyCpl);
       this.setState({executing: false, bid: this.props.bid, ask: this.props.ask});
     });
   },
@@ -41,8 +43,6 @@ module.exports = React.createClass({
       return <div className='tile col-md-2'>executing...</div>;
     }
 
-    console.log(this.props);
-
     return (<div className='tile col-md-2'>
               <div className='tile-content'>
                 <div className='tile-title'>{this.props.ccyCpl}</div>
@@ -52,7 +52,7 @@ module.exports = React.createClass({
 
                     <OneWayPrice side='sell'
                                  price={this.state.bid}
-                                 execute={() => this.execute('sell', this.state.bid, this.state.amount)} />
+                                 execute={() => this.execute('sell', this.props.ccyCpl, this.state.bid, this.state.notional)} />
 
                     <OneWayPrice side='buy'
                                  price={this.state.ask} />

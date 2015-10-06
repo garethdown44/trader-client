@@ -31,6 +31,7 @@
     "passport-local": "^1.0.0",
     "react": "^0.13.3",
     "rx": "^2.3.22",
+    "socket.io-browserify": "^0.9.6",
     "underscore": "^1.7.0",
     "watchify": "^3.3.1"
   },
