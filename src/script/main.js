@@ -3,8 +3,6 @@ require('bootstrap');
 const React = require('react');
 const PriceTile = require('./components/PriceTile');
 const StreamingPriceReceiver = require('./components/StreamingPriceReceiver');
-const PriceRow = require('./components/PriceRow');
-const StreamingPriceRow = StreamingPriceReceiver(PriceRow);
 const PriceTileList = require('./components/PriceTileList');
 const Blotter = require('./components/Blotter');
 
