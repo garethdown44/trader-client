@@ -9,11 +9,6 @@ var StreamingPriceReceiver = require('./components/StreamingPriceReceiver');
 var PriceRow = require('./components/PriceRow');
 var StreamingPriceRow = StreamingPriceReceiver(PriceRow);
 var PriceTileList = require('./components/PriceTileList');
-
-//const StreamingTrades = require('./components/StreamingTrades');
-//const RenderAsTable = require('./components/RenderAsTable');
-//const Blotter = StreamingTrades(RenderAsTable);
-
 var Blotter = require('./components/Blotter');
 
 window.myDebug = require('debug');
