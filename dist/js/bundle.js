@@ -52723,40 +52723,7 @@ var StreamingPriceReceiver = require('./StreamingPriceReceiver');
 var blotter = require('../system/blotter');
 var moment = require('moment');
 var debug = require('debug')('trader:blotter');
-
-var Value = React.createClass({
-  displayName: 'Value',
-
-  getInitialState: function getInitialState() {
-    return { value: 0 };
-  },
-
-  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-    var value = undefined;
-    var valueAtTimeOfTrade = newProps.rate * newProps.notional;
-    var valueNow = newProps.bid * newProps.notional;
-
-    if (newProps.direction == 'buy') {
-      value = valueNow - valueAtTimeOfTrade;
-    } else if (newProps.direction == 'sell') {
-      value = valueAtTimeOfTrade - valueNow;
-    }
-
-    this.setState({ value: value.toFixed(0) });
-  },
-
-  render: function render() {
-
-    var className = this.state.value < 0 ? 'negative' : 'positive';
-
-    return React.createElement(
-      'span',
-      { className: className },
-      this.state.value
-    );
-  }
-});
-
+var Value = require('./Value');
 var StreamingValue = StreamingPriceReceiver(Value);
 
 module.exports = React.createClass({
@@ -52894,7 +52861,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"../system/blotter":233,"./StreamingPriceReceiver":231,"debug":16,"moment":20,"react":175}],226:[function(require,module,exports){
+},{"../system/blotter":234,"./StreamingPriceReceiver":231,"./Value":232,"debug":16,"moment":20,"react":175}],226:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -52976,10 +52943,6 @@ var React = require('react');
 
 var PriceRow = React.createClass({
   displayName: 'PriceRow',
-
-  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-    //if (newProps.mid > )
-  },
 
   render: function render() {
     return React.createElement(
@@ -53113,7 +53076,7 @@ String.prototype.endsWith = function (suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-},{"../system/executeTrade":235,"./OneWayPrice":226,"./Spread":230,"debug":16,"react":175}],229:[function(require,module,exports){
+},{"../system/executeTrade":236,"./OneWayPrice":226,"./Spread":230,"debug":16,"react":175}],229:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -53169,7 +53132,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"../system/workspace":241,"./PriceTile":228,"./StreamingPriceReceiver":231,"react":175}],230:[function(require,module,exports){
+},{"../system/workspace":242,"./PriceTile":228,"./StreamingPriceReceiver":231,"react":175}],230:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -53249,7 +53212,45 @@ module.exports = function (Child) {
   });
 };
 
-},{"../system/getStreamingPrices":238,"debug":16,"react":175}],232:[function(require,module,exports){
+},{"../system/getStreamingPrices":239,"debug":16,"react":175}],232:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+module.exports = React.createClass({
+  displayName: 'exports',
+
+  getInitialState: function getInitialState() {
+    return { value: 0 };
+  },
+
+  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+    var value = undefined;
+    var valueAtTimeOfTrade = newProps.rate * newProps.notional;
+    var valueNow = newProps.bid * newProps.notional;
+
+    if (newProps.direction == 'buy') {
+      value = valueNow - valueAtTimeOfTrade;
+    } else if (newProps.direction == 'sell') {
+      value = valueAtTimeOfTrade - valueNow;
+    }
+
+    this.setState({ value: value.toFixed(0) });
+  },
+
+  render: function render() {
+
+    var className = this.state.value < 0 ? 'negative' : 'positive';
+
+    return React.createElement(
+      'span',
+      { className: className },
+      this.state.value
+    );
+  }
+});
+
+},{"react":175}],233:[function(require,module,exports){
 'use strict';
 
 var config = {};
@@ -53260,12 +53261,12 @@ config.streamingPrices = 'server'; // (server,fake,oanda)
 
 module.exports = config;
 
-},{}],233:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":234}],234:[function(require,module,exports){
+},{"./server":235}],235:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
@@ -53282,12 +53283,12 @@ var stream = Rx.Observable.create(function (obs) {
 
 module.exports = stream;
 
-},{"../../../config":232,"rx":176,"socket.io-client":177}],235:[function(require,module,exports){
+},{"../../../config":233,"rx":176,"socket.io-client":177}],236:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":236}],236:[function(require,module,exports){
+},{"./server":237}],237:[function(require,module,exports){
 'use strict';
 
 var debug = require('debug')('trader:server:executeTrade');
@@ -53332,7 +53333,7 @@ module.exports = function (action, ccyCpl, rate, notional, success, error) {
   });
 };
 
-},{"../../../config":232,"debug":16,"jquery":19}],237:[function(require,module,exports){
+},{"../../../config":233,"debug":16,"jquery":19}],238:[function(require,module,exports){
 'use strict';
 
 var Rx = require('rx');
@@ -53349,7 +53350,7 @@ module.exports = function (ccyCpl) {
    });
 };
 
-},{"rx":176}],238:[function(require,module,exports){
+},{"rx":176}],239:[function(require,module,exports){
 'use strict';
 
 var config = require('../../config');
@@ -53367,7 +53368,7 @@ if (config.streamingPrices == 'server') {
   module.exports = require('./fake');
 }
 
-},{"../../config":232,"./fake":237,"./server":239}],239:[function(require,module,exports){
+},{"../../config":233,"./fake":238,"./server":240}],240:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
@@ -53388,7 +53389,7 @@ module.exports = function (ccyCpl) {
   });
 };
 
-},{"../../../config":232,"rx":176,"socket.io-client":177}],240:[function(require,module,exports){
+},{"../../../config":233,"rx":176,"socket.io-client":177}],241:[function(require,module,exports){
 'use strict';
 
 module.exports.get = function (callback) {
@@ -53398,10 +53399,10 @@ module.exports.get = function (callback) {
   callback(data);
 };
 
-},{}],241:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./fake');
 
-},{"./fake":240}]},{},[1])
+},{"./fake":241}]},{},[1])
 //# sourceMappingURL=bundle.js.map

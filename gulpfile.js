@@ -53,10 +53,15 @@ gulp.task('views', function() {
   gulp.src('src/*.html').pipe(gulp.dest('dist/'));
 });
 
+gulp.task('lib', function() {
+  gulp.src('lib/**/*.*').pipe(gulp.dest('dist/'));
+});
+
+
 /**
  * First bundle, then serve from the ./app directory
  */
-gulp.task('default', ['views', 'bundle'], function () {
+gulp.task('default', ['views', 'lib', 'bundle'], function () {
   browserSync.init({
       server: "./dist"
   });
