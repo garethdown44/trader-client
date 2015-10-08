@@ -3,6 +3,7 @@ const React = require('react');
 const PriceTile = require('./PriceTile');
 const StreamingPriceReceiver = require('./StreamingPriceReceiver');
 const StreamingPriceTile = StreamingPriceReceiver(PriceTile);
+const OptionTile = require('./option/OptionTile');
 
 const workspace = require('../system/workspace');
 
@@ -25,7 +26,14 @@ module.exports = React.createClass({
   },
 
   renderTiles: function() {
-    return this.state.workspace.tiles.map((tile, index) => (<StreamingPriceTile ccyCpl={tile.ccyCpl} key={index} />));
+    return this.state.workspace.tiles.map((tile, index) => {
+
+      if (tile.type == 'option') {
+        return (<OptionTile {...tile.data} key={index} />);
+      } else {
+        return (<StreamingPriceTile ccyCpl={tile.ccyCpl} key={index} />)  
+      }
+    });
   },
 
   render: function() {

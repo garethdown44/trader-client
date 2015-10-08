@@ -10,7 +10,7 @@ var PriceTileList = require('./components/PriceTileList');
 var Blotter = require('./components/Blotter');
 
 window.myDebug = require('debug');
-window.myDebug.enable('trader:*');
+window.myDebug.enable('trader:components:Opt*');
 
 var Component = React.createClass({
   displayName: 'Component',
@@ -52854,7 +52854,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"../system/blotter":233,"./StreamingPriceReceiver":230,"./Value":231,"debug":16,"moment":20,"react":175}],226:[function(require,module,exports){
+},{"../system/blotter":234,"./StreamingPriceReceiver":230,"./Value":231,"debug":16,"moment":20,"react":175}],226:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -53036,14 +53036,17 @@ String.prototype.endsWith = function (suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-},{"../system/executeTrade":235,"./OneWayPrice":226,"./Spread":229,"debug":16,"react":175}],228:[function(require,module,exports){
+},{"../system/executeTrade":236,"./OneWayPrice":226,"./Spread":229,"debug":16,"react":175}],228:[function(require,module,exports){
 'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var React = require('react');
 
 var PriceTile = require('./PriceTile');
 var StreamingPriceReceiver = require('./StreamingPriceReceiver');
 var StreamingPriceTile = StreamingPriceReceiver(PriceTile);
+var OptionTile = require('./option/OptionTile');
 
 var workspace = require('../system/workspace');
 
@@ -53076,7 +53079,12 @@ module.exports = React.createClass({
 
   renderTiles: function renderTiles() {
     return this.state.workspace.tiles.map(function (tile, index) {
-      return React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: index });
+
+      if (tile.type == 'option') {
+        return React.createElement(OptionTile, _extends({}, tile.data, { key: index }));
+      } else {
+        return React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: index });
+      }
     });
   },
 
@@ -53092,7 +53100,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"../system/workspace":241,"./PriceTile":227,"./StreamingPriceReceiver":230,"react":175}],229:[function(require,module,exports){
+},{"../system/workspace":242,"./PriceTile":227,"./StreamingPriceReceiver":230,"./option/OptionTile":232,"react":175}],229:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -53172,7 +53180,7 @@ module.exports = function (Child) {
   });
 };
 
-},{"../system/getStreamingPrices":238,"debug":16,"react":175}],231:[function(require,module,exports){
+},{"../system/getStreamingPrices":239,"debug":16,"react":175}],231:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -53213,6 +53221,199 @@ module.exports = React.createClass({
 },{"react":175}],232:[function(require,module,exports){
 'use strict';
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var debug = require('debug')('trader:components:OptionTile');
+var React = require('react');
+
+var TwoChoice = React.createClass({
+  displayName: 'TwoChoice',
+
+  render: function render() {
+    return React.createElement(
+      'select',
+      null,
+      React.createElement(
+        'option',
+        null,
+        this.props.first
+      ),
+      React.createElement(
+        'option',
+        null,
+        this.props.second
+      )
+    );
+  }
+});
+
+var NotionalTextBox = React.createClass({
+  displayName: 'NotionalTextBox',
+
+  render: function render() {
+    return React.createElement('input', { type: 'text', value: this.props.value });
+  }
+});
+
+var DateChooser = React.createClass({
+  displayName: 'DateChooser',
+
+  render: function render() {
+    return React.createElement('input', { type: 'text', value: this.props.value });
+  }
+});
+
+var WithValidation = function WithValidation(Child, validateFn) {
+  return React.createClass({
+
+    onChange: function onChange(e) {
+      if (validateFn(e.target.value)) {
+        this.setState({ value: e.target.value, valid: true });
+        this.props.isValidChanged(true);
+      } else {
+        this.setState({ value: e.target.value, valid: false });
+        this.props.isValidChanged(false);
+      }
+    },
+
+    render: function render() {
+      return React.createElement(Child, { onChange: this.onChange });
+    }
+  });
+};
+
+var StrikePriceTextBox = React.createClass({
+  displayName: 'StrikePriceTextBox',
+
+  getInitialState: function getInitialState() {
+    return { value: 0 };
+  },
+
+  componentDidMount: function componentDidMount() {
+    this.setState({ value: this.props.value });
+  },
+
+  valueChanged: function valueChanged(e) {
+    this.setState({ value: e.target.value });
+  },
+
+  render: function render() {
+    return React.createElement('input', { type: 'text', value: this.state.value, onChange: this.valueChanged });
+  }
+});
+
+var ValidatedStrikePrice = WithValidation(StrikePriceTextBox, function (val) {
+  return val < 2;
+});
+
+var OptionLeg = React.createClass({
+  displayName: 'OptionLeg',
+
+  render: function render() {
+
+    debug(this.props);
+
+    return React.createElement(
+      'div',
+      { className: 'leg' },
+      React.createElement(TwoChoice, { first: 'buy', second: 'sell', selected: 'buy' }),
+      React.createElement(NotionalTextBox, { value: this.props.notional }),
+      React.createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate }),
+      React.createElement(ValidatedStrikePrice, { className: 'strike', value: this.props.strike, isValidChanged: this.props.strikePriceInvalid }),
+      React.createElement(TwoChoice, { first: 'call', second: 'put', selected: 'call' })
+    );
+  }
+});
+
+// TODO: if a strike is invalid, the leg is invalid, then the price button is disabled
+
+var Button = React.createClass({
+  displayName: 'Button',
+
+  render: function render() {
+
+    var classNames = 'button';
+    if (!this.props.valid) {
+      classNames += ' invalid';
+    }
+
+    return React.createElement(
+      'div',
+      { className: classNames },
+      this.props.text
+    );
+  }
+});
+
+// validates and returns the option with validation fields populated
+var validateOption = function validateOption(option) {
+  for (var leg in option.legs) {
+    if (leg.strike > 2) {
+      option.valid = false;
+      leg.strike.valid = false;
+    }
+  }
+
+  return option;
+};
+
+module.exports = React.createClass({
+  displayName: 'exports',
+
+  getInitialState: function getInitialState() {
+    return { legs: [], valid: true };
+  },
+
+  componentDidMount: function componentDidMount() {
+
+    debug('props', this.props);
+
+    this.setState({ legs: this.props.legs });
+  },
+
+  strikePriceInvalid: function strikePriceInvalid() {
+    this.setState({ valid: false });
+  },
+
+  renderLegs: function renderLegs(legs) {
+    var _this = this;
+
+    return legs.map(function (leg) {
+      return React.createElement(OptionLeg, _extends({}, leg, {
+        strikePriceInvalid: _this.strikePriceInvalid }));
+    });
+  },
+
+  render: function render() {
+    var legs = this.renderLegs(this.state.legs);
+
+    return React.createElement(
+      'div',
+      { className: 'tile option-tile' },
+      React.createElement(
+        'div',
+        { className: 'tile-title' },
+        this.props.ccyCpl
+      ),
+      React.createElement(
+        'span',
+        null,
+        this.props.ccyCpl
+      ),
+      React.createElement(
+        'div',
+        null,
+        legs
+      ),
+      React.createElement(Button, { valid: this.state.valid, text: 'PRICE' })
+    );
+  }
+
+});
+
+},{"debug":16,"react":175}],233:[function(require,module,exports){
+'use strict';
+
 var config = {};
 
 if (window.location.href.indexOf('herokuapp') != -1) config.serverUrl = 'http://trader-server.herokuapp.com';else config.serverUrl = 'http://localhost:8080';
@@ -53221,12 +53422,12 @@ config.streamingPrices = 'server'; // (server,fake,oanda)
 
 module.exports = config;
 
-},{}],233:[function(require,module,exports){
+},{}],234:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":234}],234:[function(require,module,exports){
+},{"./server":235}],235:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
@@ -53243,12 +53444,12 @@ var stream = Rx.Observable.create(function (obs) {
 
 module.exports = stream;
 
-},{"../../../config":232,"rx":176,"socket.io-client":177}],235:[function(require,module,exports){
+},{"../../../config":233,"rx":176,"socket.io-client":177}],236:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":236}],236:[function(require,module,exports){
+},{"./server":237}],237:[function(require,module,exports){
 'use strict';
 
 var debug = require('debug')('trader:server:executeTrade');
@@ -53293,7 +53494,7 @@ module.exports = function (action, ccyCpl, rate, notional, success, error) {
   });
 };
 
-},{"../../../config":232,"debug":16,"jquery":19}],237:[function(require,module,exports){
+},{"../../../config":233,"debug":16,"jquery":19}],238:[function(require,module,exports){
 'use strict';
 
 var Rx = require('rx');
@@ -53310,7 +53511,7 @@ module.exports = function (ccyCpl) {
    });
 };
 
-},{"rx":176}],238:[function(require,module,exports){
+},{"rx":176}],239:[function(require,module,exports){
 'use strict';
 
 var config = require('../../config');
@@ -53328,7 +53529,7 @@ if (config.streamingPrices == 'server') {
   module.exports = require('./fake');
 }
 
-},{"../../config":232,"./fake":237,"./server":239}],239:[function(require,module,exports){
+},{"../../config":233,"./fake":238,"./server":240}],240:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
@@ -53349,20 +53550,24 @@ module.exports = function (ccyCpl) {
   });
 };
 
-},{"../../../config":232,"rx":176,"socket.io-client":177}],240:[function(require,module,exports){
+},{"../../../config":233,"rx":176,"socket.io-client":177}],241:[function(require,module,exports){
 'use strict';
 
 module.exports.get = function (callback) {
 
-  var data = { tiles: [{ ccyCpl: 'EURUSD' }, { ccyCpl: 'EURGBP' }, { ccyCpl: 'AUDCHF' }, { ccyCpl: 'GBPCHF' }, { ccyCpl: 'AUDUSD' }] };
+  var data = { tiles: [{ type: 'spot', ccyCpl: 'EURUSD' }, { type: 'spot', ccyCpl: 'EURGBP' }, { type: 'spot', ccyCpl: 'AUDCHF' }, { type: 'spot', ccyCpl: 'GBPCHF' }, { type: 'spot', ccyCpl: 'AUDUSD' }, { type: 'option', data: {
+        ccyCpl: 'EURUSD',
+        legs: [{ direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'call' }, { direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'put' }]
+      }
+    }] };
 
   callback(data);
 };
 
-},{}],241:[function(require,module,exports){
+},{}],242:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./fake');
 
-},{"./fake":240}]},{},[1])
+},{"./fake":241}]},{},[1])
 //# sourceMappingURL=bundle.js.map

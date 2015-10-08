@@ -7,6 +7,7 @@ var exorcist    = require('exorcist');
 var browserify  = require('browserify');
 var browserSync = require('browser-sync').create();
 var nodemon     = require('nodemon');
+var stylus      = require('gulp-stylus');
 
 // Input file.
 watchify.args.debug = true;
@@ -57,15 +58,21 @@ gulp.task('lib', function() {
   gulp.src('lib/**/*.*').pipe(gulp.dest('dist/'));
 });
 
+gulp.task('stylus', function () {
+  gulp.src('./src/script/components/option/option.styl')
+    .pipe(stylus())
+    .pipe(gulp.dest('./dist/css'));
+});
 
 /**
  * First bundle, then serve from the ./app directory
  */
-gulp.task('default', ['views', 'lib', 'bundle'], function () {
+gulp.task('default', ['views', 'lib', 'bundle', 'stylus'], function () {
   browserSync.init({
       server: "./dist"
   });
   gulp.watch([ 'src/styles/**/*.css' ], [ 'css' ]);
+  gulp.watch([ 'src/**/*.styl' ], [ 'stylus', browserSync.reload]);
 });
 
 // gulp.task('serve', function() {

@@ -1,0 +1,53 @@
+$back01  = #002b36
+$back02  = #073642
+$white01 = #586e75
+$white02 = #657b83
+$white03 = #839496
+$white04 = #93a1a1
+$white05 = #eee8d5
+$white06 = #fdf6e3
+$yellow  = #b58900
+$orange  = #cb4b16
+$red     = #dc322f
+$magenta = #d33682
+$violet  = #6c71c4
+$blue    = #268bd2
+$cyan    = #2aa198
+$green   = #859900
+
+.option-tile
+  font-size 11px
+  color $white04
+  
+  .leg
+    padding-top 2px
+  
+  input
+    background-color $back01
+    color $white04
+    display inline
+    width 40px
+    border 1px solid $white01
+    
+.button
+  color $white04
+  border 1px solid $white01
+  width 60px
+  background-color $back02
+  cursor pointer
+  text-transform uppercase
+  margin-top 8px
+  padding 2px 0px 2px 0px
+  text-align center
+  
+  &:hover
+    background-color $orange
+    color white
+      
+.invalid
+  background-color gray
+  cursor default
+  
+  &:hover
+    background-color gray
+    color: $white04

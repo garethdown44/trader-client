@@ -7,7 +7,7 @@ const PriceTileList = require('./components/PriceTileList');
 const Blotter = require('./components/Blotter');
 
 window.myDebug = require('debug');
-window.myDebug.enable('trader:*');
+window.myDebug.enable('trader:components:Opt*');
 
 var Component = React.createClass({
   render: function() {
