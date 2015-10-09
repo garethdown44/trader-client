@@ -46,18 +46,27 @@ const StrikePriceTextBox = React.createClass({
     this.setState({value: this.props.value});
   },
 
-  valueChanged: function(e) {
-    this.setState({value: e.target.value});
-  },
+  // valueChanged: function(e) {
+  //   this.setState({value: e.target.value});
+  // },
 
   render: function() {
-    return <input type='text' value={this.state.value} onChange={this.valueChanged} />
+    return <input type='text' 
+                  value={this.state.value} 
+                  onChange={this.props.onChange} />
   }
 });
 
-const ValidatedStrikePrice = WithValidation(StrikePriceTextBox, val => val < 2);
+const optionStore = require('./optionStore');
+const optionActions = require('./optionActions');
+
+//const ValidatedStrikePrice = WithValidation(StrikePriceTextBox, val => val < 2);
 
 const OptionLeg = React.createClass({
+
+  handleStrikeChange: function(e) {
+    optionActions.updateStrike(e.target.value, this.props.index);
+  },
 
   render: function() {
 
@@ -65,9 +74,9 @@ const OptionLeg = React.createClass({
 
     return (<div className='leg'>
               <TwoChoice first='buy' second='sell' selected='buy' />
-              <NotionalTextBox value={this.props.notional} />
-              <DateChooser className='expiryDate' value={this.props.expiryDate} />
-              <ValidatedStrikePrice className='strike' value={this.props.strike} isValidChanged={this.props.strikePriceInvalid} />
+              {/*<NotionalTextBox value={this.props.notional} />
+              <DateChooser className='expiryDate' value={this.props.expiryDate} />*/}
+              <StrikePriceTextBox className='strike' onChange={this.handleStrikeChange} />
               <TwoChoice first='call' second='put' selected='call' />
             </div>);
   }
@@ -88,49 +97,65 @@ const Button = React.createClass({
 });
 
 // validates and returns the option with validation fields populated
-const validateOption = function(option) {
-  for (let leg in option.legs) {
-    if (leg.strike > 2) {
-      option.valid = false;
-      leg.strike.valid = false;
-    }
-  }
+// const validateOption = function(option) {
+//   for (let leg in option.legs) {
+//     if (leg.strike > 2) {
+//       option.valid = false;
+//       leg.strike.valid = false;
+//     }
+//   }
 
-  return option;
-};
+//   return option;
+// };
+
+const Reflux = require('reflux');
+
+const ListenerMethods = require('reflux-core/lib/ListenerMethods');
+const _ = require('reflux-core/lib/utils');
 
 module.exports = React.createClass({
 
-  getInitialState: function() {
-    return {legs: [], valid: true};
-  },
+  mixins: [Reflux.connect(optionStore, "option")],
 
-  componentDidMount: function() {
+  // componentWillMount: function() {
 
-    debug('props', this.props);
+  //   var store = optionStore(this.props);
 
-    this.setState({legs: this.props.legs});
-  },
+  //   _.extend(this, ListenerMethods);
 
-  strikePriceInvalid: function() {
-    this.setState({valid: false});
-  },
+  //   this.listenTo(store, this.setState);
+  // },
+
+  // getInitialState: function() {
+  //   return { option: { legs: [], valid: true} };
+  // },
+
+  // componentDidMount: function() {
+
+  //   debug('props', this.props);
+
+  //   this.setState({legs: this.props.legs});
+  // },
+
+  // strikePriceInvalid: function() {
+  //   this.setState({valid: false});
+  // },
 
   renderLegs: function(legs) {
-    return legs.map(leg => {
-        return <OptionLeg {...leg} 
-                  strikePriceInvalid={this.strikePriceInvalid} />;
+    return legs.map((leg, index) => {
+        return <OptionLeg {...leg} key={index} index={index} />;
       });
   },
 
   render: function() {
-    let legs = this.renderLegs(this.state.legs);
+
+    let legs = this.renderLegs(this.state.option.legs);
 
     return <div className='tile option-tile'>
               <div className='tile-title'>{this.props.ccyCpl}</div>
               <span>{this.props.ccyCpl}</span>
               <div>{legs}</div>
-              <Button valid={this.state.valid} text='PRICE' />
+              <Button valid={this.state.option.valid} text='PRICE' />
             </div>;
   }
 
