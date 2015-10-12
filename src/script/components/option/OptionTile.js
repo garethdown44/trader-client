@@ -1,5 +1,6 @@
 const debug = require('debug')('trader:components:OptionTile');
 const React = require('react');
+import {connect} from 'react-redux';
 
 const TwoChoice = React.createClass({
   render: function() {
@@ -19,70 +20,61 @@ const DateChooser = React.createClass({
   }
 });
 
-const WithValidation = (Child, validateFn) => React.createClass({
+// const WithValidation = (Child, validateFn) => React.createClass({
 
-  onChange: function(e) {
-    if (validateFn(e.target.value)) {
-      this.setState({value:e.target.value, valid: true });
-      this.props.isValidChanged(true);
-    } else {
-      this.setState({value:e.target.value, valid: false });
-      this.props.isValidChanged(false);
-    }
-  },
+//   onChange: function(e) {
+//     if (validateFn(e.target.value)) {
+//       this.setState({value:e.target.value, valid: true });
+//       this.props.isValidChanged(true);
+//     } else {
+//       this.setState({value:e.target.value, valid: false });
+//       this.props.isValidChanged(false);
+//     }
+//   },
 
-  render: function() {
-    return <Child onChange={this.onChange} />;
-  }
-});
+//   render: function() {
+//     return <Child onChange={this.onChange} />;
+//   }
+// });
 
 const StrikePriceTextBox = React.createClass({
 
-  getInitialState:function() {
-    return {value: 0};
-  },
-
-  componentDidMount: function() {
-    this.setState({value: this.props.value});
-  },
-
-  // valueChanged: function(e) {
-  //   this.setState({value: e.target.value});
-  // },
-
   render: function() {
     return <input type='text' 
-                  value={this.state.value} 
+                  value={this.props.value} 
                   onChange={this.props.onChange} />
   }
 });
 
-const optionStore = require('./optionStore');
-const optionActions = require('./optionActions');
+import {createStore} from 'redux';
+import operations from './reducers';
 
-//const ValidatedStrikePrice = WithValidation(StrikePriceTextBox, val => val < 2);
+let store = createStore(operations);
+
+import {updateStrike} from './actions';
+
+import {Provider} from 'react-redux'
 
 const OptionLeg = React.createClass({
 
-  handleStrikeChange: function(e) {
-    optionActions.updateStrike(e.target.value, this.props.index);
-  },
-
   render: function() {
-
-    debug(this.props);
 
     return (<div className='leg'>
               <TwoChoice first='buy' second='sell' selected='buy' />
-              {/*<NotionalTextBox value={this.props.notional} />
-              <DateChooser className='expiryDate' value={this.props.expiryDate} />*/}
-              <StrikePriceTextBox className='strike' onChange={this.handleStrikeChange} />
+              <NotionalTextBox value={this.props.notional} />
+              <DateChooser className='expiryDate' value={this.props.expiryDate} />
+              <StrikePriceTextBox className='strike' value={this.props.strike} onChange={this.props.handleStrikeChange} />
               <TwoChoice first='call' second='put' selected='call' />
             </div>);
   }
 });
 
-// TODO: if a strike is invalid, the leg is invalid, then the price button is disabled
+function select(state) {
+
+  // choose the bits from the global state we want
+
+  return state;
+}
 
 const Button = React.createClass({
   render: function() {
@@ -96,67 +88,35 @@ const Button = React.createClass({
   }
 });
 
-// validates and returns the option with validation fields populated
-// const validateOption = function(option) {
-//   for (let leg in option.legs) {
-//     if (leg.strike > 2) {
-//       option.valid = false;
-//       leg.strike.valid = false;
-//     }
-//   }
+const OptionTile = React.createClass({
 
-//   return option;
-// };
+  componentDidMount: function() {
+    this.dispatch = this.props.dispatch;
+  },
 
-const Reflux = require('reflux');
-
-const ListenerMethods = require('reflux-core/lib/ListenerMethods');
-const _ = require('reflux-core/lib/utils');
-
-module.exports = React.createClass({
-
-  mixins: [Reflux.connect(optionStore, "option")],
-
-  // componentWillMount: function() {
-
-  //   var store = optionStore(this.props);
-
-  //   _.extend(this, ListenerMethods);
-
-  //   this.listenTo(store, this.setState);
-  // },
-
-  // getInitialState: function() {
-  //   return { option: { legs: [], valid: true} };
-  // },
-
-  // componentDidMount: function() {
-
-  //   debug('props', this.props);
-
-  //   this.setState({legs: this.props.legs});
-  // },
-
-  // strikePriceInvalid: function() {
-  //   this.setState({valid: false});
-  // },
+  handleStrikeChange: function(value, legIndex) {
+    this.dispatch(updateStrike(value, legIndex));
+  },
 
   renderLegs: function(legs) {
     return legs.map((leg, index) => {
-        return <OptionLeg {...leg} key={index} index={index} />;
+        return <OptionLeg {...leg} key={index} handleStrikeChange={e => this.handleStrikeChange(e.target.value, index)} />;
       });
   },
 
   render: function() {
 
-    let legs = this.renderLegs(this.state.option.legs);
+    let legs = this.renderLegs(this.props.legs);
+
+    debug('OptionTile.render(), props', this.props);
 
     return <div className='tile option-tile'>
               <div className='tile-title'>{this.props.ccyCpl}</div>
               <span>{this.props.ccyCpl}</span>
               <div>{legs}</div>
-              <Button valid={this.state.option.valid} text='PRICE' />
+              <Button valid={this.props.valid} text='PRICE' />
             </div>;
   }
-
 });
+
+export default connect(select)(OptionTile);

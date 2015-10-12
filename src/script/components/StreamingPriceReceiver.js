@@ -8,9 +8,6 @@ module.exports = Child => React.createClass({
     var priceStream = getStreamingPrices(this.props.ccyCpl);
 
     priceStream.subscribe(p => {
-
-      debug('price ticked: ', p);
-
       this.setState({bid: p.bid, ask: p.ask, tradeable: true});
     });
   },
@@ -20,8 +17,6 @@ module.exports = Child => React.createClass({
   },
 
   render: function() {
-    debug('render');
-    debug(this.state);
     return <Child {...this.props} bid={this.state.bid} 
                                   ask={this.state.ask}
                                   tradeable={this.state.tradeable} />;

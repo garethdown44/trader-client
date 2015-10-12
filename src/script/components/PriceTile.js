@@ -11,7 +11,6 @@ module.exports = React.createClass({
   },
 
   componentWillReceiveProps: function(newProps) {
-    debug(newProps);
     this.setState({bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable});
   },
 
