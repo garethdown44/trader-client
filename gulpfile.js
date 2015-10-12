@@ -15,7 +15,8 @@ var bundler = watchify(browserify('./src/script/main.js', watchify.args));
 
 // Babel transform
 bundler.transform(babelify.configure({
-    sourceMapRelative: 'src/script'
+    sourceMapRelative: 'src/script',
+    stage: 0
 }));
 
 // On updates recompile

@@ -28,9 +28,11 @@ function operations(state = initialState, action) {
 
       let newState = Object.assign({}, state);
 
-      newState.positions.push(action.position);
+      newState.positions = [...state.positions, Object.assign({}, action.position)];
 
-      return state;
+      debug('newState', newState);
+
+      return newState;
 
     case UPDATE_STRIKE:
 
@@ -49,23 +51,23 @@ function operations(state = initialState, action) {
 
     // debug('newState', newState);
 
-    return newState;
+      return state;
 
-  case BOOK_SPOT_TRADE:
-    return state;
+    case BOOK_SPOT_TRADE:
+      return state;
 
-  case TRADE_BOOKED:
-    return state;
+    case TRADE_BOOKED:
+      return state;
 
     default:
       return state;
   }
 }
 
-function options(state = {}, action) {
-  return state;
-}
+// function options(state = {}, action) {
+//   return state;
+// }
 
-const rootReducer = combineReducers({operations, options});
+//const rootReducer = combineReducers({operations, options});
 
-export default rootReducer;
+export default operations;

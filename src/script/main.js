@@ -12,14 +12,16 @@ const Blotter = require('./components/Blotter');
 
 
 
+window.myDebug = require('debug');
+window.myDebug.enable('trader*');
 
 
 
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
-import { subscribePositions } from './actions';
-import rootReducer from './reducers';
+import { subscribePositions } from './system/redux/actions';
+import rootReducer from './system/redux/reducers';
 
 const loggerMiddleware = createLogger();
 
@@ -30,21 +32,12 @@ const createStoreWithMiddleware = applyMiddleware(
 
 const store = createStoreWithMiddleware(rootReducer);
 
-//store.dispatch(subscribePositions());
-store.dispatch(subscribePositions()).then(() =>
-  console.log(store.getState())
-);
+store.dispatch(subscribePositions());
 
 
 
 
 
-
-
-
-
-window.myDebug = require('debug');
-window.myDebug.enable('trader*');
 
 var Component = React.createClass({
   render: function() {

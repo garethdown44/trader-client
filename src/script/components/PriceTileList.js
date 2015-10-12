@@ -5,25 +5,8 @@ const PriceTile = require('./PriceTile');
 const StreamingPriceReceiver = require('./StreamingPriceReceiver');
 const StreamingPriceTile = StreamingPriceReceiver(PriceTile);
 const OptionTile = require('./option/OptionTile');
-//const workspace = require('../system/workspace');
-
-// const Loading = React.createClass({
-//   render: function() {
-//     return <div>loading...</div>;
-//   }
-// });
 
 const PriceTileList = React.createClass({
-
-  // getInitialState: function() {
-  //   return { loading: true };
-  // },
-
-  // componentDidMount: function() {
-  //   workspace.get((data) => {
-  //     this.setState({loading: false, workspace: data});
-  //   });
-  // },
 
   renderTiles: function() {
     return this.props.tiles.map((tile, index) => {

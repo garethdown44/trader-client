@@ -1,4 +1,5 @@
 const React = require('react');
+const {connect} = require('react-redux');
 const StreamingPriceReceiver = require('./StreamingPriceReceiver');
 const blotter = require('../system/blotter');
 const moment = require('moment');
@@ -6,25 +7,33 @@ const debug = require('debug')('trader:blotter');
 const Value = require('./Value');
 const StreamingValue = StreamingPriceReceiver(Value);
 
-module.exports = React.createClass({
+function select(state) {
+  //return {positions: [{notional: 50000}]};
 
-  getInitialState: function() {
-    return {positions: [], loading: true};
-  },
+  debug('STATE', state);
 
-  componentDidMount: function() {
-    this.subscription = blotter.subscribe(position => {
+  return {positions: state.positions};
+}
 
-      debug(position);
-      let positions = this.state.positions;
-      positions.push(position);
-      this.setState({positions: positions});
-    });
-  },
+const Blotter = React.createClass({
 
-  componentWillUnmount: function() {
-    this.subscription.dispose();
-  },
+  // getInitialState: function() {
+  //   return {positions: [], loading: true};
+  // },
+
+  // componentDidMount: function() {
+  //   this.subscription = blotter.subscribe(position => {
+
+  //     debug(position);
+  //     let positions = this.state.positions;
+  //     positions.push(position);
+  //     this.setState({positions: positions});
+  //   });
+  // },
+
+  // componentWillUnmount: function() {
+  //   this.subscription.dispose();
+  // },
 
   renderRows: function(rows) {
 
@@ -47,7 +56,9 @@ module.exports = React.createClass({
 
   render: function() {
 
-    let rows = this.renderRows(this.state.positions);
+    debug('render, props', this.props);
+
+    let rows = this.renderRows(this.props.positions);
 
     return (<table className='table'>
               <thead>
@@ -69,3 +80,5 @@ module.exports = React.createClass({
             </table>);
   }
 });
+
+export default connect(select)(Blotter);

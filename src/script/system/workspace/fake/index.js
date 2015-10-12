@@ -2,10 +2,10 @@ module.exports.get = () => {
 
   var data = { tiles: [
     {type: 'spot', ccyCpl: 'EURUSD'},
-    {type: 'spot', ccyCpl: 'EURGBP'},
-    {type: 'spot', ccyCpl: 'AUDCHF'},
-    {type: 'spot', ccyCpl: 'GBPCHF'},
-    {type: 'spot', ccyCpl: 'AUDUSD'},
+    // {type: 'spot', ccyCpl: 'EURGBP'},
+    // {type: 'spot', ccyCpl: 'AUDCHF'},
+    // {type: 'spot', ccyCpl: 'GBPCHF'},
+    // {type: 'spot', ccyCpl: 'AUDUSD'},
 
     // {type: 'option', data: {
     //     ccyCpl: 'EURUSD',
