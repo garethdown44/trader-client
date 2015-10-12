@@ -1,4 +1,4 @@
-module.exports.get = callback => {
+module.exports.get = () => {
 
   var data = { tiles: [
     {type: 'spot', ccyCpl: 'EURUSD'},
@@ -7,15 +7,17 @@ module.exports.get = callback => {
     {type: 'spot', ccyCpl: 'GBPCHF'},
     {type: 'spot', ccyCpl: 'AUDUSD'},
 
-    {type: 'option', data: {
-        ccyCpl: 'EURUSD',
-        legs: [ 
-            { direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'call' }, 
-            { direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'put' }
-              ]
-          } 
-      }
+    // {type: 'option', data: {
+    //     ccyCpl: 'EURUSD',
+    //     legs: [ 
+    //         { direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'call' }, 
+    //         { direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'put' }
+    //           ]
+    //       } 
+    //   }
   ]};
 
-  callback(data);
+  //callback(data);
+
+  return data;
 }
