@@ -1,6 +1,10 @@
 const debug = require('debug')('trader:components:OptionTile');
 const React = require('react');
 import {connect} from 'react-redux';
+import {createStore} from 'redux';
+import operations from './reducers';
+let store = createStore(operations);
+import {updateStrike} from './actions';
 
 const TwoChoice = React.createClass({
   render: function() {
@@ -20,23 +24,6 @@ const DateChooser = React.createClass({
   }
 });
 
-// const WithValidation = (Child, validateFn) => React.createClass({
-
-//   onChange: function(e) {
-//     if (validateFn(e.target.value)) {
-//       this.setState({value:e.target.value, valid: true });
-//       this.props.isValidChanged(true);
-//     } else {
-//       this.setState({value:e.target.value, valid: false });
-//       this.props.isValidChanged(false);
-//     }
-//   },
-
-//   render: function() {
-//     return <Child onChange={this.onChange} />;
-//   }
-// });
-
 const StrikePriceTextBox = React.createClass({
 
   render: function() {
@@ -46,14 +33,6 @@ const StrikePriceTextBox = React.createClass({
   }
 });
 
-import {createStore} from 'redux';
-import operations from './reducers';
-
-let store = createStore(operations);
-
-import {updateStrike} from './actions';
-
-import {Provider} from 'react-redux'
 
 const OptionLeg = React.createClass({
 
