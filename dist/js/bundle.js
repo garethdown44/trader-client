@@ -54552,10 +54552,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _reactRedux = require('react-redux');
 
-//import {createStore} from 'redux';
-//import reducers from './reducers';
-//let store = createStore(reducers);
-
 var _systemReduxActions = require('../../system/redux/actions');
 
 var debug = require('debug')('trader:components:OptionTile');
@@ -54630,15 +54626,6 @@ var select = function select(tileId) {
     return Object.assign({}, state.workspace.tiles[tileId]);
   };
 };
-
-// function select(state) {
-
-//   debug('select', state);
-
-//   // choose the bits from the global state we want
-
-//   return Object.assign({}, state.workspace.tiles[1].data);
-// }
 
 var Button = React.createClass({
   displayName: 'Button',
@@ -54973,7 +54960,7 @@ function subscribePositions() {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-      value: true
+  value: true
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -54992,58 +54979,63 @@ var debug = require('debug')('trader:redux:reducers');
 
 var initialWorkspaces = _workspace2['default'].get();
 
+function option(state, action) {
+  if (state === undefined) state = {};
+
+  var newState = Object.assign({}, state);
+  newState.legs = [].concat(_toConsumableArray(state.legs));
+  newState.legs[action.legIndex].strike = action.value;
+
+  newState.valid = action.value < 3;
+
+  return newState;
+}
+
 function workspace(state, action) {
-      if (state === undefined) state = initialWorkspaces;
+  if (state === undefined) state = initialWorkspaces;
 
-      switch (action.type) {
+  switch (action.type) {
 
-            case _actions.ADD_TILE:
-                  return Object.assign({}, state.tiles);
+    case _actions.ADD_TILE:
+      return Object.assign({}, state.tiles);
 
-            case _actions.UPDATE_STRIKE:
+    case _actions.UPDATE_STRIKE:
 
-                  var option = state.tiles[action.tileId];
+      var tile = state.tiles[action.tileId];
 
-                  var newState = Object.assign({}, option);
-                  newState.legs = [].concat(_toConsumableArray(option.legs));
-                  newState.legs[action.legIndex].strike = action.value;
+      var newWorkspace = {};
+      newWorkspace.tiles = Object.assign({}, state.tiles);
+      newWorkspace.tiles[action.tileId] = option(tile, action);
 
-                  newState.valid = action.value < 3;
+      return newWorkspace;
 
-                  var newWorkspace = {};
-                  newWorkspace.tiles = Object.assign({}, state.tiles);
-                  newWorkspace.tiles[action.tileId] = newState;
-
-                  return newWorkspace;
-
-            default:
-                  return Object.assign({}, state);
-      }
+    default:
+      return Object.assign({}, state);
+  }
 }
 
 function positions(state, action) {
-      if (state === undefined) state = [];
+  if (state === undefined) state = [];
 
-      debug(action);
+  debug(action);
 
-      switch (action.type) {
-            case _actions.RECEIVE_POSITION:
-                  //let newState = Object.assign({}, state.positions);
+  switch (action.type) {
+    case _actions.RECEIVE_POSITION:
 
-                  var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
+      var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
 
-                  debug('newState', newState);
+      debug('newState', newState);
 
-                  return newState;
+      return newState;
 
-            default:
-                  return [].concat(_toConsumableArray(state));
-      }
+    default:
+      return [].concat(_toConsumableArray(state));
+  }
 }
 
 exports['default'] = (0, _redux.combineReducers)({
-      workspace: workspace,
-      positions: positions
+  workspace: workspace,
+  positions: positions
 });
 module.exports = exports['default'];
 

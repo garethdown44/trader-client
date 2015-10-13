@@ -5,6 +5,17 @@ import ws from '../workspace';
 
 let initialWorkspaces = ws.get();
 
+function option(state = {}, action) {
+
+  let newState = Object.assign({}, state);
+  newState.legs = [...state.legs];
+  newState.legs[action.legIndex].strike = action.value;
+
+  newState.valid = action.value < 3;
+
+  return newState;
+}
+
 function workspace(state = initialWorkspaces, action) {
 
   switch (action.type) {
@@ -14,17 +25,11 @@ function workspace(state = initialWorkspaces, action) {
 
     case UPDATE_STRIKE:
 
-      let option = state.tiles[action.tileId];
-
-      let newState = Object.assign({}, option);
-      newState.legs = [...option.legs];
-      newState.legs[action.legIndex].strike = action.value;
-
-      newState.valid = action.value < 3;
+      let tile = state.tiles[action.tileId];
 
       let newWorkspace = {};
       newWorkspace.tiles = Object.assign({}, state.tiles);
-      newWorkspace.tiles[action.tileId] = newState;
+      newWorkspace.tiles[action.tileId] = option(tile, action);
 
       return newWorkspace;
 
@@ -39,8 +44,7 @@ function positions(state = [], action) {
 
   switch (action.type) {
     case RECEIVE_POSITION:
-      //let newState = Object.assign({}, state.positions);
-
+    
       let newState = [...state, Object.assign({}, action.position)];
 
       debug('newState', newState);
