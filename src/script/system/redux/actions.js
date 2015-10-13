@@ -5,6 +5,7 @@ export const BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
 export const UPDATE_STRIKE = 'UPDATE_STRIKE';
 export const TRADE_BOOKED = 'TRADE_BOOKED';
 export const RECEIVE_POSITION = 'RECEIVE_POSITION';
+export const ADD_TILE = 'ADD_TILE';
 
 export function bookSpotTrade(ccyCpl, notional, rate) {
   return {
@@ -30,15 +31,17 @@ export function updateStrike(value, legIndex) {
   };
 }
 
-let i = 0;
-
 export function receivePosition(position) {
-
-  debug('receivePosition, count', i++);
-
   return {
     type: RECEIVE_POSITION,
     position: position
+  }
+}
+
+export function addTile(tile) {
+  return {
+    type: ADD_TILE,
+    tile: tile
   }
 }
 

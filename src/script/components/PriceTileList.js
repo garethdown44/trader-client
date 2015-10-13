@@ -12,7 +12,7 @@ const PriceTileList = React.createClass({
     return this.props.tiles.map((tile, index) => {
 
       if (tile.type == 'option') {
-        return (<OptionTile {...tile.data} key={index} />);
+        return (<OptionTile key={index} />);
       } else {
         return (<StreamingPriceTile ccyCpl={tile.ccyCpl} key={index} />) 
       }

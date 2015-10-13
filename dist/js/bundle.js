@@ -54371,9 +54371,6 @@ String.prototype.endsWith = function (suffix) {
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var React = require('react');
 
 var _require = require('react-redux');
@@ -54392,7 +54389,7 @@ var PriceTileList = React.createClass({
     return this.props.tiles.map(function (tile, index) {
 
       if (tile.type == 'option') {
-        return React.createElement(OptionTile, _extends({}, tile.data, { key: index }));
+        return React.createElement(OptionTile, { key: index });
       } else {
         return React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: index });
       }
@@ -54532,110 +54529,170 @@ module.exports = React.createClass({
 });
 
 },{"react":185}],253:[function(require,module,exports){
-"use strict";
+'use strict';
 
-// const debug = require('debug')('trader:components:OptionTile');
-// const React = require('react');
-// import {connect} from 'react-redux';
-// import {createStore} from 'redux';
-// import operations from './reducers';
-// let store = createStore(operations);
-// import {updateStrike} from './actions';
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 
-// const TwoChoice = React.createClass({
-//   render: function() {
-//     return (<select><option>{this.props.first}</option><option>{this.props.second}</option></select>);
-//   }
-// });
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-// const NotionalTextBox = React.createClass({
-//   render: function() {
-//     return (<input type='text' value={this.props.value} />);
-//   }
-// });
+var _reactRedux = require('react-redux');
 
-// const DateChooser = React.createClass({
-//   render: function() {
-//     return (<input type='text' value={this.props.value} />);
-//   }
-// });
+//import {createStore} from 'redux';
+//import operations from './reducers';
+//let store = createStore(operations);
 
-// const StrikePriceTextBox = React.createClass({
+var _systemReduxActions = require('../../system/redux/actions');
 
-//   render: function() {
-//     return <input type='text'
-//                   value={this.props.value}
-//                   onChange={this.props.onChange} />
-//   }
-// });
+var debug = require('debug')('trader:components:OptionTile');
+var React = require('react');
 
-// const OptionLeg = React.createClass({
+var TwoChoice = React.createClass({
+  displayName: 'TwoChoice',
 
-//   render: function() {
+  render: function render() {
+    return React.createElement(
+      'select',
+      null,
+      React.createElement(
+        'option',
+        null,
+        this.props.first
+      ),
+      React.createElement(
+        'option',
+        null,
+        this.props.second
+      )
+    );
+  }
+});
 
-//     return (<div className='leg'>
-//               <TwoChoice first='buy' second='sell' selected='buy' />
-//               <NotionalTextBox value={this.props.notional} />
-//               <DateChooser className='expiryDate' value={this.props.expiryDate} />
-//               <StrikePriceTextBox className='strike' value={this.props.strike} onChange={this.props.handleStrikeChange} />
-//               <TwoChoice first='call' second='put' selected='call' />
-//             </div>);
-//   }
-// });
+var NotionalTextBox = React.createClass({
+  displayName: 'NotionalTextBox',
 
-// function select(state) {
+  render: function render() {
+    return React.createElement('input', { type: 'text', value: this.props.value });
+  }
+});
 
-//   // choose the bits from the global state we want
+var DateChooser = React.createClass({
+  displayName: 'DateChooser',
 
-//   return state;
-// }
+  render: function render() {
+    return React.createElement('input', { type: 'text', value: this.props.value });
+  }
+});
 
-// const Button = React.createClass({
-//   render: function() {
+var StrikePriceTextBox = React.createClass({
+  displayName: 'StrikePriceTextBox',
 
-//     let classNames = 'button';
-//     if (!this.props.valid) {
-//       classNames += ' invalid';
-//     }
+  render: function render() {
+    return React.createElement('input', { type: 'text',
+      value: this.props.value,
+      onChange: this.props.onChange });
+  }
+});
 
-//     return <div className={classNames}>{this.props.text}</div>;
-//   }
-// });
+var OptionLeg = React.createClass({
+  displayName: 'OptionLeg',
 
-// const OptionTile = React.createClass({
+  render: function render() {
 
-//   componentDidMount: function() {
-//     this.dispatch = this.props.dispatch;
-//   },
+    return React.createElement(
+      'div',
+      { className: 'leg' },
+      React.createElement(TwoChoice, { first: 'buy', second: 'sell', selected: 'buy' }),
+      React.createElement(NotionalTextBox, { value: this.props.notional }),
+      React.createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate }),
+      React.createElement(StrikePriceTextBox, { className: 'strike', value: this.props.strike, onChange: this.props.handleStrikeChange }),
+      React.createElement(TwoChoice, { first: 'call', second: 'put', selected: 'call' })
+    );
+  }
+});
 
-//   handleStrikeChange: function(value, legIndex) {
-//     this.dispatch(updateStrike(value, legIndex));
-//   },
+function select(state) {
 
-//   renderLegs: function(legs) {
-//     return legs.map((leg, index) => {
-//         return <OptionLeg {...leg} key={index} handleStrikeChange={e => this.handleStrikeChange(e.target.value, index)} />;
-//       });
-//   },
+  debug('select', state);
 
-//   render: function() {
+  // choose the bits from the global state we want
 
-//     let legs = this.renderLegs(this.props.legs);
+  return Object.assign({}, state.workspace.tiles[1].data);
+}
 
-//     debug('OptionTile.render(), props', this.props);
+var Button = React.createClass({
+  displayName: 'Button',
 
-//     return <div className='tile option-tile'>
-//               <div className='tile-title'>{this.props.ccyCpl}</div>
-//               <span>{this.props.ccyCpl}</span>
-//               <div>{legs}</div>
-//               <Button valid={this.props.valid} text='PRICE' />
-//             </div>;
-//   }
-// });
+  render: function render() {
 
-// export default connect(select)(OptionTile);
+    var classNames = 'button';
+    if (!this.props.valid) {
+      classNames += ' invalid';
+    }
 
-},{}],254:[function(require,module,exports){
+    return React.createElement(
+      'div',
+      { className: classNames },
+      this.props.text
+    );
+  }
+});
+
+var OptionTile = React.createClass({
+  displayName: 'OptionTile',
+
+  componentDidMount: function componentDidMount() {
+    this.dispatch = this.props.dispatch;
+  },
+
+  handleStrikeChange: function handleStrikeChange(value, legIndex) {
+    this.dispatch((0, _systemReduxActions.updateStrike)(value, legIndex));
+  },
+
+  renderLegs: function renderLegs(legs) {
+    var _this = this;
+
+    return legs.map(function (leg, index) {
+      return React.createElement(OptionLeg, _extends({}, leg, { key: index, handleStrikeChange: function (e) {
+          return _this.handleStrikeChange(e.target.value, index);
+        } }));
+    });
+  },
+
+  render: function render() {
+
+    var legs = this.renderLegs(this.props.legs);
+
+    debug('OptionTile.render(), props', this.props);
+
+    return React.createElement(
+      'div',
+      { className: 'tile option-tile' },
+      React.createElement(
+        'div',
+        { className: 'tile-title' },
+        this.props.ccyCpl
+      ),
+      React.createElement(
+        'span',
+        null,
+        this.props.ccyCpl
+      ),
+      React.createElement(
+        'div',
+        null,
+        legs
+      ),
+      React.createElement(Button, { valid: this.props.valid, text: 'PRICE' })
+    );
+  }
+});
+
+exports['default'] = (0, _reactRedux.connect)(select)(OptionTile);
+module.exports = exports['default'];
+
+},{"../../system/redux/actions":262,"debug":16,"react":185,"react-redux":24}],254:[function(require,module,exports){
 'use strict';
 
 var config = {};
@@ -54784,6 +54841,7 @@ exports.bookSpotTrade = bookSpotTrade;
 exports.tradeBooked = tradeBooked;
 exports.updateStrike = updateStrike;
 exports.receivePosition = receivePosition;
+exports.addTile = addTile;
 exports.subscribePositions = subscribePositions;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -54800,8 +54858,10 @@ exports.UPDATE_STRIKE = UPDATE_STRIKE;
 var TRADE_BOOKED = 'TRADE_BOOKED';
 exports.TRADE_BOOKED = TRADE_BOOKED;
 var RECEIVE_POSITION = 'RECEIVE_POSITION';
-
 exports.RECEIVE_POSITION = RECEIVE_POSITION;
+var ADD_TILE = 'ADD_TILE';
+
+exports.ADD_TILE = ADD_TILE;
 
 function bookSpotTrade(ccyCpl, notional, rate) {
   return {
@@ -54827,15 +54887,17 @@ function updateStrike(value, legIndex) {
   };
 }
 
-var i = 0;
-
 function receivePosition(position) {
-
-  debug('receivePosition, count', i++);
-
   return {
     type: RECEIVE_POSITION,
     position: position
+  };
+}
+
+function addTile(tile) {
+  return {
+    type: ADD_TILE,
+    tile: tile
   };
 }
 
@@ -54888,7 +54950,7 @@ function subscribePositions() {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-    value: true
+  value: true
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -54903,77 +54965,44 @@ var _workspace = require('../workspace');
 
 var _workspace2 = _interopRequireDefault(_workspace);
 
-//import Immutable from 'immutable'
-
-// const initialState = {
-//   ccyCpl: 'EURUSD',
-//   legs: [
-//     {strike: 1.234},
-//     {strike: 2.345}
-//   ],
-//   valid: true
-// };
-
 var debug = require('debug')('trader:redux:reducers');
-var initialState = {
-    workspace: _workspace2['default'].get(),
-    positions: []
-};
 
-function operations(state, action) {
-    if (state === undefined) state = initialState;
+var initialWorkspaces = _workspace2['default'].get();
 
-    debug('operations - entry', state, action);
+function workspace(state, action) {
+  if (state === undefined) state = initialWorkspaces;
 
-    switch (action.type) {
+  switch (action.type) {
 
-        case _actions.RECEIVE_POSITION:
+    case _actions.ADD_TILE:
+      return Object.assign({}, state.tiles);
 
-            var newState = Object.assign({}, state);
-
-            newState.positions = [].concat(_toConsumableArray(state.positions), [Object.assign({}, action.position)]);
-
-            debug('newState', newState);
-
-            return newState;
-
-        case _actions.UPDATE_STRIKE:
-
-            // let valid = action.value < 3;
-
-            // let newState = {
-            //   ccyCpl: 'EURUSD',
-            //   legs: [
-            //     {strike: action.value},
-            //     {strike: 2.345}
-            //   ],
-            //   valid: valid
-            // };
-
-            // newState.legs[action.legIndex].strike = action.value;
-
-            // debug('newState', newState);
-
-            return state;
-
-        case _actions.BOOK_SPOT_TRADE:
-            return state;
-
-        case _actions.TRADE_BOOKED:
-            return state;
-
-        default:
-            return state;
-    }
+    default:
+      return Object.assign({}, state);
+  }
 }
 
-// function options(state = {}, action) {
-//   return state;
-// }
+function positions(state, action) {
+  if (state === undefined) state = [];
 
-//const rootReducer = combineReducers({operations, options});
+  debug(action);
 
-exports['default'] = operations;
+  switch (action.type) {
+    case _actions.RECEIVE_POSITION:
+      //let newState = Object.assign({}, state.positions);
+
+      var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
+
+      debug('newState', newState);
+
+      return newState;
+
+    default:
+      return [].concat(_toConsumableArray(state));
+  }
+}
+
+exports['default'] = (0, _redux.combineReducers)({ workspace: workspace, positions: positions });
 module.exports = exports['default'];
 
 },{"../workspace":265,"./actions":262,"debug":16,"redux":189}],264:[function(require,module,exports){
@@ -54981,11 +55010,10 @@ module.exports = exports['default'];
 
 module.exports.get = function () {
 
-  var data = { tiles: [{ type: 'spot', ccyCpl: 'EURUSD' }] };
+  var data = { tiles: [{ type: 'spot', ccyCpl: 'EURUSD' }, { type: 'spot', ccyCpl: 'EURGBP' }] };
 
   //callback(data);
 
-  // {type: 'spot', ccyCpl: 'EURGBP'},
   // {type: 'spot', ccyCpl: 'AUDCHF'},
   // {type: 'spot', ccyCpl: 'GBPCHF'},
   // {type: 'spot', ccyCpl: 'AUDUSD'},
@@ -54993,8 +55021,8 @@ module.exports.get = function () {
   // {type: 'option', data: {
   //     ccyCpl: 'EURUSD',
   //     legs: [
-  //         { direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'call' },
-  //         { direction: 'buy', notional: 50000, expiryDate: new Date(), strike: 1.2345, type: 'put' }
+  //         { direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' },
+  //         { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }
   //           ]
   //       }
   //   }
