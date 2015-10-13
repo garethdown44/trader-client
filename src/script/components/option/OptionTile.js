@@ -1,9 +1,9 @@
 const debug = require('debug')('trader:components:OptionTile');
 const React = require('react');
 import {connect} from 'react-redux';
-//import {createStore} from 'redux';
-//import operations from './reducers';
-//let store = createStore(operations);
+import {createStore} from 'redux';
+import reducers from './reducers';
+let store = createStore(operations);
 import {updateStrike} from '../../system/redux/actions';
 
 const TwoChoice = React.createClass({
