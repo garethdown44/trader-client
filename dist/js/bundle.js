@@ -54532,7 +54532,7 @@ var _reactRedux = require('react-redux');
 
 var _systemReduxActions = require('../../system/redux/actions');
 
-var debug = require('debug')('trader:components:OptionTile');
+var debug = require('debug')('trader:components:option');
 var React = require('react');
 
 var TwoChoice = React.createClass({
@@ -54575,6 +54575,10 @@ var DateChooser = React.createClass({
 var StrikePriceTextBox = React.createClass({
   displayName: 'StrikePriceTextBox',
 
+  // shouldComponentUpdate: function(nextProps, nextState) {
+  //   return nextProps.value != this.props.value;
+  // },
+
   render: function render() {
     return React.createElement('input', { type: 'text',
       value: this.props.value,
@@ -54591,9 +54595,7 @@ var OptionLeg = React.createClass({
       'div',
       { className: 'leg' },
       React.createElement(TwoChoice, { first: 'buy', second: 'sell', selected: 'buy' }),
-      React.createElement(NotionalTextBox, { value: this.props.notional }),
-      React.createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate }),
-      React.createElement(StrikePriceTextBox, { className: 'strike', value: this.props.strike, onChange: this.props.handleStrikeChange }),
+      React.createElement(StrikePriceTextBox, { className: 'strike', value: this.props.strike, onChange: this.props.handleStrikeChange, key: '43' }),
       React.createElement(TwoChoice, { first: 'call', second: 'put', selected: 'call' })
     );
   }
@@ -54601,12 +54603,20 @@ var OptionLeg = React.createClass({
 
 var select = function select(tileId) {
   return function (state) {
-    return Object.assign({}, state.workspace.tiles[tileId]);
+    //return Object.assign({}, state.workspace.tiles[tileId]);
+
+    //return Object.assign({}, state.workspace.tiles[tileId]);
+
+    return state;
   };
 };
 
 var Button = React.createClass({
   displayName: 'Button',
+
+  shouldComponentUpdate: function shouldComponentUpdate() {
+    return true;
+  },
 
   render: function render() {
 
@@ -54623,6 +54633,8 @@ var Button = React.createClass({
   }
 });
 
+//const debugOptionTile = require('debug')('trader:components:OptionTile');
+
 var OptionTile = React.createClass({
   displayName: 'OptionTile',
 
@@ -54638,6 +54650,7 @@ var OptionTile = React.createClass({
     var _this = this;
 
     return legs.map(function (leg, index) {
+      debug('index', index);
       return React.createElement(OptionLeg, _extends({}, leg, { key: index, handleStrikeChange: function (e) {
           return _this.handleStrikeChange(e.target.value, index);
         } }));
@@ -54652,7 +54665,7 @@ var OptionTile = React.createClass({
 
     return React.createElement(
       'div',
-      { className: 'tile option-tile' },
+      { key: '41', className: 'tile option-tile' },
       React.createElement(
         'div',
         { className: 'tile-title' },
@@ -54678,6 +54691,7 @@ exports['default'] = function (tileId) {
 };
 
 module.exports = exports['default'];
+/*<NotionalTextBox value={this.props.notional} />*/ /*<DateChooser className='expiryDate' value={this.props.expiryDate} />*/
 
 },{"../../system/redux/actions":262,"debug":16,"react":185,"react-redux":24}],254:[function(require,module,exports){
 'use strict';
@@ -54961,7 +54975,10 @@ function option(state, action) {
   if (state === undefined) state = {};
 
   var newState = Object.assign({}, state);
-  newState.legs = [].concat(_toConsumableArray(state.legs));
+  newState.legs = [];
+
+  newState.legs.push(Object.assign({}, state.legs[0]));
+  newState.legs.push(Object.assign({}, state.legs[1]));
 
   switch (action.type) {
     case _actions.UPDATE_STRIKE:

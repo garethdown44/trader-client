@@ -9,7 +9,10 @@ let initialWorkspaces = ws.get();
 function option(state = {}, action) {
 
   let newState = Object.assign({}, state);
-  newState.legs = [...state.legs];
+  newState.legs = [];
+
+  newState.legs.push(Object.assign({}, state.legs[0]));
+  newState.legs.push(Object.assign({}, state.legs[1]));
 
   switch (action.type) {
     case UPDATE_STRIKE:

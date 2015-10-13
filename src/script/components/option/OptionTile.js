@@ -1,4 +1,4 @@
-const debug = require('debug')('trader:components:OptionTile');
+const debug = require('debug')('trader:components:option');
 const React = require('react');
 import {connect} from 'react-redux';
 import {updateStrike} from '../../system/redux/actions';
@@ -23,6 +23,10 @@ const DateChooser = React.createClass({
 
 const StrikePriceTextBox = React.createClass({
 
+  // shouldComponentUpdate: function(nextProps, nextState) {
+  //   return nextProps.value != this.props.value;
+  // },
+
   render: function() {
     return <input type='text' 
                   value={this.props.value} 
@@ -37,19 +41,28 @@ const OptionLeg = React.createClass({
 
     return (<div className='leg'>
               <TwoChoice first='buy' second='sell' selected='buy' />
-              <NotionalTextBox value={this.props.notional} />
-              <DateChooser className='expiryDate' value={this.props.expiryDate} />
-              <StrikePriceTextBox className='strike' value={this.props.strike} onChange={this.props.handleStrikeChange} />
+              {/*<NotionalTextBox value={this.props.notional} />*/}
+              {/*<DateChooser className='expiryDate' value={this.props.expiryDate} />*/}
+              <StrikePriceTextBox className='strike' value={this.props.strike} onChange={this.props.handleStrikeChange} key='43' />
               <TwoChoice first='call' second='put' selected='call' />
             </div>);
   }
 });
 
 let select = tileId => state => {
-  return Object.assign({}, state.workspace.tiles[tileId]);
+  //return Object.assign({}, state.workspace.tiles[tileId]);
+
+  //return Object.assign({}, state.workspace.tiles[tileId]);
+
+  return state;
 }
 
 const Button = React.createClass({
+
+  shouldComponentUpdate: function() {
+    return true;
+  },
+
   render: function() {
 
     let classNames = 'button';
@@ -60,6 +73,8 @@ const Button = React.createClass({
     return <div className={classNames}>{this.props.text}</div>;
   }
 });
+
+//const debugOptionTile = require('debug')('trader:components:OptionTile');
 
 const OptionTile = React.createClass({
 
@@ -73,6 +88,7 @@ const OptionTile = React.createClass({
 
   renderLegs: function(legs) {
     return legs.map((leg, index) => {
+        debug('index', index);
         return <OptionLeg {...leg} key={index} handleStrikeChange={e => this.handleStrikeChange(e.target.value, index)} />;
       });
   },
@@ -83,7 +99,7 @@ const OptionTile = React.createClass({
 
     debug('OptionTile.render(), props', this.props);
 
-    return <div className='tile option-tile'>
+    return <div key='41' className='tile option-tile'>
               <div className='tile-title'>{this.props.ccyCpl}</div>
               <span>{this.props.ccyCpl}</span>
               <div>{legs}</div>
