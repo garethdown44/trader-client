@@ -8,32 +8,10 @@ const Value = require('./Value');
 const StreamingValue = StreamingPriceReceiver(Value);
 
 function select(state) {
-  //return {positions: [{notional: 50000}]};
-
-  debug('STATE', state);
-
   return {positions: state.positions};
 }
 
 const Blotter = React.createClass({
-
-  // getInitialState: function() {
-  //   return {positions: [], loading: true};
-  // },
-
-  // componentDidMount: function() {
-  //   this.subscription = blotter.subscribe(position => {
-
-  //     debug(position);
-  //     let positions = this.state.positions;
-  //     positions.push(position);
-  //     this.setState({positions: positions});
-  //   });
-  // },
-
-  // componentWillUnmount: function() {
-  //   this.subscription.dispose();
-  // },
 
   renderRows: function(rows) {
 

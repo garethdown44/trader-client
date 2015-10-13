@@ -36447,7 +36447,7 @@ function compose() {
 module.exports = exports["default"];
 },{}],194:[function(require,module,exports){
 module.exports=require(26)
-},{"/Users/garethd/work/repos/trader/node_modules/react-redux/lib/utils/isPlainObject.js":26}],195:[function(require,module,exports){
+},{"c:\\dev\\trader-client\\node_modules\\react-redux\\lib\\utils\\isPlainObject.js":26}],195:[function(require,module,exports){
 /**
  * Applies a function to every key-value pair inside an object.
  *
@@ -50981,7 +50981,7 @@ exports.enable(load());
 
 },{"./debug":220}],220:[function(require,module,exports){
 arguments[4][17][0].apply(exports,arguments)
-},{"/Users/garethd/work/repos/trader/node_modules/debug/debug.js":17,"ms":221}],221:[function(require,module,exports){
+},{"c:\\dev\\trader-client\\node_modules\\debug\\debug.js":17,"ms":221}],221:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -53141,7 +53141,7 @@ function isBuf(obj) {
 //# sourceMappingURL=data:application/json;charset:utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9zb2NrZXQuaW8tY2xpZW50L25vZGVfbW9kdWxlcy9zb2NrZXQuaW8tcGFyc2VyL2lzLWJ1ZmZlci5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsImZpbGUiOiJnZW5lcmF0ZWQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlc0NvbnRlbnQiOlsiXG5tb2R1bGUuZXhwb3J0cyA9IGlzQnVmO1xuXG4vKipcbiAqIFJldHVybnMgdHJ1ZSBpZiBvYmogaXMgYSBidWZmZXIgb3IgYW4gYXJyYXlidWZmZXIuXG4gKlxuICogQGFwaSBwcml2YXRlXG4gKi9cblxuZnVuY3Rpb24gaXNCdWYob2JqKSB7XG4gIHJldHVybiAoZ2xvYmFsLkJ1ZmZlciAmJiBnbG9iYWwuQnVmZmVyLmlzQnVmZmVyKG9iaikpIHx8XG4gICAgICAgICAoZ2xvYmFsLkFycmF5QnVmZmVyICYmIG9iaiBpbnN0YW5jZW9mIEFycmF5QnVmZmVyKTtcbn1cbiJdfQ==
 },{}],243:[function(require,module,exports){
 module.exports=require(236)
-},{"/Users/garethd/work/repos/trader/node_modules/socket.io-client/node_modules/has-binary/node_modules/isarray/index.js":236}],244:[function(require,module,exports){
+},{"c:\\dev\\trader-client\\node_modules\\socket.io-client\\node_modules\\has-binary\\node_modules\\isarray\\index.js":236}],244:[function(require,module,exports){
 /*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
 ;(function (window) {
   // Convenience aliases.
@@ -54039,33 +54039,11 @@ var Value = require('./Value');
 var StreamingValue = StreamingPriceReceiver(Value);
 
 function select(state) {
-  //return {positions: [{notional: 50000}]};
-
-  debug('STATE', state);
-
   return { positions: state.positions };
 }
 
 var Blotter = React.createClass({
   displayName: 'Blotter',
-
-  // getInitialState: function() {
-  //   return {positions: [], loading: true};
-  // },
-
-  // componentDidMount: function() {
-  //   this.subscription = blotter.subscribe(position => {
-
-  //     debug(position);
-  //     let positions = this.state.positions;
-  //     positions.push(position);
-  //     this.setState({positions: positions});
-  //   });
-  // },
-
-  // componentWillUnmount: function() {
-  //   this.subscription.dispose();
-  // },
 
   renderRows: function renderRows(rows) {
 
