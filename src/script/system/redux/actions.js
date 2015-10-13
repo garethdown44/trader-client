@@ -23,9 +23,10 @@ export function tradeBooked(trade) {
   }
 }
 
-export function updateStrike(value, legIndex) {
+export function updateStrike(value, tileId, legIndex) {
   return {
     type: UPDATE_STRIKE,
+    tileId: tileId,
     value: value,
     legIndex: legIndex
   };

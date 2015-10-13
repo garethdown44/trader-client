@@ -54371,6 +54371,9 @@ String.prototype.endsWith = function (suffix) {
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var React = require('react');
 
 var _require = require('react-redux');
@@ -54386,14 +54389,24 @@ var PriceTileList = React.createClass({
   displayName: 'PriceTileList',
 
   renderTiles: function renderTiles() {
-    return this.props.tiles.map(function (tile, index) {
+
+    var tiles = [];
+
+    for (var tileId in this.props.tiles) {
+
+      var tile = this.props.tiles[tileId];
 
       if (tile.type == 'option') {
-        return React.createElement(OptionTile, { key: index });
+
+        var Ot = OptionTile(tileId);
+
+        tiles.push(React.createElement(Ot, _extends({ key: tileId }, tile, { tileId: tileId })));
       } else {
-        return React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: index });
+        tiles.push(React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: tileId }));
       }
-    });
+    }
+
+    return tiles;
   },
 
   render: function render() {
@@ -54540,8 +54553,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 var _reactRedux = require('react-redux');
 
 //import {createStore} from 'redux';
-//import operations from './reducers';
-//let store = createStore(operations);
+//import reducers from './reducers';
+//let store = createStore(reducers);
 
 var _systemReduxActions = require('../../system/redux/actions');
 
@@ -54612,14 +54625,20 @@ var OptionLeg = React.createClass({
   }
 });
 
-function select(state) {
+var select = function select(tileId) {
+  return function (state) {
+    return Object.assign({}, state.workspace.tiles[tileId]);
+  };
+};
 
-  debug('select', state);
+// function select(state) {
 
-  // choose the bits from the global state we want
+//   debug('select', state);
 
-  return Object.assign({}, state.workspace.tiles[1].data);
-}
+//   // choose the bits from the global state we want
+
+//   return Object.assign({}, state.workspace.tiles[1].data);
+// }
 
 var Button = React.createClass({
   displayName: 'Button',
@@ -54647,7 +54666,7 @@ var OptionTile = React.createClass({
   },
 
   handleStrikeChange: function handleStrikeChange(value, legIndex) {
-    this.dispatch((0, _systemReduxActions.updateStrike)(value, legIndex));
+    this.dispatch((0, _systemReduxActions.updateStrike)(value, this.props.tileId, legIndex));
   },
 
   renderLegs: function renderLegs(legs) {
@@ -54689,7 +54708,10 @@ var OptionTile = React.createClass({
   }
 });
 
-exports['default'] = (0, _reactRedux.connect)(select)(OptionTile);
+exports['default'] = function (tileId) {
+  return (0, _reactRedux.connect)(select(tileId))(OptionTile);
+};
+
 module.exports = exports['default'];
 
 },{"../../system/redux/actions":262,"debug":16,"react":185,"react-redux":24}],254:[function(require,module,exports){
@@ -54879,9 +54901,10 @@ function tradeBooked(trade) {
   };
 }
 
-function updateStrike(value, legIndex) {
+function updateStrike(value, tileId, legIndex) {
   return {
     type: UPDATE_STRIKE,
+    tileId: tileId,
     value: value,
     legIndex: legIndex
   };
@@ -54950,7 +54973,7 @@ function subscribePositions() {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+      value: true
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -54970,39 +54993,58 @@ var debug = require('debug')('trader:redux:reducers');
 var initialWorkspaces = _workspace2['default'].get();
 
 function workspace(state, action) {
-  if (state === undefined) state = initialWorkspaces;
+      if (state === undefined) state = initialWorkspaces;
 
-  switch (action.type) {
+      switch (action.type) {
 
-    case _actions.ADD_TILE:
-      return Object.assign({}, state.tiles);
+            case _actions.ADD_TILE:
+                  return Object.assign({}, state.tiles);
 
-    default:
-      return Object.assign({}, state);
-  }
+            case _actions.UPDATE_STRIKE:
+
+                  var option = state.tiles[action.tileId];
+
+                  var newState = Object.assign({}, option);
+                  newState.legs = [].concat(_toConsumableArray(option.legs));
+                  newState.legs[action.legIndex].strike = action.value;
+
+                  newState.valid = action.value < 3;
+
+                  var newWorkspace = {};
+                  newWorkspace.tiles = Object.assign({}, state.tiles);
+                  newWorkspace.tiles[action.tileId] = newState;
+
+                  return newWorkspace;
+
+            default:
+                  return Object.assign({}, state);
+      }
 }
 
 function positions(state, action) {
-  if (state === undefined) state = [];
+      if (state === undefined) state = [];
 
-  debug(action);
+      debug(action);
 
-  switch (action.type) {
-    case _actions.RECEIVE_POSITION:
-      //let newState = Object.assign({}, state.positions);
+      switch (action.type) {
+            case _actions.RECEIVE_POSITION:
+                  //let newState = Object.assign({}, state.positions);
 
-      var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
+                  var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
 
-      debug('newState', newState);
+                  debug('newState', newState);
 
-      return newState;
+                  return newState;
 
-    default:
-      return [].concat(_toConsumableArray(state));
-  }
+            default:
+                  return [].concat(_toConsumableArray(state));
+      }
 }
 
-exports['default'] = (0, _redux.combineReducers)({ workspace: workspace, positions: positions });
+exports['default'] = (0, _redux.combineReducers)({
+      workspace: workspace,
+      positions: positions
+});
 module.exports = exports['default'];
 
 },{"../workspace":265,"./actions":262,"debug":16,"redux":189}],264:[function(require,module,exports){
@@ -55010,22 +55052,32 @@ module.exports = exports['default'];
 
 module.exports.get = function () {
 
-  var data = { tiles: [{ type: 'spot', ccyCpl: 'EURUSD' }, { type: 'spot', ccyCpl: 'EURGBP' }] };
+  var data = {
+    tiles: {
+      1: { type: 'spot', ccyCpl: 'EURUSD' },
+      2: { type: 'spot', ccyCpl: 'EURGBP' },
+      3: { type: 'option', ccyCpl: 'EURUSD', legs: [{ direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' }, { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }] }
+    }
+  };
+
+  //   {type: 'spot', ccyCpl: 'EURUSD'},
+  //   {type: 'spot', ccyCpl: 'EURGBP'},
+  //   // {type: 'spot', ccyCpl: 'AUDCHF'},
+  //   // {type: 'spot', ccyCpl: 'GBPCHF'},
+  //   // {type: 'spot', ccyCpl: 'AUDUSD'},
+
+  //   {type: 'option', data: {
+  //       ccyCpl: 'EURUSD',
+  //       legs: [
+  //           { direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' },
+  //           { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }
+  //             ]
+  //         }
+  //     }
+  // ]};
 
   //callback(data);
 
-  // {type: 'spot', ccyCpl: 'AUDCHF'},
-  // {type: 'spot', ccyCpl: 'GBPCHF'},
-  // {type: 'spot', ccyCpl: 'AUDUSD'},
-
-  // {type: 'option', data: {
-  //     ccyCpl: 'EURUSD',
-  //     legs: [
-  //         { direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' },
-  //         { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }
-  //           ]
-  //       }
-  //   }
   return data;
 };
 

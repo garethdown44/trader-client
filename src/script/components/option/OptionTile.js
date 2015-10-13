@@ -1,9 +1,9 @@
 const debug = require('debug')('trader:components:OptionTile');
 const React = require('react');
 import {connect} from 'react-redux';
-import {createStore} from 'redux';
-import reducers from './reducers';
-let store = createStore(operations);
+//import {createStore} from 'redux';
+//import reducers from './reducers';
+//let store = createStore(reducers);
 import {updateStrike} from '../../system/redux/actions';
 
 const TwoChoice = React.createClass({
@@ -48,14 +48,18 @@ const OptionLeg = React.createClass({
   }
 });
 
-function select(state) {
-
-  debug('select', state);
-
-  // choose the bits from the global state we want
-
-  return Object.assign({}, state.workspace.tiles[1].data);
+let select = tileId => state => {
+  return Object.assign({}, state.workspace.tiles[tileId]);
 }
+
+// function select(state) {
+
+//   debug('select', state);
+
+//   // choose the bits from the global state we want
+
+//   return Object.assign({}, state.workspace.tiles[1].data);
+// }
 
 const Button = React.createClass({
   render: function() {
@@ -76,7 +80,7 @@ const OptionTile = React.createClass({
   },
 
   handleStrikeChange: function(value, legIndex) {
-    this.dispatch(updateStrike(value, legIndex));
+    this.dispatch(updateStrike(value, this.props.tileId, legIndex));
   },
 
   renderLegs: function(legs) {
@@ -100,4 +104,5 @@ const OptionTile = React.createClass({
   }
 });
 
-export default connect(select)(OptionTile);
+
+export default tileId => connect(select(tileId))(OptionTile);

@@ -12,6 +12,22 @@ function workspace(state = initialWorkspaces, action) {
     case ADD_TILE:
       return Object.assign({}, state.tiles);
 
+    case UPDATE_STRIKE:
+
+      let option = state.tiles[action.tileId];
+
+      let newState = Object.assign({}, option);
+      newState.legs = [...option.legs];
+      newState.legs[action.legIndex].strike = action.value;
+
+      newState.valid = action.value < 3;
+
+      let newWorkspace = {};
+      newWorkspace.tiles = Object.assign({}, state.tiles);
+      newWorkspace.tiles[action.tileId] = newState;
+
+      return newWorkspace;
+
     default:
       return Object.assign({}, state);
   }
@@ -36,4 +52,7 @@ function positions(state = [], action) {
   }
 }
 
-export default combineReducers({workspace, positions});
+export default combineReducers( { 
+                                  workspace, 
+                                  positions 
+                                } );

@@ -9,14 +9,24 @@ const OptionTile = require('./option/OptionTile');
 const PriceTileList = React.createClass({
 
   renderTiles: function() {
-    return this.props.tiles.map((tile, index) => {
+
+    let tiles = [];
+
+    for (let tileId in this.props.tiles) {
+
+      let tile = this.props.tiles[tileId];
 
       if (tile.type == 'option') {
-        return (<OptionTile key={index} />);
+
+        let Ot = OptionTile(tileId);
+
+        tiles.push(<Ot key={tileId} {...tile} tileId={tileId}  />);
       } else {
-        return (<StreamingPriceTile ccyCpl={tile.ccyCpl} key={index} />) 
+        tiles.push(<StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />);
       }
-    });
+    }
+
+    return tiles;
   },
 
   render: function() {
