@@ -5,13 +5,22 @@ import ws from '../workspace';
 
 let initialWorkspaces = ws.get();
 
+
 function option(state = {}, action) {
 
   let newState = Object.assign({}, state);
   newState.legs = [...state.legs];
-  newState.legs[action.legIndex].strike = action.value;
 
-  newState.valid = action.value < 3;
+  switch (action.type) {
+    case UPDATE_STRIKE:
+      newState.legs[action.legIndex].strike = action.value;
+      newState.valid = action.value < 3;
+      break;
+
+    case UPDATE_NOTIONAL:
+      newState.legs[action.legIndex].notional = action.notional;
+      break;
+  }
 
   return newState;
 }
@@ -44,7 +53,7 @@ function positions(state = [], action) {
 
   switch (action.type) {
     case RECEIVE_POSITION:
-    
+
       let newState = [...state, Object.assign({}, action.position)];
 
       debug('newState', newState);

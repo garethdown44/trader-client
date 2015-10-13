@@ -54984,9 +54984,17 @@ function option(state, action) {
 
   var newState = Object.assign({}, state);
   newState.legs = [].concat(_toConsumableArray(state.legs));
-  newState.legs[action.legIndex].strike = action.value;
 
-  newState.valid = action.value < 3;
+  switch (action.type) {
+    case _actions.UPDATE_STRIKE:
+      newState.legs[action.legIndex].strike = action.value;
+      newState.valid = action.value < 3;
+      break;
+
+    case UPDATE_NOTIONAL:
+      newState.legs[action.legIndex].notional = action.notional;
+      break;
+  }
 
   return newState;
 }
