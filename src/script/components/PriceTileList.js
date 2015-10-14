@@ -6,7 +6,13 @@ const StreamingPriceReceiver = require('./StreamingPriceReceiver');
 const StreamingPriceTile = StreamingPriceReceiver(PriceTile);
 const OptionTile = require('./option/OptionTile');
 
+const {updateStrike} = require('../system/redux/actions');
+
 const PriceTileList = React.createClass({
+
+  updateStrike: function(value, tileId, legIndex) {
+    this.props.dispatch(updateStrike(value, tileId, legIndex));
+  },
 
   renderTiles: function() {
 
@@ -18,9 +24,7 @@ const PriceTileList = React.createClass({
 
       if (tile.type == 'option') {
 
-        let Ot = OptionTile(tileId);
-
-        tiles.push(<Ot key={tileId} {...tile} tileId={tileId}  />);
+        tiles.push(<OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} updateStrike={this.updateStrike} />);
       } else {
         tiles.push(<StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />);
       }
@@ -29,7 +33,21 @@ const PriceTileList = React.createClass({
     return tiles;
   },
 
+  componentDidMount: function() {
+    this.isProfiling = false;
+  },
+
   render: function() {
+
+    //Perf.start();
+
+    // if (!this.isProfiling) {
+    //   Perf.start();
+    //   this.isProfiling = true;
+    // } else {
+    //   Perf.stop();
+    //   this.isProfiling = false;
+    // }
 
     let view = this.renderTiles();
 

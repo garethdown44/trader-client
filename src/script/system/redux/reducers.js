@@ -15,6 +15,7 @@ function option(state = {}, action) {
   newState.legs.push(Object.assign({}, state.legs[1]));
 
   switch (action.type) {
+
     case UPDATE_STRIKE:
       newState.legs[action.legIndex].strike = action.value;
       newState.valid = action.value < 3;

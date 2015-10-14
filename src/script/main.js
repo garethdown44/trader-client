@@ -1,6 +1,5 @@
-require('bootstrap');
-
 const React = require('react');
+const ReactDOM = require('react-dom');
 const {Provider} = require('react-redux');
 const PriceTile = require('./components/PriceTile');
 const StreamingPriceReceiver = require('./components/StreamingPriceReceiver');
@@ -34,11 +33,6 @@ const store = createStoreWithMiddleware(rootReducer);
 
 store.dispatch(subscribePositions());
 
-
-
-
-
-
 var Component = React.createClass({
   render: function() {
     return (<div className='container'>
@@ -56,13 +50,15 @@ var Component = React.createClass({
   }
 });
 
+window.Perf = require('react-addons-perf');
+
 const Root = React.createClass({
 
   render: function() {
     return <Provider store={store}>
-             {() => <Component />}
+             <Component />
            </Provider>;
   }
 });
 
-React.render(<Root />, document.body);
+ReactDOM.render(<Root />, document.getElementById('cont'));

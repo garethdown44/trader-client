@@ -50,10 +50,6 @@ const OptionLeg = React.createClass({
 });
 
 let select = tileId => state => {
-  //return Object.assign({}, state.workspace.tiles[tileId]);
-
-  //return Object.assign({}, state.workspace.tiles[tileId]);
-
   return state;
 }
 
@@ -74,22 +70,16 @@ const Button = React.createClass({
   }
 });
 
-//const debugOptionTile = require('debug')('trader:components:OptionTile');
-
-const OptionTile = React.createClass({
-
-  componentDidMount: function() {
-    this.dispatch = this.props.dispatch;
-  },
+module.exports = React.createClass({
 
   handleStrikeChange: function(value, legIndex) {
-    this.dispatch(updateStrike(value, this.props.tileId, legIndex));
+    this.props.dispatch(updateStrike(value, this.props.tileId, legIndex));
   },
 
   renderLegs: function(legs) {
     return legs.map((leg, index) => {
         debug('index', index);
-        return <OptionLeg {...leg} key={index} handleStrikeChange={e => this.handleStrikeChange(e.target.value, index)} />;
+        return <OptionLeg strike={this.props.strike} key={index} handleStrikeChange={e => this.handleStrikeChange(e.target.value, index)} />;
       });
   },
 
@@ -99,7 +89,7 @@ const OptionTile = React.createClass({
 
     debug('OptionTile.render(), props', this.props);
 
-    return <div key='41' className='tile option-tile'>
+    return <div className='tile option-tile'>
               <div className='tile-title'>{this.props.ccyCpl}</div>
               <span>{this.props.ccyCpl}</span>
               <div>{legs}</div>
@@ -107,6 +97,3 @@ const OptionTile = React.createClass({
             </div>;
   }
 });
-
-
-export default tileId => connect(select(tileId))(OptionTile);
