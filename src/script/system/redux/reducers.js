@@ -1,18 +1,20 @@
 const debug = require('debug')('trader:redux:reducers');
-import { BOOK_SPOT_TRADE, UPDATE_STRIKE, TRADE_BOOKED, RECEIVE_POSITION, ADD_TILE } from './actions'
+import { BOOK_SPOT_TRADE, UPDATE_STRIKE, UPDATE_NOTIONAL, TRADE_BOOKED, RECEIVE_POSITION, ADD_TILE, PRICE_OPTION, OPTION_PRICE_REQUESTED, OPTION_PRICE_RECEIVED } from './actions'
 import { combineReducers } from 'redux';
 import ws from '../workspace';
 
 let initialWorkspaces = ws.get();
-
 
 function option(state = {}, action) {
 
   let newState = Object.assign({}, state);
   newState.legs = [];
 
-  newState.legs.push(Object.assign({}, state.legs[0]));
-  newState.legs.push(Object.assign({}, state.legs[1]));
+  for (let leg in state.legs) {
+    newState.legs.push(Object.assign({}, state.legs[leg]));
+  }
+
+  newState.valid = true;
 
   switch (action.type) {
 
@@ -22,7 +24,16 @@ function option(state = {}, action) {
       break;
 
     case UPDATE_NOTIONAL:
-      newState.legs[action.legIndex].notional = action.notional;
+      newState.legs[action.legIndex].notional = action.value;
+      break;
+
+    case OPTION_PRICE_REQUESTED:
+      newState.isPricing = true;
+      break;
+
+    case OPTION_PRICE_RECEIVED:
+      newState.isPriced = true;
+      newState.price = action.option.price;
       break;
   }
 
@@ -37,14 +48,27 @@ function workspace(state = initialWorkspaces, action) {
       return Object.assign({}, state.tiles);
 
     case UPDATE_STRIKE:
+    case UPDATE_NOTIONAL:
+    case OPTION_PRICE_REQUESTED:
+    case OPTION_PRICE_RECEIVED:
 
       let tile = state.tiles[action.tileId];
 
       let newWorkspace = {};
-      newWorkspace.tiles = Object.assign({}, state.tiles);
-      newWorkspace.tiles[action.tileId] = option(tile, action);
+      newWorkspace.tiles = [];
+
+      for (let t in state.tiles) {
+        if (t == action.tileId) {
+          newWorkspace.tiles.push(option(tile, action));
+        } else {
+          newWorkspace.tiles.push(state.tiles[t]);
+        }
+      }
 
       return newWorkspace;
+
+    case PRICE_OPTION:
+      return state;
 
     default:
       return Object.assign({}, state);

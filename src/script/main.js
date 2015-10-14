@@ -6,15 +6,9 @@ const StreamingPriceReceiver = require('./components/StreamingPriceReceiver');
 const PriceTileList = require('./components/PriceTileList');
 const Blotter = require('./components/Blotter');
 
-//const store = require('./system/redux/store.js');
-
-
-
-
 window.myDebug = require('debug');
 window.myDebug.enable('trader*');
-
-
+window.Perf = require('react-addons-perf');
 
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
@@ -49,8 +43,6 @@ var Component = React.createClass({
             </div>);
   }
 });
-
-window.Perf = require('react-addons-perf');
 
 const Root = React.createClass({
 

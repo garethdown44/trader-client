@@ -15,9 +15,9 @@ const Blotter = React.createClass({
 
   renderRows: function(rows) {
 
-    return rows.map(row => {
+    return rows.map((row, index) => {
 
-      return (<tr>
+      return (<tr key={index}>
                 <td>{moment(row.date).format('D MMM YYYY h:mm:ss')}</td>
                 <td><span className={row.direction}>{row.direction}</span></td>
                 <td>{row.ccyCpl}</td>

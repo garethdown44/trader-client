@@ -39,16 +39,6 @@ const PriceTileList = React.createClass({
 
   render: function() {
 
-    //Perf.start();
-
-    // if (!this.isProfiling) {
-    //   Perf.start();
-    //   this.isProfiling = true;
-    // } else {
-    //   Perf.stop();
-    //   this.isProfiling = false;
-    // }
-
     let view = this.renderTiles();
 
     return <div className='row'>{view}</div>;

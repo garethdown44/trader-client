@@ -1,17 +1,17 @@
 const debug = require('debug')('trader:components:option');
 const React = require('react');
 import {connect} from 'react-redux';
-import {updateStrike} from '../../system/redux/actions';
+import {updateStrike, updateNotional, priceOption} from '../../system/redux/actions';
 
 const TwoChoice = React.createClass({
   render: function() {
-    return (<select><option>{this.props.first}</option><option>{this.props.second}</option></select>);
+    return (<select ><option>{this.props.first}</option><option>{this.props.second}</option></select>);
   }
 });
 
 const NotionalTextBox = React.createClass({
   render: function() {
-    return (<input type='text' value={this.props.value} />);
+    return (<input type='text' value={this.props.value} onChange={this.props.onChange} />);
   }
 });
 
@@ -22,11 +22,6 @@ const DateChooser = React.createClass({
 });
 
 const StrikePriceTextBox = React.createClass({
-
-  // shouldComponentUpdate: function(nextProps, nextState) {
-  //   return nextProps.value != this.props.value;
-  // },
-
   render: function() {
     return <input type='text' 
                   value={this.props.value} 
@@ -34,24 +29,19 @@ const StrikePriceTextBox = React.createClass({
   }
 });
 
-
 const OptionLeg = React.createClass({
 
   render: function() {
 
     return (<div className='leg'>
               <TwoChoice first='buy' second='sell' selected='buy' />
-              {/*<NotionalTextBox value={this.props.notional} />*/}
-              {/*<DateChooser className='expiryDate' value={this.props.expiryDate} />*/}
+              <NotionalTextBox value={this.props.notional} onChange={this.props.handleNotionalChange} />
+              <DateChooser className='expiryDate' value={this.props.expiryDate} />
               <StrikePriceTextBox className='strike' value={this.props.strike} onChange={this.props.handleStrikeChange} key='43' />
               <TwoChoice first='call' second='put' selected='call' />
             </div>);
   }
 });
-
-let select = tileId => state => {
-  return state;
-}
 
 const Button = React.createClass({
 
@@ -66,7 +56,7 @@ const Button = React.createClass({
       classNames += ' invalid';
     }
 
-    return <div className={classNames}>{this.props.text}</div>;
+    return <div {...this.props} className={classNames}>{this.props.text}</div>;
   }
 });
 
@@ -76,10 +66,21 @@ module.exports = React.createClass({
     this.props.dispatch(updateStrike(value, this.props.tileId, legIndex));
   },
 
+  handleNotionalChange: function(value, legIndex) {
+    this.props.dispatch(updateNotional(value, this.props.tileId, legIndex));
+  },
+
+  handlePrice: function() {
+    this.props.dispatch(priceOption(this.props.tileId, this.props));
+  },
+
   renderLegs: function(legs) {
     return legs.map((leg, index) => {
         debug('index', index);
-        return <OptionLeg strike={this.props.strike} key={index} handleStrikeChange={e => this.handleStrikeChange(e.target.value, index)} />;
+        return <OptionLeg {...leg}
+                          key={index}
+                          handleStrikeChange={e => this.handleStrikeChange(e.target.value, index)}
+                          handleNotionalChange={e => this.handleNotionalChange(e.target.value, index)} />;
       });
   },
 
@@ -93,7 +94,7 @@ module.exports = React.createClass({
               <div className='tile-title'>{this.props.ccyCpl}</div>
               <span>{this.props.ccyCpl}</span>
               <div>{legs}</div>
-              <Button valid={this.props.valid} text='PRICE' />
+              <Button valid={this.props.valid} text='PRICE' onClick={this.handlePrice} />
             </div>;
   }
 });

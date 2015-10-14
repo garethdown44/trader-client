@@ -31,10 +31,9 @@ var StreamingPriceReceiver = require('./components/StreamingPriceReceiver');
 var PriceTileList = require('./components/PriceTileList');
 var Blotter = require('./components/Blotter');
 
-//const store = require('./system/redux/store.js');
-
 window.myDebug = require('debug');
 window.myDebug.enable('trader*');
+window.Perf = require('react-addons-perf');
 
 var loggerMiddleware = (0, _reduxLogger2['default'])();
 
@@ -70,8 +69,6 @@ var Component = React.createClass({
     );
   }
 });
-
-window.Perf = require('react-addons-perf');
 
 var Root = React.createClass({
   displayName: 'Root',
@@ -33249,7 +33246,7 @@ function compose() {
 module.exports = exports["default"];
 },{}],183:[function(require,module,exports){
 module.exports=require(15)
-},{"c:\\dev\\trader-client\\node_modules\\react-redux\\lib\\utils\\isPlainObject.js":15}],184:[function(require,module,exports){
+},{"/Users/garethd/work/repos/trader/node_modules/react-redux/lib/utils/isPlainObject.js":15}],184:[function(require,module,exports){
 /**
  * Applies a function to every key-value pair inside an object.
  *
@@ -47783,7 +47780,7 @@ exports.enable(load());
 
 },{"./debug":209}],209:[function(require,module,exports){
 arguments[4][4][0].apply(exports,arguments)
-},{"c:\\dev\\trader-client\\node_modules\\debug\\debug.js":4,"ms":210}],210:[function(require,module,exports){
+},{"/Users/garethd/work/repos/trader/node_modules/debug/debug.js":4,"ms":210}],210:[function(require,module,exports){
 /**
  * Helpers.
  */
@@ -49943,7 +49940,7 @@ function isBuf(obj) {
 //# sourceMappingURL=data:application/json;charset:utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm5vZGVfbW9kdWxlcy9zb2NrZXQuaW8tY2xpZW50L25vZGVfbW9kdWxlcy9zb2NrZXQuaW8tcGFyc2VyL2lzLWJ1ZmZlci5qcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsImZpbGUiOiJnZW5lcmF0ZWQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlc0NvbnRlbnQiOlsiXG5tb2R1bGUuZXhwb3J0cyA9IGlzQnVmO1xuXG4vKipcbiAqIFJldHVybnMgdHJ1ZSBpZiBvYmogaXMgYSBidWZmZXIgb3IgYW4gYXJyYXlidWZmZXIuXG4gKlxuICogQGFwaSBwcml2YXRlXG4gKi9cblxuZnVuY3Rpb24gaXNCdWYob2JqKSB7XG4gIHJldHVybiAoZ2xvYmFsLkJ1ZmZlciAmJiBnbG9iYWwuQnVmZmVyLmlzQnVmZmVyKG9iaikpIHx8XG4gICAgICAgICAoZ2xvYmFsLkFycmF5QnVmZmVyICYmIG9iaiBpbnN0YW5jZW9mIEFycmF5QnVmZmVyKTtcbn1cbiJdfQ==
 },{}],232:[function(require,module,exports){
 module.exports=require(225)
-},{"c:\\dev\\trader-client\\node_modules\\socket.io-client\\node_modules\\has-binary\\node_modules\\isarray\\index.js":225}],233:[function(require,module,exports){
+},{"/Users/garethd/work/repos/trader/node_modules/socket.io-client/node_modules/has-binary/node_modules/isarray/index.js":225}],233:[function(require,module,exports){
 /*! JSON v3.2.6 | http://bestiejs.github.io/json3 | Copyright 2012-2013, Kit Cambridge | http://kit.mit-license.org */
 ;(function (window) {
   // Convenience aliases.
@@ -50849,11 +50846,11 @@ var Blotter = React.createClass({
 
   renderRows: function renderRows(rows) {
 
-    return rows.map(function (row) {
+    return rows.map(function (row, index) {
 
       return React.createElement(
         'tr',
-        null,
+        { key: index },
         React.createElement(
           'td',
           null,
@@ -51201,16 +51198,6 @@ var PriceTileList = React.createClass({
 
   render: function render() {
 
-    //Perf.start();
-
-    // if (!this.isProfiling) {
-    //   Perf.start();
-    //   this.isProfiling = true;
-    // } else {
-    //   Perf.stop();
-    //   this.isProfiling = false;
-    // }
-
     var view = this.renderTiles();
 
     return React.createElement(
@@ -51344,6 +51331,8 @@ module.exports = React.createClass({
 },{"react":174}],242:[function(require,module,exports){
 'use strict';
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _reactRedux = require('react-redux');
 
 var _systemReduxActions = require('../../system/redux/actions');
@@ -51376,7 +51365,7 @@ var NotionalTextBox = React.createClass({
   displayName: 'NotionalTextBox',
 
   render: function render() {
-    return React.createElement('input', { type: 'text', value: this.props.value });
+    return React.createElement('input', { type: 'text', value: this.props.value, onChange: this.props.onChange });
   }
 });
 
@@ -51390,10 +51379,6 @@ var DateChooser = React.createClass({
 
 var StrikePriceTextBox = React.createClass({
   displayName: 'StrikePriceTextBox',
-
-  // shouldComponentUpdate: function(nextProps, nextState) {
-  //   return nextProps.value != this.props.value;
-  // },
 
   render: function render() {
     return React.createElement('input', { type: 'text',
@@ -51411,17 +51396,13 @@ var OptionLeg = React.createClass({
       'div',
       { className: 'leg' },
       React.createElement(TwoChoice, { first: 'buy', second: 'sell', selected: 'buy' }),
+      React.createElement(NotionalTextBox, { value: this.props.notional, onChange: this.props.handleNotionalChange }),
+      React.createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate }),
       React.createElement(StrikePriceTextBox, { className: 'strike', value: this.props.strike, onChange: this.props.handleStrikeChange, key: '43' }),
       React.createElement(TwoChoice, { first: 'call', second: 'put', selected: 'call' })
     );
   }
 });
-
-var select = function select(tileId) {
-  return function (state) {
-    return state;
-  };
-};
 
 var Button = React.createClass({
   displayName: 'Button',
@@ -51439,7 +51420,7 @@ var Button = React.createClass({
 
     return React.createElement(
       'div',
-      { className: classNames },
+      _extends({}, this.props, { className: classNames }),
       this.props.text
     );
   }
@@ -51452,14 +51433,27 @@ module.exports = React.createClass({
     this.props.dispatch((0, _systemReduxActions.updateStrike)(value, this.props.tileId, legIndex));
   },
 
+  handleNotionalChange: function handleNotionalChange(value, legIndex) {
+    this.props.dispatch((0, _systemReduxActions.updateNotional)(value, this.props.tileId, legIndex));
+  },
+
+  handlePrice: function handlePrice() {
+    this.props.dispatch((0, _systemReduxActions.priceOption)(this.props.tileId, this.props));
+  },
+
   renderLegs: function renderLegs(legs) {
     var _this = this;
 
     return legs.map(function (leg, index) {
       debug('index', index);
-      return React.createElement(OptionLeg, { strike: _this.props.strike, key: index, handleStrikeChange: function (e) {
+      return React.createElement(OptionLeg, _extends({}, leg, {
+        key: index,
+        handleStrikeChange: function (e) {
           return _this.handleStrikeChange(e.target.value, index);
-        } });
+        },
+        handleNotionalChange: function (e) {
+          return _this.handleNotionalChange(e.target.value, index);
+        } }));
     });
   },
 
@@ -51487,11 +51481,10 @@ module.exports = React.createClass({
         null,
         legs
       ),
-      React.createElement(Button, { valid: this.props.valid, text: 'PRICE' })
+      React.createElement(Button, { valid: this.props.valid, text: 'PRICE', onClick: this.handlePrice })
     );
   }
 });
-/*<NotionalTextBox value={this.props.notional} />*/ /*<DateChooser className='expiryDate' value={this.props.expiryDate} />*/
 
 },{"../../system/redux/actions":251,"debug":3,"react":174,"react-redux":13}],243:[function(require,module,exports){
 'use strict';
@@ -51641,8 +51634,12 @@ Object.defineProperty(exports, '__esModule', {
 exports.bookSpotTrade = bookSpotTrade;
 exports.tradeBooked = tradeBooked;
 exports.updateStrike = updateStrike;
+exports.updateNotional = updateNotional;
 exports.receivePosition = receivePosition;
 exports.addTile = addTile;
+exports.optionPriceRequested = optionPriceRequested;
+exports.optionPriceReceived = optionPriceReceived;
+exports.priceOption = priceOption;
 exports.subscribePositions = subscribePositions;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -51651,18 +51648,30 @@ var _blotter = require('../blotter');
 
 var _blotter2 = _interopRequireDefault(_blotter);
 
+var _requestOptionPrice = require('../requestOptionPrice');
+
+var _requestOptionPrice2 = _interopRequireDefault(_requestOptionPrice);
+
 var debug = require('debug')('trader:actions');
 var BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
 exports.BOOK_SPOT_TRADE = BOOK_SPOT_TRADE;
 var UPDATE_STRIKE = 'UPDATE_STRIKE';
 exports.UPDATE_STRIKE = UPDATE_STRIKE;
+var UPDATE_NOTIONAL = 'UPDATE_NOTIONAL';
+exports.UPDATE_NOTIONAL = UPDATE_NOTIONAL;
 var TRADE_BOOKED = 'TRADE_BOOKED';
 exports.TRADE_BOOKED = TRADE_BOOKED;
 var RECEIVE_POSITION = 'RECEIVE_POSITION';
 exports.RECEIVE_POSITION = RECEIVE_POSITION;
 var ADD_TILE = 'ADD_TILE';
-
 exports.ADD_TILE = ADD_TILE;
+var PRICE_OPTION = 'PRICE_OPTION';
+exports.PRICE_OPTION = PRICE_OPTION;
+var OPTION_PRICE_REQUESTED = 'OPTION_PRICE_REQUESTED';
+exports.OPTION_PRICE_REQUESTED = OPTION_PRICE_REQUESTED;
+var OPTION_PRICE_RECEIVED = 'OPTION_PRICE_RECEIVED';
+
+exports.OPTION_PRICE_RECEIVED = OPTION_PRICE_RECEIVED;
 
 function bookSpotTrade(ccyCpl, notional, rate) {
   return {
@@ -51689,6 +51698,15 @@ function updateStrike(value, tileId, legIndex) {
   };
 }
 
+function updateNotional(value, tileId, legIndex) {
+  return {
+    type: UPDATE_NOTIONAL,
+    tileId: tileId,
+    value: value,
+    legIndex: legIndex
+  };
+}
+
 function receivePosition(position) {
   return {
     type: RECEIVE_POSITION,
@@ -51703,52 +51721,49 @@ function addTile(tile) {
   };
 }
 
+function optionPriceRequested(tileId, option) {
+  return {
+    type: OPTION_PRICE_REQUESTED,
+    tileId: tileId,
+    option: option
+  };
+}
+
+function optionPriceReceived(tileId, option) {
+  return {
+    type: OPTION_PRICE_RECEIVED,
+    tileId: tileId,
+    option: option
+  };
+}
+
+function priceOption(tileId, option) {
+
+  return function (dispatch) {
+
+    dispatch(optionPriceRequested(tileId, option));
+
+    // make request, then dispatch
+
+    (0, _requestOptionPrice2['default'])(option, function (result) {
+      dispatch(optionPriceReceived(tileId, result));
+    });
+  };
+}
+
 function subscribePositions() {
 
   debug('subscribePositions() - entry');
 
   return function (dispatch) {
 
-    debug('inside function - dispatch', dispatch);
-
-    //dispatch(requestPositions); // todo: make the UI update when the positions are being requested for the first time
-
-    // <td>{moment(row.date).format('D MMM YYYY h:mm:ss')}</td>
-    //                 <td><span className={row.direction}>{row.direction}</span></td>
-    //                 <td>{row.ccyCpl}</td>
-    //                 <td>{row.notional}</td>
-    //                 <td>{row.rate}</td>
-    //                 <td><StreamingValue notional={row.notional}
-    //                                     direction={row.direction}
-    //                                     rate={row.rate}
-    //                                     ccyCpl={row.ccyCpl} /></td>
-    //                 <td>{row.status}</td>
-
-    // let position = {
-    //   date: new Date(),
-    //   ccyCpl: 'EURUSD',
-    //   direction: 'buy',
-    //   notional: 50000,
-    //   rate: 1.234,
-    //   status: 'done'
-    // };
-
-    // return dispatch(receivePosition(position));
-
     return _blotter2['default'].subscribe(function (position) {
-
-      debug('position', position);
-
       return dispatch(receivePosition(position));
     });
-
-    // return positions.subscribe(position => {
-    //   return dispatch(receivePosition(position));
-    // });
   };
 }
 
-},{"../blotter":244,"debug":3}],252:[function(require,module,exports){
+},{"../blotter":244,"../requestOptionPrice":253,"debug":3}],252:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -51777,8 +51792,11 @@ function option(state, action) {
   var newState = Object.assign({}, state);
   newState.legs = [];
 
-  newState.legs.push(Object.assign({}, state.legs[0]));
-  newState.legs.push(Object.assign({}, state.legs[1]));
+  for (var leg in state.legs) {
+    newState.legs.push(Object.assign({}, state.legs[leg]));
+  }
+
+  newState.valid = true;
 
   switch (action.type) {
 
@@ -51787,8 +51805,17 @@ function option(state, action) {
       newState.valid = action.value < 3;
       break;
 
-    case UPDATE_NOTIONAL:
-      newState.legs[action.legIndex].notional = action.notional;
+    case _actions.UPDATE_NOTIONAL:
+      newState.legs[action.legIndex].notional = action.value;
+      break;
+
+    case _actions.OPTION_PRICE_REQUESTED:
+      newState.isPricing = true;
+      break;
+
+    case _actions.OPTION_PRICE_RECEIVED:
+      newState.isPriced = true;
+      newState.price = action.option.price;
       break;
   }
 
@@ -51804,14 +51831,27 @@ function workspace(state, action) {
       return Object.assign({}, state.tiles);
 
     case _actions.UPDATE_STRIKE:
+    case _actions.UPDATE_NOTIONAL:
+    case _actions.OPTION_PRICE_REQUESTED:
+    case _actions.OPTION_PRICE_RECEIVED:
 
       var tile = state.tiles[action.tileId];
 
       var newWorkspace = {};
-      newWorkspace.tiles = Object.assign({}, state.tiles);
-      newWorkspace.tiles[action.tileId] = option(tile, action);
+      newWorkspace.tiles = [];
+
+      for (var t in state.tiles) {
+        if (t == action.tileId) {
+          newWorkspace.tiles.push(option(tile, action));
+        } else {
+          newWorkspace.tiles.push(state.tiles[t]);
+        }
+      }
 
       return newWorkspace;
+
+    case _actions.PRICE_OPTION:
+      return state;
 
     default:
       return Object.assign({}, state);
@@ -51843,7 +51883,34 @@ exports['default'] = (0, _redux.combineReducers)({
 });
 module.exports = exports['default'];
 
-},{"../workspace":254,"./actions":251,"debug":3,"redux":178}],253:[function(require,module,exports){
+},{"../workspace":255,"./actions":251,"debug":3,"redux":178}],253:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var $ = require('jquery');
+var config = require('../../config');
+
+var url = config.serverUrl + '/options/price';
+
+exports['default'] = function (option, success, error) {
+
+  var payload = JSON.stringify(option);
+
+  $.ajax({
+    type: 'POST',
+    url: url,
+    data: payload,
+    success: success,
+    error: error,
+    contentType: 'application/json'
+  });
+};
+
+module.exports = exports['default'];
+
+},{"../../config":243,"jquery":6}],254:[function(require,module,exports){
 'use strict';
 
 module.exports.get = function () {
@@ -51852,7 +51919,7 @@ module.exports.get = function () {
     tiles: {
       1: { type: 'spot', ccyCpl: 'EURUSD' },
       2: { type: 'spot', ccyCpl: 'EURGBP' },
-      3: { type: 'option', ccyCpl: 'EURUSD', legs: [{ direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' }, { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }] }
+      3: { type: 'option', ccyCpl: 'EURUSD', valid: true, legs: [{ direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' }, { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }] }
     }
   };
 
@@ -51862,25 +51929,15 @@ module.exports.get = function () {
   //   // {type: 'spot', ccyCpl: 'GBPCHF'},
   //   // {type: 'spot', ccyCpl: 'AUDUSD'},
 
-  //   {type: 'option', data: {
-  //       ccyCpl: 'EURUSD',
-  //       legs: [
-  //           { direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' },
-  //           { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }
-  //             ]
-  //         }
-  //     }
-  // ]};
-
   //callback(data);
 
   return data;
 };
 
-},{}],254:[function(require,module,exports){
+},{}],255:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./fake');
 
-},{"./fake":253}]},{},[1])
+},{"./fake":254}]},{},[1])
 //# sourceMappingURL=bundle.js.map
