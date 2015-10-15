@@ -12,6 +12,7 @@ export const ADD_TILE = 'ADD_TILE';
 export const PRICE_OPTION = 'PRICE_OPTION';
 export const OPTION_PRICE_REQUESTED = 'OPTION_PRICE_REQUESTED';
 export const OPTION_PRICE_RECEIVED = 'OPTION_PRICE_RECEIVED';
+export const QUOTE_TIMED_OUT = 'QUOTE_TIMED_OUT';
 
 export function bookSpotTrade(ccyCpl, notional, rate) {
   return {
@@ -88,6 +89,13 @@ export function priceOption(tileId, option) {
     requestOptionPrice(option, result => {
       dispatch(optionPriceReceived(tileId, result));
     });
+  }
+}
+
+export function quoteTimedOut(tileId) {
+  return {
+    type: QUOTE_TIMED_OUT,
+    tileId: tileId
   }
 }
 

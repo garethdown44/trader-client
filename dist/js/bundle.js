@@ -51373,7 +51373,7 @@ var DateChooser = React.createClass({
   displayName: 'DateChooser',
 
   render: function render() {
-    return React.createElement('input', { type: 'text', value: this.props.value });
+    return React.createElement('input', { type: 'text', value: this.props.value, onChange: this.props.onChange });
   }
 });
 
@@ -51397,7 +51397,7 @@ var OptionLeg = React.createClass({
       { className: 'leg' },
       React.createElement(TwoChoice, { first: 'buy', second: 'sell', selected: 'buy' }),
       React.createElement(NotionalTextBox, { value: this.props.notional, onChange: this.props.handleNotionalChange }),
-      React.createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate }),
+      React.createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate, onChange: this.props.handleExpiryDateChange }),
       React.createElement(StrikePriceTextBox, { className: 'strike', value: this.props.strike, onChange: this.props.handleStrikeChange, key: '43' }),
       React.createElement(TwoChoice, { first: 'call', second: 'put', selected: 'call' })
     );
@@ -51426,6 +51426,16 @@ var Button = React.createClass({
   }
 });
 
+var Countdown = React.createClass({
+  displayName: 'Countdown',
+
+  getInitialState: function getInitialState() {},
+
+  tick: function tick() {},
+
+  render: function render() {}
+});
+
 module.exports = React.createClass({
   displayName: 'exports',
 
@@ -51441,6 +51451,10 @@ module.exports = React.createClass({
     this.props.dispatch((0, _systemReduxActions.priceOption)(this.props.tileId, this.props));
   },
 
+  handleExpiryDateChange: function handleExpiryDateChange() {
+    // noop at the moment
+  },
+
   renderLegs: function renderLegs(legs) {
     var _this = this;
 
@@ -51453,8 +51467,40 @@ module.exports = React.createClass({
         },
         handleNotionalChange: function (e) {
           return _this.handleNotionalChange(e.target.value, index);
+        },
+        handleExpiryDateChange: function (e) {
+          return _this.handleExpiryDateChange(e.target.value, index);
         } }));
     });
+  },
+
+  startTimer: function startTimer(from) {
+    this.count = from;
+
+    setInterval(this.tick, 1000);
+  },
+
+  tick: function tick() {
+    this.count--;
+
+    if (this.count == 0) {
+      //this.setState({quoteTimedOut: true});
+
+      this.props.dispatch((0, _systemReduxActions.quoteTimedOut)(this.props.tileId));
+    } else {
+      this.setState({ count: this.count });
+    }
+  },
+
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    if (nextProps.status == 'IS_PRICED') {
+      this.setState({ count: 10 });
+      this.startTimer(10);
+    }
+  },
+
+  getInitialState: function getInitialState() {
+    return { quoteTimedOut: false };
   },
 
   render: function render() {
@@ -51462,6 +51508,31 @@ module.exports = React.createClass({
     var legs = this.renderLegs(this.props.legs);
 
     debug('OptionTile.render(), props', this.props);
+
+    var canPrice = this.props.valid || this.props.status != 'IS_PRICING';
+    var buttons = undefined;
+
+    if (!this.props.status || this.state.quoteTimedOut) {
+      buttons = React.createElement(Button, { valid: canPrice, text: 'PRICE', onClick: this.handlePrice });
+    } else if (this.props.status == 'IS_PRICED') {
+
+      var formattedPrice = this.props.price.toFixed(2);
+      var price = this.props.ccyCpl.substr(0, 3) + ' ' + formattedPrice;
+
+      buttons = React.createElement(
+        'div',
+        null,
+        React.createElement(Button, { valid: true, text: 'BUY - you pay ' + price, onClick: this.buy, style: { float: 'left' } }),
+        React.createElement(Button, { valid: true, text: 'SELL - we pay ' + price, onClick: this.sell, style: { float: 'left', marginLeft: '10px' } }),
+        React.createElement(
+          'div',
+          null,
+          'quote is valid for ',
+          this.state.count,
+          ' seconds'
+        )
+      );
+    }
 
     return React.createElement(
       'div',
@@ -51472,16 +51543,11 @@ module.exports = React.createClass({
         this.props.ccyCpl
       ),
       React.createElement(
-        'span',
-        null,
-        this.props.ccyCpl
-      ),
-      React.createElement(
         'div',
         null,
         legs
       ),
-      React.createElement(Button, { valid: this.props.valid, text: 'PRICE', onClick: this.handlePrice })
+      buttons
     );
   }
 });
@@ -51640,6 +51706,7 @@ exports.addTile = addTile;
 exports.optionPriceRequested = optionPriceRequested;
 exports.optionPriceReceived = optionPriceReceived;
 exports.priceOption = priceOption;
+exports.quoteTimedOut = quoteTimedOut;
 exports.subscribePositions = subscribePositions;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -51670,8 +51737,10 @@ exports.PRICE_OPTION = PRICE_OPTION;
 var OPTION_PRICE_REQUESTED = 'OPTION_PRICE_REQUESTED';
 exports.OPTION_PRICE_REQUESTED = OPTION_PRICE_REQUESTED;
 var OPTION_PRICE_RECEIVED = 'OPTION_PRICE_RECEIVED';
-
 exports.OPTION_PRICE_RECEIVED = OPTION_PRICE_RECEIVED;
+var QUOTE_TIMED_OUT = 'QUOTE_TIMED_OUT';
+
+exports.QUOTE_TIMED_OUT = QUOTE_TIMED_OUT;
 
 function bookSpotTrade(ccyCpl, notional, rate) {
   return {
@@ -51751,6 +51820,13 @@ function priceOption(tileId, option) {
   };
 }
 
+function quoteTimedOut(tileId) {
+  return {
+    type: QUOTE_TIMED_OUT,
+    tileId: tileId
+  };
+}
+
 function subscribePositions() {
 
   debug('subscribePositions() - entry');
@@ -51810,13 +51886,14 @@ function option(state, action) {
       break;
 
     case _actions.OPTION_PRICE_REQUESTED:
-      newState.isPricing = true;
+      newState.status = 'IS_PRICING';
       break;
 
     case _actions.OPTION_PRICE_RECEIVED:
-      newState.isPriced = true;
+      newState.status = 'IS_PRICED';
       newState.price = action.option.price;
       break;
+
   }
 
   return newState;
@@ -51834,17 +51911,18 @@ function workspace(state, action) {
     case _actions.UPDATE_NOTIONAL:
     case _actions.OPTION_PRICE_REQUESTED:
     case _actions.OPTION_PRICE_RECEIVED:
+    case QUOTE_TIMED_OUT:
 
       var tile = state.tiles[action.tileId];
 
       var newWorkspace = {};
-      newWorkspace.tiles = [];
+      newWorkspace.tiles = {};
 
       for (var t in state.tiles) {
         if (t == action.tileId) {
-          newWorkspace.tiles.push(option(tile, action));
+          newWorkspace.tiles[t] = option(tile, action);
         } else {
-          newWorkspace.tiles.push(state.tiles[t]);
+          newWorkspace.tiles[t] = state.tiles[t];
         }
       }
 

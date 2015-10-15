@@ -28,13 +28,15 @@ function option(state = {}, action) {
       break;
 
     case OPTION_PRICE_REQUESTED:
-      newState.isPricing = true;
+      newState.status = 'IS_PRICING';
       break;
 
     case OPTION_PRICE_RECEIVED:
-      newState.isPriced = true;
+      newState.status = 'IS_PRICED';
       newState.price = action.option.price;
       break;
+
+    
   }
 
   return newState;
@@ -51,17 +53,18 @@ function workspace(state = initialWorkspaces, action) {
     case UPDATE_NOTIONAL:
     case OPTION_PRICE_REQUESTED:
     case OPTION_PRICE_RECEIVED:
+    case QUOTE_TIMED_OUT:
 
       let tile = state.tiles[action.tileId];
 
       let newWorkspace = {};
-      newWorkspace.tiles = [];
+      newWorkspace.tiles = {};
 
       for (let t in state.tiles) {
         if (t == action.tileId) {
-          newWorkspace.tiles.push(option(tile, action));
+          newWorkspace.tiles[t] = (option(tile, action));
         } else {
-          newWorkspace.tiles.push(state.tiles[t]);
+          newWorkspace.tiles[t] = state.tiles[t];
         }
       }
 
