@@ -7,7 +7,7 @@ const debug = require('debug')('trader:components:PriceTile');
 module.exports = React.createClass({
 
   getInitialState: function() {
-    return { executing: false, notional: 1000000, firstCcy: this.props.ccyCpl.substr(0, 3), tradeable: false };
+    return { executing: false, notional: 1000000, firstCcy: '', tradeable: false };
   },
 
   componentWillReceiveProps: function(newProps) {

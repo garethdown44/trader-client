@@ -10,43 +10,53 @@ const {updateStrike} = require('../system/redux/actions');
 
 const PriceTileList = React.createClass({
 
-  updateStrike: function(value, tileId, legIndex) {
-    this.props.dispatch(updateStrike(value, tileId, legIndex));
-  },
+  // updateStrike: function(value, tileId, legIndex) {
+  //   this.props.dispatch(updateStrike(value, tileId, legIndex));
+  // },
 
   renderTiles: function() {
 
-    let tiles = [];
+    //let tiles = [];
 
-    for (let tileId in this.props.tiles) {
+    //this.props.tiles.toSeq();
 
-      let tile = this.props.tiles[tileId];
+    // for (let tileId in this.props.tiles) {
+
+    //   let tile = this.props.tiles[tileId];
+
+    //   if (tile.type == 'option') {
+
+    //     tiles.push(<OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} updateStrike={this.updateStrike} />);
+    //   } else {
+    //     tiles.push(<StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />);
+    //   }
+    // }
+
+    var tiles = this.props.workspace.tiles;
+
+    return tiles.map((tile, tileId) => {
+
+      tile = tile.toJS();
+
 
       if (tile.type == 'option') {
-
-        tiles.push(<OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} updateStrike={this.updateStrike} />);
+        return <OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} />;
       } else {
-        tiles.push(<StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />);
+        return <StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />;
       }
-    }
-
-    return tiles;
-  },
-
-  componentDidMount: function() {
-    this.isProfiling = false;
+    });
   },
 
   render: function() {
 
-    let view = this.renderTiles();
+    let view = this.renderTiles().toJS();
 
     return <div className='row'>{view}</div>;
   }
 });
 
 function selectWorkspace(state) {
-  return state.workspace;
+  return {workspace: state.workspace};
 }
 
 export default connect(selectWorkspace)(PriceTileList);
