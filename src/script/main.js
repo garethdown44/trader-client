@@ -13,7 +13,7 @@ window.Perf = require('react-addons-perf');
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import { createStore, applyMiddleware } from 'redux';
-import { subscribePositions } from './system/redux/actions';
+import { subscribePositions } from './system/redux/actions/positions';
 import rootReducer from './system/redux/reducers';
 
 const loggerMiddleware = createLogger();

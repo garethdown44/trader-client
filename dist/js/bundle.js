@@ -13,7 +13,7 @@ var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
 
 var _redux = require('redux');
 
-var _systemReduxActions = require('./system/redux/actions');
+var _systemReduxActionsPositions = require('./system/redux/actions/positions');
 
 var _systemReduxReducers = require('./system/redux/reducers');
 
@@ -43,7 +43,7 @@ loggerMiddleware // neat middleware that logs actions
 
 var store = createStoreWithMiddleware(_systemReduxReducers2['default']);
 
-store.dispatch((0, _systemReduxActions.subscribePositions)());
+store.dispatch((0, _systemReduxActionsPositions.subscribePositions)());
 
 var Component = React.createClass({
   displayName: 'Component',
@@ -84,7 +84,7 @@ var Root = React.createClass({
 
 ReactDOM.render(React.createElement(Root, null), document.getElementById('cont'));
 
-},{"./components/Blotter":236,"./components/PriceTile":238,"./components/PriceTileList":239,"./components/StreamingPriceReceiver":241,"./system/redux/actions":252,"./system/redux/reducers":253,"debug":3,"react":175,"react-addons-perf":9,"react-dom":10,"react-redux":14,"redux":179,"redux-logger":176,"redux-thunk":177}],2:[function(require,module,exports){
+},{"./components/Blotter":236,"./components/PriceTile":238,"./components/PriceTileList":239,"./components/StreamingPriceReceiver":241,"./system/redux/actions/positions":253,"./system/redux/reducers":256,"debug":3,"react":175,"react-addons-perf":9,"react-dom":10,"react-redux":14,"redux":179,"redux-logger":176,"redux-thunk":177}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -56123,10 +56123,6 @@ var StreamingPriceReceiver = require('./StreamingPriceReceiver');
 var StreamingPriceTile = StreamingPriceReceiver(PriceTile);
 var OptionTile = require('./option/OptionTile');
 
-var _require2 = require('../system/redux/actions');
-
-var updateStrike = _require2.updateStrike;
-
 var PriceTileList = React.createClass({
   displayName: 'PriceTileList',
 
@@ -56166,7 +56162,7 @@ function selectWorkspace(state) {
 exports['default'] = connect(selectWorkspace)(PriceTileList);
 module.exports = exports['default'];
 
-},{"../system/redux/actions":252,"./PriceTile":238,"./StreamingPriceReceiver":241,"./option/OptionTile":243,"react":175,"react-redux":14}],240:[function(require,module,exports){
+},{"./PriceTile":238,"./StreamingPriceReceiver":241,"./option/OptionTile":243,"react":175,"react-redux":14}],240:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -56296,7 +56292,7 @@ var _rx2 = _interopRequireDefault(_rx);
 
 var _reactRedux = require('react-redux');
 
-var _systemReduxActions = require('../../system/redux/actions');
+var _systemReduxActionsOptions = require('../../system/redux/actions/options');
 
 var debug = require('debug')('trader:components:option');
 
@@ -56391,7 +56387,7 @@ var Countdown = _react2['default'].createClass({
   displayName: 'Countdown',
 
   componentDidMount: function componentDidMount() {
-    this.startTimer(10);
+    this.startTimer(this.props.from);
   },
 
   getInitialState: function getInitialState() {
@@ -56430,15 +56426,15 @@ module.exports = _react2['default'].createClass({
   displayName: 'exports',
 
   handleStrikeChange: function handleStrikeChange(value, legIndex) {
-    this.props.dispatch((0, _systemReduxActions.updateStrike)(value, this.props.tileId, legIndex));
+    this.props.dispatch((0, _systemReduxActionsOptions.updateStrike)(value, this.props.tileId, legIndex));
   },
 
   handleNotionalChange: function handleNotionalChange(value, legIndex) {
-    this.props.dispatch((0, _systemReduxActions.updateNotional)(value, this.props.tileId, legIndex));
+    this.props.dispatch((0, _systemReduxActionsOptions.updateNotional)(value, this.props.tileId, legIndex));
   },
 
   handlePrice: function handlePrice() {
-    this.props.dispatch((0, _systemReduxActions.priceOption)(this.props.tileId, this.props));
+    this.props.dispatch((0, _systemReduxActionsOptions.priceOption)(this.props.tileId, this.props));
   },
 
   handleExpiryDateChange: function handleExpiryDateChange() {
@@ -56485,7 +56481,7 @@ module.exports = _react2['default'].createClass({
         null,
         _react2['default'].createElement(Button, { valid: true, text: 'BUY - you pay ' + price, onClick: this.buy, style: { float: 'left' } }),
         _react2['default'].createElement(Button, { valid: true, text: 'SELL - we pay ' + price, onClick: this.sell, style: { float: 'left', marginLeft: '10px' } }),
-        _react2['default'].createElement(Countdown, { from: 10 })
+        _react2['default'].createElement(Countdown, { from: this.props.quoteValidForInSeconds })
       );
     }
 
@@ -56507,7 +56503,7 @@ module.exports = _react2['default'].createClass({
   }
 });
 
-},{"../../system/redux/actions":252,"debug":3,"react":175,"react-redux":14,"rx":187}],244:[function(require,module,exports){
+},{"../../system/redux/actions/options":252,"debug":3,"react":175,"react-redux":14,"rx":187}],244:[function(require,module,exports){
 'use strict';
 
 var config = {};
@@ -56652,47 +56648,28 @@ module.exports = function (ccyCpl) {
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports.bookSpotTrade = bookSpotTrade;
-exports.tradeBooked = tradeBooked;
 exports.updateStrike = updateStrike;
 exports.updateNotional = updateNotional;
-exports.receivePosition = receivePosition;
-exports.addTile = addTile;
 exports.optionPriceRequested = optionPriceRequested;
 exports.optionPriceReceived = optionPriceReceived;
 exports.initiateQuoteExpiry = initiateQuoteExpiry;
 exports.priceOption = priceOption;
 exports.quoteTimedOut = quoteTimedOut;
-exports.subscribePositions = subscribePositions;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _requestOptionPrice = require('../../requestOptionPrice');
+
+var _requestOptionPrice2 = _interopRequireDefault(_requestOptionPrice);
 
 var _rx = require('rx');
 
 var _rx2 = _interopRequireDefault(_rx);
 
-var _blotter = require('../blotter');
-
-var _blotter2 = _interopRequireDefault(_blotter);
-
-var _requestOptionPrice = require('../requestOptionPrice');
-
-var _requestOptionPrice2 = _interopRequireDefault(_requestOptionPrice);
-
-var debug = require('debug')('trader:actions');
-
-var BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
-exports.BOOK_SPOT_TRADE = BOOK_SPOT_TRADE;
 var UPDATE_STRIKE = 'UPDATE_STRIKE';
 exports.UPDATE_STRIKE = UPDATE_STRIKE;
 var UPDATE_NOTIONAL = 'UPDATE_NOTIONAL';
 exports.UPDATE_NOTIONAL = UPDATE_NOTIONAL;
-var TRADE_BOOKED = 'TRADE_BOOKED';
-exports.TRADE_BOOKED = TRADE_BOOKED;
-var RECEIVE_POSITION = 'RECEIVE_POSITION';
-exports.RECEIVE_POSITION = RECEIVE_POSITION;
-var ADD_TILE = 'ADD_TILE';
-exports.ADD_TILE = ADD_TILE;
 var PRICE_OPTION = 'PRICE_OPTION';
 exports.PRICE_OPTION = PRICE_OPTION;
 var OPTION_PRICE_REQUESTED = 'OPTION_PRICE_REQUESTED';
@@ -56702,22 +56679,6 @@ exports.OPTION_PRICE_RECEIVED = OPTION_PRICE_RECEIVED;
 var QUOTE_TIMED_OUT = 'QUOTE_TIMED_OUT';
 
 exports.QUOTE_TIMED_OUT = QUOTE_TIMED_OUT;
-
-function bookSpotTrade(ccyCpl, notional, rate) {
-  return {
-    type: BOOK_SPOT_TRADE,
-    ccyCpl: ccyCpl,
-    notional: notional,
-    rate: rate
-  };
-}
-
-function tradeBooked(trade) {
-  return {
-    type: TRADE_BOOKED,
-    trade: trade
-  };
-}
 
 function updateStrike(value, tileId, legIndex) {
   return {
@@ -56737,20 +56698,6 @@ function updateNotional(value, tileId, legIndex) {
     func: function func(leg, val) {
       return leg.set('strike', val);
     }
-  };
-}
-
-function receivePosition(position) {
-  return {
-    type: RECEIVE_POSITION,
-    position: position
-  };
-}
-
-function addTile(tile) {
-  return {
-    type: ADD_TILE,
-    tile: tile
   };
 }
 
@@ -56799,6 +56746,25 @@ function quoteTimedOut(tileId) {
   };
 }
 
+},{"../../requestOptionPrice":258,"rx":187}],253:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.subscribePositions = subscribePositions;
+exports.receivePosition = receivePosition;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _blotter = require('../../blotter');
+
+var _blotter2 = _interopRequireDefault(_blotter);
+
+var RECEIVE_POSITION = 'RECEIVE_POSITION';
+
+exports.RECEIVE_POSITION = RECEIVE_POSITION;
+
 function subscribePositions() {
   return function (dispatch) {
     return _blotter2['default'].subscribe(function (position) {
@@ -56807,7 +56773,62 @@ function subscribePositions() {
   };
 }
 
-},{"../blotter":245,"../requestOptionPrice":254,"debug":3,"rx":187}],253:[function(require,module,exports){
+function receivePosition(position) {
+  return {
+    type: RECEIVE_POSITION,
+    position: position
+  };
+}
+
+},{"../../blotter":245}],254:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.bookSpotTrade = bookSpotTrade;
+exports.tradeBooked = tradeBooked;
+var BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
+exports.BOOK_SPOT_TRADE = BOOK_SPOT_TRADE;
+var TRADE_BOOKED = 'TRADE_BOOKED';
+
+exports.TRADE_BOOKED = TRADE_BOOKED;
+
+function bookSpotTrade(ccyCpl, notional, rate) {
+  return {
+    type: BOOK_SPOT_TRADE,
+    ccyCpl: ccyCpl,
+    notional: notional,
+    rate: rate
+  };
+}
+
+function tradeBooked(trade) {
+  return {
+    type: TRADE_BOOKED,
+    trade: trade
+  };
+}
+
+},{}],255:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports.addTile = addTile;
+var ADD_TILE = 'ADD_TILE';
+
+exports.ADD_TILE = ADD_TILE;
+
+function addTile(tile) {
+  return {
+    type: ADD_TILE,
+    tile: tile
+  };
+}
+
+},{}],256:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56818,69 +56839,27 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
 
-var _actions = require('./actions');
+var _options = require('./options');
+
+var _options2 = _interopRequireDefault(_options);
+
+var _actionsOptions = require('../actions/options');
+
+var _actionsSpot = require('../actions/spot');
+
+var _actionsPositions = require('../actions/positions');
+
+var _actionsWorkspace = require('../actions/workspace');
 
 var _redux = require('redux');
 
-var _workspace = require('../workspace');
+var _workspace = require('../../workspace');
 
 var _workspace2 = _interopRequireDefault(_workspace);
 
 var debug = require('debug')('trader:redux:reducers');
 
 var initialWorkspace = _workspace2['default'].get();
-
-function legfn(leg, action) {
-  switch (action.type) {
-    case _actions.UPDATE_STRIKE:
-      leg = leg.set('strike', action.value);
-      break;
-
-    case _actions.UPDATE_NOTIONAL:
-      leg = leg.set('notional', action.value);
-      break;
-  }
-
-  return leg;
-}
-
-function option(state, action) {
-  if (state === undefined) state = {};
-
-  state = state.set('valid', true);
-  var legs = state.get('legs');
-
-  switch (action.type) {
-
-    case _actions.UPDATE_STRIKE:
-
-      state = state.set('valid', action.value < 3);
-
-    case _actions.UPDATE_NOTIONAL:
-      var leg = legs.get(action.legIndex);
-
-      leg = legfn(leg, action);
-
-      legs = legs.set(action.legIndex, leg);
-      state = state.set('legs', legs);
-      break;
-
-    case _actions.OPTION_PRICE_REQUESTED:
-      state = state.set('status', 'IS_PRICING');
-      break;
-
-    case _actions.OPTION_PRICE_RECEIVED:
-      state = state.set('status', 'IS_PRICED');
-      state = state.set('price', action.option.price);
-      //state = state.set('quoteValidForInSeconds', 10); // arbitrary
-      break;
-
-    case _actions.QUOTE_TIMED_OUT:
-      state = state.set('status', '');
-  }
-
-  return state;
-}
 
 function workspace(state, action) {
   if (state === undefined) state = initialWorkspace;
@@ -56890,15 +56869,15 @@ function workspace(state, action) {
     //case ADD_TILE:
     //return Object.assign({}, state.tiles);
 
-    case _actions.UPDATE_STRIKE:
-    case _actions.UPDATE_NOTIONAL:
-    case _actions.OPTION_PRICE_REQUESTED:
-    case _actions.OPTION_PRICE_RECEIVED:
-    case _actions.QUOTE_TIMED_OUT:
+    case _actionsOptions.UPDATE_STRIKE:
+    case _actionsOptions.UPDATE_NOTIONAL:
+    case _actionsOptions.OPTION_PRICE_REQUESTED:
+    case _actionsOptions.OPTION_PRICE_RECEIVED:
+    case _actionsOptions.QUOTE_TIMED_OUT:
       var tiles = state.get('tiles');
       var tile = tiles.get(action.tileId);
 
-      tiles = tiles.set(action.tileId, option(tile, action));
+      tiles = tiles.set(action.tileId, (0, _options2['default'])(tile, action));
       state = state.set('tiles', tiles);
 
       return state;
@@ -56914,7 +56893,7 @@ function positions(state, action) {
   debug(action);
 
   switch (action.type) {
-    case _actions.RECEIVE_POSITION:
+    case _actionsPositions.RECEIVE_POSITION:
 
       var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
 
@@ -56933,7 +56912,71 @@ exports['default'] = (0, _redux.combineReducers)({
 });
 module.exports = exports['default'];
 
-},{"../workspace":256,"./actions":252,"debug":3,"redux":179}],254:[function(require,module,exports){
+},{"../../workspace":260,"../actions/options":252,"../actions/positions":253,"../actions/spot":254,"../actions/workspace":255,"./options":257,"debug":3,"redux":179}],257:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports['default'] = option;
+
+var _actionsOptions = require('../actions/options');
+
+function legfn(leg, action) {
+  switch (action.type) {
+    case _actionsOptions.UPDATE_STRIKE:
+      leg = leg.set('strike', action.value);
+      break;
+
+    case _actionsOptions.UPDATE_NOTIONAL:
+      leg = leg.set('notional', action.value);
+      break;
+  }
+
+  return leg;
+}
+
+function option(state, action) {
+  if (state === undefined) state = {};
+
+  state = state.set('valid', true);
+  var legs = state.get('legs');
+
+  switch (action.type) {
+
+    case _actionsOptions.UPDATE_STRIKE:
+
+      state = state.set('valid', action.value < 3);
+
+    case _actionsOptions.UPDATE_NOTIONAL:
+      var leg = legs.get(action.legIndex);
+
+      leg = legfn(leg, action);
+
+      legs = legs.set(action.legIndex, leg);
+      state = state.set('legs', legs);
+      break;
+
+    case _actionsOptions.OPTION_PRICE_REQUESTED:
+      state = state.set('status', 'IS_PRICING');
+      break;
+
+    case _actionsOptions.OPTION_PRICE_RECEIVED:
+      state = state.set('status', 'IS_PRICED');
+      state = state.set('price', action.option.price);
+      state = state.set('quoteValidForInSeconds', 12); // arbitrary
+      break;
+
+    case _actionsOptions.QUOTE_TIMED_OUT:
+      state = state.set('status', '');
+  }
+
+  return state;
+}
+
+module.exports = exports['default'];
+
+},{"../actions/options":252}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56960,14 +57003,14 @@ exports['default'] = function (option, success, error) {
 
 module.exports = exports['default'];
 
-},{"../../config":244,"jquery":7}],255:[function(require,module,exports){
+},{"../../config":244,"jquery":7}],259:[function(require,module,exports){
 'use strict';
 
 var Immutable = require('immutable');
 
 var Workspace = Immutable.Record({ tiles: Immutable.List() });
 var SpotTile = Immutable.Record({ type: 'spot', ccyCpl: '' });
-var OptionTile = Immutable.Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', legs: Immutable.List() });
+var OptionTile = Immutable.Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', quoteValidForInSeconds: 10, legs: Immutable.List() });
 var Leg = Immutable.Record({ strike: 0, notional: 0, expiryDate: undefined, callPut: 'call', type: 'buy' });
 
 module.exports.get = function () {
@@ -56997,10 +57040,10 @@ module.exports.get = function () {
   return workspace;
 };
 
-},{"immutable":6}],256:[function(require,module,exports){
+},{"immutable":6}],260:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./fake');
 
-},{"./fake":255}]},{},[1])
+},{"./fake":259}]},{},[1])
 //# sourceMappingURL=bundle.js.map

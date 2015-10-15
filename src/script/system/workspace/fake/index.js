@@ -2,7 +2,7 @@ const Immutable = require('immutable');
 
 const Workspace = Immutable.Record({ tiles: Immutable.List()});
 const SpotTile = Immutable.Record({ type: 'spot', ccyCpl: '' });
-const OptionTile = Immutable.Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', legs: Immutable.List() });
+const OptionTile = Immutable.Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', quoteValidForInSeconds: 10, legs: Immutable.List() });
 const Leg = Immutable.Record({strike: 0, notional: 0, expiryDate: undefined, callPut: 'call', type: 'buy'});
 
 module.exports.get = () => {

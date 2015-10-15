@@ -2,7 +2,7 @@ const debug = require('debug')('trader:components:option');
 import React from 'react'
 import Rx from 'rx'
 import {connect} from 'react-redux';
-import {updateStrike, updateNotional, priceOption, quoteTimedOut} from '../../system/redux/actions';
+import {updateStrike, updateNotional, priceOption, quoteTimedOut} from '../../system/redux/actions/options';
 
 const TwoChoice = React.createClass({
   render: function() {
@@ -65,7 +65,7 @@ const Button = React.createClass({
 const Countdown = React.createClass({
 
   componentDidMount: function() {
-    this.startTimer(10);
+    this.startTimer(this.props.from);
   },
 
   getInitialState: function() {
@@ -143,7 +143,7 @@ module.exports = React.createClass({
                    <Button valid={true} text={'BUY - you pay ' + price} onClick={this.buy} style={{float: 'left'}} />
                    <Button valid={true} text={'SELL - we pay ' + price} onClick={this.sell} style={{float: 'left', marginLeft: '10px'}} />
 
-                   <Countdown from={10} />
+                   <Countdown from={this.props.quoteValidForInSeconds} />
                    
                  </div>);
 

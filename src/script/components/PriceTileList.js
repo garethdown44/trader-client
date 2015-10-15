@@ -6,8 +6,6 @@ const StreamingPriceReceiver = require('./StreamingPriceReceiver');
 const StreamingPriceTile = StreamingPriceReceiver(PriceTile);
 const OptionTile = require('./option/OptionTile');
 
-const {updateStrike} = require('../system/redux/actions');
-
 const PriceTileList = React.createClass({
 
   renderTiles: function() {
