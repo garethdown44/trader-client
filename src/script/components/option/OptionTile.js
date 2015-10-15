@@ -1,10 +1,12 @@
 const debug = require('debug')('trader:components:option');
-const React = require('react');
+import React from 'react'
+import Rx from 'rx'
 import {connect} from 'react-redux';
 import {updateStrike, updateNotional, priceOption, quoteTimedOut} from '../../system/redux/actions';
 
 const TwoChoice = React.createClass({
   render: function() {
+    // todo: replace with a button that flips the value
     return (<select ><option>{this.props.first}</option><option>{this.props.second}</option></select>);
   }
 });
@@ -62,15 +64,33 @@ const Button = React.createClass({
 
 const Countdown = React.createClass({
 
-  getInitialState: function() {
+  componentDidMount: function() {
+    this.startTimer(10);
+  },
 
+  getInitialState: function() {
+    return { count: this.props.from };
+  },
+
+  componentWillUnmount: function() {
+    this.subscription.dispose();
+  },
+
+  startTimer: function(from) {
+    this.count = from;
+    this.subscription = Rx.Observable.interval(1000).subscribe(this.tick);
   },
 
   tick: function() {
+    this.count--;
 
+    if (this.count > -1) {
+      this.setState({count: this.count});
+    }
   },
 
   render: function() {
+    return <div>quote is valid for {this.state.count} seconds</div>
   }
 });
 
@@ -103,46 +123,16 @@ module.exports = React.createClass({
       });
   },
 
-  startTimer: function(from) {
-    this.count = from;
-
-    setInterval(this.tick, 1000);
-  },
-
-  tick: function() {
-    this.count--;
-
-    if (this.count == 0) {
-      //this.setState({quoteTimedOut: true});
-
-      this.props.dispatch(quoteTimedOut(this.props.tileId));
-
-    } else {
-      this.setState({count: this.count});  
-    }
-  },
-
-  componentWillReceiveProps: function(nextProps) {
-    if (nextProps.status == 'IS_PRICED') {
-      this.setState({count: 10});
-      this.startTimer(10);
-    }
-  },
-
-  getInitialState: function() {
-    return {quoteTimedOut: false};
-  },
-
   render: function() {
 
     let legs = this.renderLegs(this.props.legs);
 
     debug('OptionTile.render(), props', this.props);
 
-    let canPrice = this.props.valid || this.props.status != 'IS_PRICING';
+    let canPrice = this.props.valid && this.props.status != 'IS_PRICING';
     let buttons;
 
-    if (!this.props.status || this.state.quoteTimedOut) {
+    if (!this.props.status) {
       buttons = <Button valid={canPrice} text='PRICE' onClick={this.handlePrice} />;
     } else if (this.props.status == 'IS_PRICED') {
 
@@ -153,7 +143,8 @@ module.exports = React.createClass({
                    <Button valid={true} text={'BUY - you pay ' + price} onClick={this.buy} style={{float: 'left'}} />
                    <Button valid={true} text={'SELL - we pay ' + price} onClick={this.sell} style={{float: 'left', marginLeft: '10px'}} />
 
-                   <div>quote is valid for {this.state.count} seconds</div>
+                   <Countdown from={10} />
+                   
                  </div>);
 
     }

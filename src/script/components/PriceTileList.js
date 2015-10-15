@@ -10,27 +10,7 @@ const {updateStrike} = require('../system/redux/actions');
 
 const PriceTileList = React.createClass({
 
-  // updateStrike: function(value, tileId, legIndex) {
-  //   this.props.dispatch(updateStrike(value, tileId, legIndex));
-  // },
-
   renderTiles: function() {
-
-    //let tiles = [];
-
-    //this.props.tiles.toSeq();
-
-    // for (let tileId in this.props.tiles) {
-
-    //   let tile = this.props.tiles[tileId];
-
-    //   if (tile.type == 'option') {
-
-    //     tiles.push(<OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} updateStrike={this.updateStrike} />);
-    //   } else {
-    //     tiles.push(<StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />);
-    //   }
-    // }
 
     var tiles = this.props.workspace.tiles;
 

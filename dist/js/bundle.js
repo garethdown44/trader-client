@@ -56107,7 +56107,7 @@ String.prototype.endsWith = function (suffix) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-    value: true
+  value: true
 });
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -56128,59 +56128,39 @@ var _require2 = require('../system/redux/actions');
 var updateStrike = _require2.updateStrike;
 
 var PriceTileList = React.createClass({
-    displayName: 'PriceTileList',
+  displayName: 'PriceTileList',
 
-    // updateStrike: function(value, tileId, legIndex) {
-    //   this.props.dispatch(updateStrike(value, tileId, legIndex));
-    // },
+  renderTiles: function renderTiles() {
+    var _this = this;
 
-    renderTiles: function renderTiles() {
-        var _this = this;
+    var tiles = this.props.workspace.tiles;
 
-        //let tiles = [];
+    return tiles.map(function (tile, tileId) {
 
-        //this.props.tiles.toSeq();
+      tile = tile.toJS();
 
-        // for (let tileId in this.props.tiles) {
+      if (tile.type == 'option') {
+        return React.createElement(OptionTile, _extends({ dispatch: _this.props.dispatch, key: tileId }, tile, { tileId: tileId }));
+      } else {
+        return React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: tileId });
+      }
+    });
+  },
 
-        //   let tile = this.props.tiles[tileId];
+  render: function render() {
 
-        //   if (tile.type == 'option') {
+    var view = this.renderTiles().toJS();
 
-        //     tiles.push(<OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} updateStrike={this.updateStrike} />);
-        //   } else {
-        //     tiles.push(<StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />);
-        //   }
-        // }
-
-        var tiles = this.props.workspace.tiles;
-
-        return tiles.map(function (tile, tileId) {
-
-            tile = tile.toJS();
-
-            if (tile.type == 'option') {
-                return React.createElement(OptionTile, _extends({ dispatch: _this.props.dispatch, key: tileId }, tile, { tileId: tileId }));
-            } else {
-                return React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: tileId });
-            }
-        });
-    },
-
-    render: function render() {
-
-        var view = this.renderTiles().toJS();
-
-        return React.createElement(
-            'div',
-            { className: 'row' },
-            view
-        );
-    }
+    return React.createElement(
+      'div',
+      { className: 'row' },
+      view
+    );
+  }
 });
 
 function selectWorkspace(state) {
-    return { workspace: state.workspace };
+  return { workspace: state.workspace };
 }
 
 exports['default'] = connect(selectWorkspace)(PriceTileList);
@@ -56304,26 +56284,36 @@ module.exports = React.createClass({
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _rx = require('rx');
+
+var _rx2 = _interopRequireDefault(_rx);
+
 var _reactRedux = require('react-redux');
 
 var _systemReduxActions = require('../../system/redux/actions');
 
 var debug = require('debug')('trader:components:option');
-var React = require('react');
 
-var TwoChoice = React.createClass({
+var TwoChoice = _react2['default'].createClass({
   displayName: 'TwoChoice',
 
   render: function render() {
-    return React.createElement(
+    // todo: replace with a button that flips the value
+    return _react2['default'].createElement(
       'select',
       null,
-      React.createElement(
+      _react2['default'].createElement(
         'option',
         null,
         this.props.first
       ),
-      React.createElement(
+      _react2['default'].createElement(
         'option',
         null,
         this.props.second
@@ -56332,50 +56322,50 @@ var TwoChoice = React.createClass({
   }
 });
 
-var NotionalTextBox = React.createClass({
+var NotionalTextBox = _react2['default'].createClass({
   displayName: 'NotionalTextBox',
 
   render: function render() {
-    return React.createElement('input', { type: 'text', value: this.props.value, onChange: this.props.onChange });
+    return _react2['default'].createElement('input', { type: 'text', value: this.props.value, onChange: this.props.onChange });
   }
 });
 
-var DateChooser = React.createClass({
+var DateChooser = _react2['default'].createClass({
   displayName: 'DateChooser',
 
   render: function render() {
-    return React.createElement('input', { type: 'text', value: this.props.value, onChange: this.props.onChange });
+    return _react2['default'].createElement('input', { type: 'text', value: this.props.value, onChange: this.props.onChange });
   }
 });
 
-var StrikePriceTextBox = React.createClass({
+var StrikePriceTextBox = _react2['default'].createClass({
   displayName: 'StrikePriceTextBox',
 
   render: function render() {
-    return React.createElement('input', { type: 'text',
+    return _react2['default'].createElement('input', { type: 'text',
       value: this.props.value,
       onChange: this.props.onChange });
   }
 });
 
-var OptionLeg = React.createClass({
+var OptionLeg = _react2['default'].createClass({
   displayName: 'OptionLeg',
 
   render: function render() {
 
-    return React.createElement(
+    return _react2['default'].createElement(
       'div',
       { className: 'leg' },
-      React.createElement(TwoChoice, { first: 'buy', second: 'sell', selected: 'buy' }),
-      React.createElement(NotionalTextBox, { value: this.props.notional, onChange: this.props.handleNotionalChange }),
-      React.createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate, onChange: this.props.handleExpiryDateChange }),
-      React.createElement(StrikePriceTextBox, { className: 'strike', value: this.props.strike, onChange: this.props.handleStrikeChange, key: '43' }),
-      React.createElement(TwoChoice, { first: 'call', second: 'put', selected: 'call' })
+      _react2['default'].createElement(TwoChoice, { first: 'buy', second: 'sell', selected: 'buy' }),
+      _react2['default'].createElement(NotionalTextBox, { value: this.props.notional, onChange: this.props.handleNotionalChange }),
+      _react2['default'].createElement(DateChooser, { className: 'expiryDate', value: this.props.expiryDate, onChange: this.props.handleExpiryDateChange }),
+      _react2['default'].createElement(StrikePriceTextBox, { className: 'strike', value: this.props.strike, onChange: this.props.handleStrikeChange, key: '43' }),
+      _react2['default'].createElement(TwoChoice, { first: 'call', second: 'put', selected: 'call' })
     );
   }
 });
 
-var Button = React.createClass({
+var Button = _react2['default'].createClass({
   displayName: 'Button',
 
   shouldComponentUpdate: function shouldComponentUpdate() {
@@ -56389,7 +56379,7 @@ var Button = React.createClass({
       classNames += ' invalid';
     }
 
-    return React.createElement(
+    return _react2['default'].createElement(
       'div',
       _extends({}, this.props, { className: classNames }),
       this.props.text
@@ -56397,17 +56387,46 @@ var Button = React.createClass({
   }
 });
 
-var Countdown = React.createClass({
+var Countdown = _react2['default'].createClass({
   displayName: 'Countdown',
 
-  getInitialState: function getInitialState() {},
+  componentDidMount: function componentDidMount() {
+    this.startTimer(10);
+  },
 
-  tick: function tick() {},
+  getInitialState: function getInitialState() {
+    return { count: this.props.from };
+  },
 
-  render: function render() {}
+  componentWillUnmount: function componentWillUnmount() {
+    this.subscription.dispose();
+  },
+
+  startTimer: function startTimer(from) {
+    this.count = from;
+    this.subscription = _rx2['default'].Observable.interval(1000).subscribe(this.tick);
+  },
+
+  tick: function tick() {
+    this.count--;
+
+    if (this.count > -1) {
+      this.setState({ count: this.count });
+    }
+  },
+
+  render: function render() {
+    return _react2['default'].createElement(
+      'div',
+      null,
+      'quote is valid for ',
+      this.state.count,
+      ' seconds'
+    );
+  }
 });
 
-module.exports = React.createClass({
+module.exports = _react2['default'].createClass({
   displayName: 'exports',
 
   handleStrikeChange: function handleStrikeChange(value, legIndex) {
@@ -56431,7 +56450,7 @@ module.exports = React.createClass({
 
     return legs.map(function (leg, index) {
       debug('index', index);
-      return React.createElement(OptionLeg, _extends({}, leg, {
+      return _react2['default'].createElement(OptionLeg, _extends({}, leg, {
         key: index,
         handleStrikeChange: function (e) {
           return _this.handleStrikeChange(e.target.value, index);
@@ -56445,75 +56464,40 @@ module.exports = React.createClass({
     });
   },
 
-  startTimer: function startTimer(from) {
-    this.count = from;
-
-    setInterval(this.tick, 1000);
-  },
-
-  tick: function tick() {
-    this.count--;
-
-    if (this.count == 0) {
-      //this.setState({quoteTimedOut: true});
-
-      this.props.dispatch((0, _systemReduxActions.quoteTimedOut)(this.props.tileId));
-    } else {
-      this.setState({ count: this.count });
-    }
-  },
-
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-    if (nextProps.status == 'IS_PRICED') {
-      this.setState({ count: 10 });
-      this.startTimer(10);
-    }
-  },
-
-  getInitialState: function getInitialState() {
-    return { quoteTimedOut: false };
-  },
-
   render: function render() {
 
     var legs = this.renderLegs(this.props.legs);
 
     debug('OptionTile.render(), props', this.props);
 
-    var canPrice = this.props.valid || this.props.status != 'IS_PRICING';
+    var canPrice = this.props.valid && this.props.status != 'IS_PRICING';
     var buttons = undefined;
 
-    if (!this.props.status || this.state.quoteTimedOut) {
-      buttons = React.createElement(Button, { valid: canPrice, text: 'PRICE', onClick: this.handlePrice });
+    if (!this.props.status) {
+      buttons = _react2['default'].createElement(Button, { valid: canPrice, text: 'PRICE', onClick: this.handlePrice });
     } else if (this.props.status == 'IS_PRICED') {
 
       var formattedPrice = this.props.price.toFixed(2);
       var price = this.props.ccyCpl.substr(0, 3) + ' ' + formattedPrice;
 
-      buttons = React.createElement(
+      buttons = _react2['default'].createElement(
         'div',
         null,
-        React.createElement(Button, { valid: true, text: 'BUY - you pay ' + price, onClick: this.buy, style: { float: 'left' } }),
-        React.createElement(Button, { valid: true, text: 'SELL - we pay ' + price, onClick: this.sell, style: { float: 'left', marginLeft: '10px' } }),
-        React.createElement(
-          'div',
-          null,
-          'quote is valid for ',
-          this.state.count,
-          ' seconds'
-        )
+        _react2['default'].createElement(Button, { valid: true, text: 'BUY - you pay ' + price, onClick: this.buy, style: { float: 'left' } }),
+        _react2['default'].createElement(Button, { valid: true, text: 'SELL - we pay ' + price, onClick: this.sell, style: { float: 'left', marginLeft: '10px' } }),
+        _react2['default'].createElement(Countdown, { from: 10 })
       );
     }
 
-    return React.createElement(
+    return _react2['default'].createElement(
       'div',
       { className: 'tile option-tile' },
-      React.createElement(
+      _react2['default'].createElement(
         'div',
         { className: 'tile-title' },
         this.props.ccyCpl
       ),
-      React.createElement(
+      _react2['default'].createElement(
         'div',
         null,
         legs
@@ -56523,7 +56507,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"../../system/redux/actions":252,"debug":3,"react":175,"react-redux":14}],244:[function(require,module,exports){
+},{"../../system/redux/actions":252,"debug":3,"react":175,"react-redux":14,"rx":187}],244:[function(require,module,exports){
 'use strict';
 
 var config = {};
@@ -56676,11 +56660,16 @@ exports.receivePosition = receivePosition;
 exports.addTile = addTile;
 exports.optionPriceRequested = optionPriceRequested;
 exports.optionPriceReceived = optionPriceReceived;
+exports.initiateQuoteExpiry = initiateQuoteExpiry;
 exports.priceOption = priceOption;
 exports.quoteTimedOut = quoteTimedOut;
 exports.subscribePositions = subscribePositions;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _rx = require('rx');
+
+var _rx2 = _interopRequireDefault(_rx);
 
 var _blotter = require('../blotter');
 
@@ -56691,6 +56680,7 @@ var _requestOptionPrice = require('../requestOptionPrice');
 var _requestOptionPrice2 = _interopRequireDefault(_requestOptionPrice);
 
 var debug = require('debug')('trader:actions');
+
 var BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
 exports.BOOK_SPOT_TRADE = BOOK_SPOT_TRADE;
 var UPDATE_STRIKE = 'UPDATE_STRIKE';
@@ -56743,7 +56733,10 @@ function updateNotional(value, tileId, legIndex) {
     type: UPDATE_NOTIONAL,
     tileId: tileId,
     value: value,
-    legIndex: legIndex
+    legIndex: legIndex,
+    func: function func(leg, val) {
+      return leg.set('strike', val);
+    }
   };
 }
 
@@ -56777,16 +56770,24 @@ function optionPriceReceived(tileId, option) {
   };
 }
 
+function initiateQuoteExpiry(tileId, option) {
+
+  return function (dispatch) {
+    _rx2['default'].Observable.timer(10000).take(1).subscribe(function (_) {
+      dispatch(quoteTimedOut(tileId, option));
+    });
+  };
+}
+
 function priceOption(tileId, option) {
 
   return function (dispatch) {
 
     dispatch(optionPriceRequested(tileId, option));
 
-    // make request, then dispatch
-
     (0, _requestOptionPrice2['default'])(option, function (result) {
       dispatch(optionPriceReceived(tileId, result));
+      dispatch(initiateQuoteExpiry(tileId, result));
     });
   };
 }
@@ -56799,22 +56800,18 @@ function quoteTimedOut(tileId) {
 }
 
 function subscribePositions() {
-
-  debug('subscribePositions() - entry');
-
   return function (dispatch) {
-
     return _blotter2['default'].subscribe(function (position) {
       return dispatch(receivePosition(position));
     });
   };
 }
 
-},{"../blotter":245,"../requestOptionPrice":254,"debug":3}],253:[function(require,module,exports){
+},{"../blotter":245,"../requestOptionPrice":254,"debug":3,"rx":187}],253:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-      value: true
+  value: true
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -56833,110 +56830,106 @@ var debug = require('debug')('trader:redux:reducers');
 
 var initialWorkspace = _workspace2['default'].get();
 
+function legfn(leg, action) {
+  switch (action.type) {
+    case _actions.UPDATE_STRIKE:
+      leg = leg.set('strike', action.value);
+      break;
+
+    case _actions.UPDATE_NOTIONAL:
+      leg = leg.set('notional', action.value);
+      break;
+  }
+
+  return leg;
+}
+
 function option(state, action) {
-      if (state === undefined) state = {};
+  if (state === undefined) state = {};
 
-      state = state.set('valid', true);
-      var legs = state.get('legs');
+  state = state.set('valid', true);
+  var legs = state.get('legs');
 
-      switch (action.type) {
+  switch (action.type) {
 
-            case _actions.UPDATE_STRIKE:
-                  var leg = legs.get(action.legIndex);
-                  leg = leg.set('strike', action.value);
-                  legs = legs.set(action.legIndex, leg);
+    case _actions.UPDATE_STRIKE:
 
-                  state = state.set('legs', legs);
+      state = state.set('valid', action.value < 3);
 
-                  if (action.value < 3) {
-                        // contrived example
-                        state = state.set('valid', true);
-                  }
+    case _actions.UPDATE_NOTIONAL:
+      var leg = legs.get(action.legIndex);
 
-                  break;
+      leg = legfn(leg, action);
 
-            case _actions.UPDATE_NOTIONAL:
-                  //newState.legs[action.legIndex].notional = action.value;
-                  break;
+      legs = legs.set(action.legIndex, leg);
+      state = state.set('legs', legs);
+      break;
 
-            case _actions.OPTION_PRICE_REQUESTED:
-                  //newState.status = 'IS_PRICING';
-                  break;
+    case _actions.OPTION_PRICE_REQUESTED:
+      state = state.set('status', 'IS_PRICING');
+      break;
 
-            case _actions.OPTION_PRICE_RECEIVED:
-                  // newState.status = 'IS_PRICED';
-                  // newState.price = action.option.price;
-                  break;
-      }
+    case _actions.OPTION_PRICE_RECEIVED:
+      state = state.set('status', 'IS_PRICED');
+      state = state.set('price', action.option.price);
+      //state = state.set('quoteValidForInSeconds', 10); // arbitrary
+      break;
 
-      return state;
+    case _actions.QUOTE_TIMED_OUT:
+      state = state.set('status', '');
+  }
+
+  return state;
 }
 
 function workspace(state, action) {
-      if (state === undefined) state = initialWorkspace;
+  if (state === undefined) state = initialWorkspace;
 
-      switch (action.type) {
+  switch (action.type) {
 
-            //case ADD_TILE:
-            //return Object.assign({}, state.tiles);
+    //case ADD_TILE:
+    //return Object.assign({}, state.tiles);
 
-            case _actions.UPDATE_STRIKE:
-            case _actions.UPDATE_NOTIONAL:
-            case _actions.OPTION_PRICE_REQUESTED:
-            case _actions.OPTION_PRICE_RECEIVED:
-            case _actions.QUOTE_TIMED_OUT:
+    case _actions.UPDATE_STRIKE:
+    case _actions.UPDATE_NOTIONAL:
+    case _actions.OPTION_PRICE_REQUESTED:
+    case _actions.OPTION_PRICE_RECEIVED:
+    case _actions.QUOTE_TIMED_OUT:
+      var tiles = state.get('tiles');
+      var tile = tiles.get(action.tileId);
 
-                  // let tile = state.tiles[action.tileId];
+      tiles = tiles.set(action.tileId, option(tile, action));
+      state = state.set('tiles', tiles);
 
-                  // let newWorkspace = {};
-                  // newWorkspace.tiles = {};
+      return state;
 
-                  // for (let t in state.tiles) {
-                  //   if (t == action.tileId) {
-                  //     newWorkspace.tiles[t] = (option(tile, action));
-                  //   } else {
-                  //     newWorkspace.tiles[t] = state.tiles[t];
-                  //   }
-                  // }
-
-                  var tiles = state.get('tiles');
-                  var tile = tiles.get(action.tileId);
-
-                  tiles = tiles.set(action.tileId, option(tile, action));
-                  state = state.set('tiles', tiles);
-
-                  return state;
-
-            case _actions.PRICE_OPTION:
-            //return state;
-
-            default:
-                  return state;
-      }
+    default:
+      return state;
+  }
 }
 
 function positions(state, action) {
-      if (state === undefined) state = [];
+  if (state === undefined) state = [];
 
-      debug(action);
+  debug(action);
 
-      switch (action.type) {
-            case _actions.RECEIVE_POSITION:
+  switch (action.type) {
+    case _actions.RECEIVE_POSITION:
 
-                  var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
+      var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
 
-                  debug('newState', newState);
+      debug('newState', newState);
 
-                  return newState;
+      return newState;
 
-            default:
-                  return [].concat(_toConsumableArray(state));
-      }
+    default:
+      return [].concat(_toConsumableArray(state));
+  }
 }
 
 exports['default'] = (0, _redux.combineReducers)({
-      workspace: workspace,
-      positions: positions
+  workspace: workspace,
+  positions: positions
 });
 module.exports = exports['default'];
 
@@ -56974,29 +56967,10 @@ var Immutable = require('immutable');
 
 var Workspace = Immutable.Record({ tiles: Immutable.List() });
 var SpotTile = Immutable.Record({ type: 'spot', ccyCpl: '' });
-var OptionTile = Immutable.Record({ type: 'option', valid: true, ccyCpl: '', legs: Immutable.List() });
+var OptionTile = Immutable.Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', legs: Immutable.List() });
 var Leg = Immutable.Record({ strike: 0, notional: 0, expiryDate: undefined, callPut: 'call', type: 'buy' });
 
 module.exports.get = function () {
-
-  // var data = {
-  //   tiles: {
-  //     1: {type: 'spot', ccyCpl: 'EURUSD'},
-  //     2: {type: 'spot', ccyCpl: 'EURGBP'},
-  //     3: {type: 'option', ccyCpl: 'EURUSD', valid: true, legs: [
-  //          { direction: 'buy', notional: 20000, expiryDate: new Date(), strike: 1.234, type: 'call' },
-  //          { direction: 'buy', notional: 30000, expiryDate: new Date(), strike: 2.345, type: 'put' }
-  //     ]}
-  //   }
-  // };
-
-  //   {type: 'spot', ccyCpl: 'EURUSD'},
-  //   {type: 'spot', ccyCpl: 'EURGBP'},
-  //   // {type: 'spot', ccyCpl: 'AUDCHF'},
-  //   // {type: 'spot', ccyCpl: 'GBPCHF'},
-  //   // {type: 'spot', ccyCpl: 'AUDUSD'},
-
-  //callback(data);
 
   var workspace = new Workspace();
   var tiles = Immutable.List();
@@ -57008,11 +56982,15 @@ module.exports.get = function () {
 
   var legs = Immutable.List();
   legs = legs.set(0, new Leg({ strike: 1.234, expiryDate: new Date(), notional: 100000 }));
-  legs = legs.set(1, new Leg({ strike: 2.345, expiryDate: new Date(), notional: 100000 }));
+  legs = legs.set(1, new Leg({ strike: 2.345, expiryDate: new Date(), notional: 200000 }));
 
   optionTile = optionTile.set('legs', legs);
 
   tiles = tiles.set(2, optionTile);
+
+  // tiles = tiles.set(3, new SpotTile({ ccyCpl: 'AUDCHF'}));
+  // tiles = tiles.set(4, new SpotTile({ ccyCpl: 'GBPCHF'}));
+  // tiles = tiles.set(5, new SpotTile({ ccyCpl: 'AUDUSD'}));
 
   workspace = workspace.set('tiles', tiles);
 

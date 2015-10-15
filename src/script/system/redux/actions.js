@@ -1,6 +1,7 @@
 const debug = require('debug')('trader:actions');
-import positions from '../blotter';
 
+import Rx from 'rx'
+import positions from '../blotter';
 import requestOptionPrice from '../requestOptionPrice';
 
 export const BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
@@ -44,7 +45,10 @@ export function updateNotional(value, tileId, legIndex) {
     type: UPDATE_NOTIONAL,
     tileId: tileId,
     value: value,
-    legIndex: legIndex
+    legIndex: legIndex,
+    func: function(leg, val) {
+      return leg.set('strike', val);
+    }
   };
 }
 
@@ -78,16 +82,24 @@ export function optionPriceReceived(tileId, option) {
   }
 }
 
+export function initiateQuoteExpiry(tileId, option) {
+
+  return function(dispatch) {
+    Rx.Observable.timer(10000).take(1).subscribe(_ => {
+      dispatch(quoteTimedOut(tileId, option));
+    });
+  }
+}
+
 export function priceOption(tileId, option) {
 
   return function(dispatch) {
 
     dispatch(optionPriceRequested(tileId, option));
 
-    // make request, then dispatch
-
     requestOptionPrice(option, result => {
       dispatch(optionPriceReceived(tileId, result));
+      dispatch(initiateQuoteExpiry(tileId, result));
     });
   }
 }
@@ -100,11 +112,7 @@ export function quoteTimedOut(tileId) {
 }
 
 export function subscribePositions() {
-
-  debug('subscribePositions() - entry');
-
   return function (dispatch) {
-
     return positions.subscribe(position => {
       return dispatch(receivePosition(position));
     })

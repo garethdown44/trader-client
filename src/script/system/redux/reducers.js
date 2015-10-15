@@ -15,6 +15,20 @@ import ws from '../workspace';
 
 let initialWorkspace = ws.get();
 
+function legfn(leg, action) {
+  switch (action.type) {
+    case UPDATE_STRIKE:
+      leg = leg.set('strike', action.value);
+      break;
+
+    case UPDATE_NOTIONAL:
+      leg = leg.set('notional', action.value);
+      break;
+  }
+
+  return leg;
+}
+
 function option(state = {}, action) {
 
   state = state.set('valid', true);
@@ -23,30 +37,30 @@ function option(state = {}, action) {
   switch (action.type) {
 
     case UPDATE_STRIKE:
-      let leg = legs.get(action.legIndex);
-      leg = leg.set('strike', action.value);
-      legs = legs.set(action.legIndex, leg);
 
-      state = state.set('legs', legs);
-
-      if (action.value < 3) { // contrived example
-        state = state.set('valid', true);
-      }
-
-      break;
+      state = state.set('valid', action.value < 3);
 
     case UPDATE_NOTIONAL:
-      //newState.legs[action.legIndex].notional = action.value;
+      let leg = legs.get(action.legIndex);
+
+      leg = legfn(leg, action);
+
+      legs = legs.set(action.legIndex, leg);
+      state = state.set('legs', legs);
       break;
 
     case OPTION_PRICE_REQUESTED:
-      //newState.status = 'IS_PRICING';
+      state = state.set('status', 'IS_PRICING');
       break;
 
     case OPTION_PRICE_RECEIVED:
-      // newState.status = 'IS_PRICED';
-      // newState.price = action.option.price;
+      state = state.set('status', 'IS_PRICED');
+      state = state.set('price', action.option.price);
+      //state = state.set('quoteValidForInSeconds', 10); // arbitrary
       break;
+
+    case QUOTE_TIMED_OUT:
+      state = state.set('status', '');
   }
 
   return state;
@@ -64,20 +78,6 @@ function workspace(state = initialWorkspace, action) {
     case OPTION_PRICE_REQUESTED:
     case OPTION_PRICE_RECEIVED:
     case QUOTE_TIMED_OUT:
-
-      // let tile = state.tiles[action.tileId];
-
-      // let newWorkspace = {};
-      // newWorkspace.tiles = {};
-
-      // for (let t in state.tiles) {
-      //   if (t == action.tileId) {
-      //     newWorkspace.tiles[t] = (option(tile, action));
-      //   } else {
-      //     newWorkspace.tiles[t] = state.tiles[t];
-      //   }
-      // }
-
       let tiles = state.get('tiles');
       let tile = tiles.get(action.tileId);
 
@@ -85,9 +85,6 @@ function workspace(state = initialWorkspace, action) {
       state = state.set('tiles', tiles);
 
       return state;
-
-    case PRICE_OPTION:
-      //return state;
 
     default:
       return state;
