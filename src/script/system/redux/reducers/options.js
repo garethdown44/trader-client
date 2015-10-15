@@ -28,7 +28,7 @@ export default function option(state = {}, action) {
 
     case UPDATE_STRIKE:
 
-      state = state.set('valid', action.value < 3);
+      state = state.set('valid', action.value < 3); // contrived validation for demonstation purposes
 
     case UPDATE_NOTIONAL:
       let leg = legs.get(action.legIndex);

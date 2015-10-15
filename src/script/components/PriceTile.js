@@ -27,17 +27,20 @@ module.exports = React.createClass({
     this.setState({notional: val});
   },
 
-  execute: function(action, ccyCpl, rate, notional) {
+  execute: function(direction, ccyCpl, rate, notional) {
 
     if (this.state.executing)
       return;
 
     this.setState({executing: true});
 
-    executeTrade(action, ccyCpl, rate, notional, () => {
+    executeTrade(direction, ccyCpl, rate, notional, () => {
       debug(ccyCpl);
       this.setState({executing: false, bid: this.props.bid, ask: this.props.ask});
     });
+
+    // todo...
+    //this.props.dispatch(executeTrade(tileId, direction, ccyCpl, rate, notional));
   },
 
   render: function() {

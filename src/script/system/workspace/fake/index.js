@@ -23,9 +23,10 @@ module.exports.get = () => {
 
   tiles = tiles.set(2, optionTile);
 
-  // tiles = tiles.set(3, new SpotTile({ ccyCpl: 'AUDCHF'}));
-  // tiles = tiles.set(4, new SpotTile({ ccyCpl: 'GBPCHF'}));
-  // tiles = tiles.set(5, new SpotTile({ ccyCpl: 'AUDUSD'}));
+  tiles = tiles.set(3, new SpotTile({ ccyCpl: 'AUDCHF'}));
+  tiles = tiles.set(4, new SpotTile({ ccyCpl: 'GBPCHF'}));
+  tiles = tiles.set(5, new SpotTile({ ccyCpl: 'AUDUSD'}));
+  tiles = tiles.set(6, new SpotTile({ ccyCpl: 'EURHKD'}));
 
   workspace = workspace.set('tiles', tiles);
 
