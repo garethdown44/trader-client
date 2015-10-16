@@ -48,7 +48,7 @@ export function optionPriceReceived(tileId, option) {
 export function initiateQuoteExpiry(tileId, option) {
 
   return function(dispatch) {
-    Rx.Observable.timer(10000).take(1).subscribe(_ => {
+    Rx.Observable.timer(option.quoteValidForInSeconds * 1000).take(1).subscribe(_ => {
       dispatch(quoteTimedOut(tileId, option));
     });
   }

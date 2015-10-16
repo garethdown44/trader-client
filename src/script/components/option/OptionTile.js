@@ -146,7 +146,6 @@ module.exports = React.createClass({
                    <Countdown from={this.props.quoteValidForInSeconds} />
                    
                  </div>);
-
     }
 
     return <div className='tile option-tile'>

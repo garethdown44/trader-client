@@ -56723,7 +56723,7 @@ function optionPriceReceived(tileId, option) {
 function initiateQuoteExpiry(tileId, option) {
 
   return function (dispatch) {
-    _rx2['default'].Observable.timer(10000).take(1).subscribe(function (_) {
+    _rx2['default'].Observable.timer(option.quoteValidForInSeconds * 1000).take(1).subscribe(function (_) {
       dispatch(quoteTimedOut(tileId, option));
     });
   };
@@ -57034,10 +57034,20 @@ module.exports.get = function () {
 
   tiles = tiles.set(2, optionTile);
 
-  tiles = tiles.set(3, new SpotTile({ ccyCpl: 'AUDCHF' }));
-  tiles = tiles.set(4, new SpotTile({ ccyCpl: 'GBPCHF' }));
-  tiles = tiles.set(5, new SpotTile({ ccyCpl: 'AUDUSD' }));
-  tiles = tiles.set(6, new SpotTile({ ccyCpl: 'EURHKD' }));
+  var optionTile2 = new OptionTile({ ccyCpl: 'EURGBP' });
+
+  var legs2 = Immutable.List();
+  legs2 = legs2.set(0, new Leg({ strike: 2.456, expiryDate: new Date(), notional: 2000 }));
+  legs2 = legs2.set(1, new Leg({ strike: 3.456, expiryDate: new Date(), notional: 3000 }));
+
+  optionTile2 = optionTile2.set('legs', legs2);
+
+  tiles = tiles.set(3, optionTile2);
+
+  tiles = tiles.set(4, new SpotTile({ ccyCpl: 'AUDCHF' }));
+  tiles = tiles.set(5, new SpotTile({ ccyCpl: 'GBPCHF' }));
+  tiles = tiles.set(6, new SpotTile({ ccyCpl: 'AUDUSD' }));
+  tiles = tiles.set(7, new SpotTile({ ccyCpl: 'EURHKD' }));
 
   workspace = workspace.set('tiles', tiles);
 
