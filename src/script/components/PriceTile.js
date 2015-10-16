@@ -7,7 +7,7 @@ const debug = require('debug')('trader:components:PriceTile');
 module.exports = React.createClass({
 
   getInitialState: function() {
-    return { executing: false, notional: 1000000, firstCcy: '', tradeable: false };
+    return { executing: false, notional: 1000000, tradeable: false };
   },
 
   componentWillReceiveProps: function(newProps) {
@@ -47,6 +47,11 @@ module.exports = React.createClass({
 
     let nonTradeable = false;
 
+    let firstCcy = '';
+    if (this.props.ccyCpl) {
+      let firstCcy = this.props.ccyCpl.substr(0, 3);
+    } 
+
     if (this.state.executing || !this.state.tradeable) {
       nonTradeable = true;
     }
@@ -72,7 +77,7 @@ module.exports = React.createClass({
                 </div>
                 
                 <div className='notional-container'>
-                  <span className='notional-ccy'>{this.state.firstCcy}</span>
+                  <span className='notional-ccy'>{firstCcy}</span>
                   <input type="text" 
                          value={this.state.notional} 
                          onChange={this.notionalChanged}

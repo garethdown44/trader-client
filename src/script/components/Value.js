@@ -8,13 +8,11 @@ module.exports = React.createClass({
 
   componentWillReceiveProps: function(newProps) {
     let value;
-    let valueAtTimeOfTrade = newProps.rate * newProps.notional;
-    let valueNow = newProps.bid * newProps.notional;
-
+    
     if (newProps.direction == 'buy') {
-      value = valueNow - valueAtTimeOfTrade;
+      value = (newProps.bid - newProps.rate) * newProps.notional;
     } else if (newProps.direction == 'sell') {
-      value = valueAtTimeOfTrade - valueNow;
+      value = (newProps.rate - newProps.ask) * newProps.notional;
     }
 
     this.setState({value: value.toFixed(0)});

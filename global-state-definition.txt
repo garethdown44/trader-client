@@ -1,8 +1,0 @@
-{
-  positions: [],
-  tilesOrder: [1,2,3]
-  tilesById: {
-    1: { type: 'option', ccyCpl: 'EURUSD', },
-    2: { type: 'spot', ccyCpl: 'EURUSD' }
-  }
-}

@@ -56010,7 +56010,7 @@ module.exports = React.createClass({
   displayName: 'exports',
 
   getInitialState: function getInitialState() {
-    return { executing: false, notional: 1000000, firstCcy: '', tradeable: false };
+    return { executing: false, notional: 1000000, tradeable: false };
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(newProps) {
@@ -56050,6 +56050,11 @@ module.exports = React.createClass({
     var _this2 = this;
 
     var nonTradeable = false;
+
+    var firstCcy = '';
+    if (this.props.ccyCpl) {
+      var _firstCcy = this.props.ccyCpl.substr(0, 3);
+    }
 
     if (this.state.executing || !this.state.tradeable) {
       nonTradeable = true;
@@ -56091,7 +56096,7 @@ module.exports = React.createClass({
         React.createElement(
           'span',
           { className: 'notional-ccy' },
-          this.state.firstCcy
+          firstCcy
         ),
         React.createElement('input', { type: 'text',
           value: this.state.notional,
@@ -56254,13 +56259,11 @@ module.exports = React.createClass({
 
   componentWillReceiveProps: function componentWillReceiveProps(newProps) {
     var value = undefined;
-    var valueAtTimeOfTrade = newProps.rate * newProps.notional;
-    var valueNow = newProps.bid * newProps.notional;
 
     if (newProps.direction == 'buy') {
-      value = valueNow - valueAtTimeOfTrade;
+      value = (newProps.bid - newProps.rate) * newProps.notional;
     } else if (newProps.direction == 'sell') {
-      value = valueAtTimeOfTrade - valueNow;
+      value = (newProps.rate - newProps.ask) * newProps.notional;
     }
 
     this.setState({ value: value.toFixed(0) });

@@ -1,0 +1,25 @@
+== TODO ==
+
+1. fix the PnL value. 
+   - a) if it's a buy then PnL = (bid - r) * notional
+   - b) if it's a sell then PnL = (r - ask) * notional
+
+2. drag and drop tiles
+
+3. option add flip icon for buy/sell call/put
+
+4. add a bar across the top and have an add tile dropdown - spot/fwd, option
+
+5. fix notional currency
+
+6. add reducer for book trade
+
+7. add reducer for add tile
+
+8. load workspace from the server
+
+9. option - set expiry (+ using tenor dates)
+
+10. add option leg
+
+11. remove tile
