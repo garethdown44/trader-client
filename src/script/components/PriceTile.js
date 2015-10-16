@@ -4,14 +4,19 @@ const OneWayPrice = require('./OneWayPrice');
 const Spread = require('./Spread');
 const debug = require('debug')('trader:components:PriceTile');
 
-module.exports = React.createClass({
+import {removeTile} from '../system/redux/actions/workspace';
+
+const PriceTile = React.createClass({
 
   getInitialState: function() {
     return { executing: false, notional: 1000000, tradeable: false };
   },
 
   componentWillReceiveProps: function(newProps) {
-    this.setState({bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable});
+
+    if (newProps.bid != this.state.bid) {
+      this.setState({bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable});
+    }
   },
 
   notionalChanged: function(e) {
@@ -25,6 +30,10 @@ module.exports = React.createClass({
     }
 
     this.setState({notional: val});
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return nextProps.bid != this.state.bid;
   },
 
   execute: function(direction, ccyCpl, rate, notional) {
@@ -43,6 +52,10 @@ module.exports = React.createClass({
     //this.props.dispatch(executeTrade(tileId, direction, ccyCpl, rate, notional));
   },
 
+  remove: function(tileId) {
+    this.props.dispatch(removeTile(tileId));
+  },
+
   render: function() {
 
     let nonTradeable = false;
@@ -58,6 +71,7 @@ module.exports = React.createClass({
 
     return (<div className='tile'>
                 <div className='tile-title'>{this.props.ccyCpl}</div>
+                <button onClick={() => this.remove(this.props.tileId)}>x</button>
 
                 <div>
                   <OneWayPrice side='sell'
@@ -90,3 +104,5 @@ module.exports = React.createClass({
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+export default PriceTile;

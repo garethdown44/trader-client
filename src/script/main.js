@@ -5,25 +5,14 @@ const PriceTile = require('./components/PriceTile');
 const StreamingPriceReceiver = require('./components/StreamingPriceReceiver');
 const PriceTileList = require('./components/PriceTileList');
 const Blotter = require('./components/Blotter');
+const Header = require('./components/Header');
 
 window.myDebug = require('debug');
 window.myDebug.enable('trader*');
 window.Perf = require('react-addons-perf');
 
-import thunkMiddleware from 'redux-thunk';
-import createLogger from 'redux-logger';
-import { createStore, applyMiddleware } from 'redux';
+import store from './system/redux/store';
 import { subscribePositions } from './system/redux/actions/positions';
-import rootReducer from './system/redux/reducers';
-
-const loggerMiddleware = createLogger();
-
-const createStoreWithMiddleware = applyMiddleware(
-  thunkMiddleware, // lets us dispatch() functions
-  loggerMiddleware // neat middleware that logs actions
-)(createStore);
-
-const store = createStoreWithMiddleware(rootReducer);
 
 store.dispatch(subscribePositions());
 
@@ -33,6 +22,7 @@ var Component = React.createClass({
       
               <div className='row'>
                 <div className='col-lg-12 tiles'>
+                  <Header dispatch={store.dispatch} />
                   <PriceTileList />
                 </div>
               </div>

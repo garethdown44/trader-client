@@ -1,4 +1,6 @@
 const React = require('react');
+const getStreamingPrices = require('../system/getStreamingPrices');
+
 
 module.exports = React.createClass({
 
@@ -11,22 +13,31 @@ module.exports = React.createClass({
     };
   },
 
-  componentWillReceiveProps: function(newProps) {
+  componentDidMount: function() {
 
-    let priceStr = newProps.price.toString();
+    let side = this.props.side == 'buy' ? 'ask' : 'bid';
 
-    let first = priceStr.substr(0,4);
-    let bigFigures = priceStr.substr(4, 2);
-    let tenthOfPips = priceStr.substr(6) || 0;
+    this.subscription = getStreamingPrices('EURUSD').subscribe(p => {
+      let priceStr = p[side].toString();
 
-    let state = {
-      first: first,
-      bigFigures: bigFigures,
-      tenthOfPips: tenthOfPips,
-      nonTradeable: newProps.nonTradeable
-    }
+      let first = priceStr.substr(0, 4);
+      let bigFigures = priceStr.substr(4, 2);
+      let tenthOfPips = priceStr.substr(6) || 0;
 
-    this.setState(state);
+      let state = {
+        first: first,
+        bigFigures: bigFigures,
+        tenthOfPips: tenthOfPips,
+        nonTradeable: p.nonTradeable,
+        price: p[side]
+      }
+
+      this.setState(state);
+    }.bind(this));
+  },
+
+  execute: function() {
+    this.props.execute(this.state.price);
   },
 
   render: function() {
@@ -38,7 +49,7 @@ module.exports = React.createClass({
 
     return  <div className={classes}>
               <div>{this.props.side}</div>
-              <span onClick={() => this.props.execute(this.props.price)}>
+              <span onClick={this.execute}>
                 <span>{this.state.first}</span>
                 <span className='big-figures'>{this.state.bigFigures}</span>
                 <span>{this.state.tenthOfPips}</span>

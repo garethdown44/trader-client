@@ -3,21 +3,11 @@
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _reduxThunk = require('redux-thunk');
+var _systemReduxStore = require('./system/redux/store');
 
-var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
-
-var _reduxLogger = require('redux-logger');
-
-var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
-
-var _redux = require('redux');
+var _systemReduxStore2 = _interopRequireDefault(_systemReduxStore);
 
 var _systemReduxActionsPositions = require('./system/redux/actions/positions');
-
-var _systemReduxReducers = require('./system/redux/reducers');
-
-var _systemReduxReducers2 = _interopRequireDefault(_systemReduxReducers);
 
 var React = require('react');
 var ReactDOM = require('react-dom');
@@ -30,20 +20,13 @@ var PriceTile = require('./components/PriceTile');
 var StreamingPriceReceiver = require('./components/StreamingPriceReceiver');
 var PriceTileList = require('./components/PriceTileList');
 var Blotter = require('./components/Blotter');
+var Header = require('./components/Header');
 
 window.myDebug = require('debug');
 window.myDebug.enable('trader*');
 window.Perf = require('react-addons-perf');
 
-var loggerMiddleware = (0, _reduxLogger2['default'])();
-
-var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxThunk2['default'], // lets us dispatch() functions
-loggerMiddleware // neat middleware that logs actions
-)(_redux.createStore);
-
-var store = createStoreWithMiddleware(_systemReduxReducers2['default']);
-
-store.dispatch((0, _systemReduxActionsPositions.subscribePositions)());
+_systemReduxStore2['default'].dispatch((0, _systemReduxActionsPositions.subscribePositions)());
 
 var Component = React.createClass({
   displayName: 'Component',
@@ -58,6 +41,7 @@ var Component = React.createClass({
         React.createElement(
           'div',
           { className: 'col-lg-12 tiles' },
+          React.createElement(Header, { dispatch: _systemReduxStore2['default'].dispatch }),
           React.createElement(PriceTileList, null)
         )
       ),
@@ -76,7 +60,7 @@ var Root = React.createClass({
   render: function render() {
     return React.createElement(
       Provider,
-      { store: store },
+      { store: _systemReduxStore2['default'] },
       React.createElement(Component, null)
     );
   }
@@ -84,7 +68,7 @@ var Root = React.createClass({
 
 ReactDOM.render(React.createElement(Root, null), document.getElementById('cont'));
 
-},{"./components/Blotter":236,"./components/PriceTile":238,"./components/PriceTileList":239,"./components/StreamingPriceReceiver":241,"./system/redux/actions/positions":253,"./system/redux/reducers":256,"debug":3,"react":175,"react-addons-perf":9,"react-dom":10,"react-redux":14,"redux":179,"redux-logger":176,"redux-thunk":177}],2:[function(require,module,exports){
+},{"./components/Blotter":236,"./components/Header":237,"./components/PriceTile":239,"./components/PriceTileList":240,"./components/StreamingPriceReceiver":242,"./system/redux/actions/positions":254,"./system/redux/store":261,"debug":3,"react":175,"react-addons-perf":9,"react-dom":10,"react-redux":14}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -55922,10 +55906,58 @@ var Blotter = React.createClass({
 exports['default'] = connect(select)(Blotter);
 module.exports = exports['default'];
 
-},{"../system/blotter":245,"./StreamingPriceReceiver":241,"./Value":242,"debug":3,"moment":8,"react":175,"react-redux":14}],237:[function(require,module,exports){
+},{"../system/blotter":246,"./StreamingPriceReceiver":242,"./Value":243,"debug":3,"moment":8,"react":175,"react-redux":14}],237:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _systemReduxActionsWorkspace = require('../system/redux/actions/workspace');
+
+exports['default'] = _react2['default'].createClass({
+  displayName: 'Header',
+
+  add: function add(product) {
+    this.props.dispatch((0, _systemReduxActionsWorkspace.addTile)(product));
+  },
+
+  render: function render() {
+    var _this = this;
+
+    return _react2['default'].createElement(
+      'div',
+      null,
+      _react2['default'].createElement(
+        'button',
+        { onClick: function () {
+            return _this.add('spot');
+          } },
+        'add spot'
+      ),
+      _react2['default'].createElement(
+        'button',
+        { onClick: function () {
+            return _this.add('option');
+          } },
+        'add option'
+      )
+    );
+  }
+});
+module.exports = exports['default'];
+
+},{"../system/redux/actions/workspace":256,"react":175}],238:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
+var getStreamingPrices = require('../system/getStreamingPrices');
 
 module.exports = React.createClass({
   displayName: 'exports',
@@ -55939,26 +55971,35 @@ module.exports = React.createClass({
     };
   },
 
-  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+  componentDidMount: function componentDidMount() {
+    var _this = this;
 
-    var priceStr = newProps.price.toString();
+    var side = this.props.side == 'buy' ? 'ask' : 'bid';
 
-    var first = priceStr.substr(0, 4);
-    var bigFigures = priceStr.substr(4, 2);
-    var tenthOfPips = priceStr.substr(6) || 0;
+    this.subscription = getStreamingPrices('EURUSD').subscribe((function (p) {
+      var priceStr = p[side].toString();
 
-    var state = {
-      first: first,
-      bigFigures: bigFigures,
-      tenthOfPips: tenthOfPips,
-      nonTradeable: newProps.nonTradeable
-    };
+      var first = priceStr.substr(0, 4);
+      var bigFigures = priceStr.substr(4, 2);
+      var tenthOfPips = priceStr.substr(6) || 0;
 
-    this.setState(state);
+      var state = {
+        first: first,
+        bigFigures: bigFigures,
+        tenthOfPips: tenthOfPips,
+        nonTradeable: p.nonTradeable,
+        price: p[side]
+      };
+
+      _this.setState(state);
+    }).bind(this));
+  },
+
+  execute: function execute() {
+    this.props.execute(this.state.price);
   },
 
   render: function render() {
-    var _this = this;
 
     var tradeable = this.state.nonTradeable ? 'non-tradeable' : '';
 
@@ -55974,9 +56015,7 @@ module.exports = React.createClass({
       ),
       React.createElement(
         'span',
-        { onClick: function () {
-            return _this.props.execute(_this.props.price);
-          } },
+        { onClick: this.execute },
         React.createElement(
           'span',
           null,
@@ -55997,8 +56036,14 @@ module.exports = React.createClass({
   }
 });
 
-},{"react":175}],238:[function(require,module,exports){
+},{"../system/getStreamingPrices":251,"react":175}],239:[function(require,module,exports){
 'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _systemReduxActionsWorkspace = require('../system/redux/actions/workspace');
 
 var React = require('react');
 var executeTrade = require('../system/executeTrade');
@@ -56006,15 +56051,18 @@ var OneWayPrice = require('./OneWayPrice');
 var Spread = require('./Spread');
 var debug = require('debug')('trader:components:PriceTile');
 
-module.exports = React.createClass({
-  displayName: 'exports',
+var PriceTile = React.createClass({
+  displayName: 'PriceTile',
 
   getInitialState: function getInitialState() {
     return { executing: false, notional: 1000000, tradeable: false };
   },
 
   componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-    this.setState({ bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable });
+
+    if (newProps.bid != this.state.bid) {
+      this.setState({ bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable });
+    }
   },
 
   notionalChanged: function notionalChanged(e) {
@@ -56028,6 +56076,10 @@ module.exports = React.createClass({
     }
 
     this.setState({ notional: val });
+  },
+
+  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.bid != this.state.bid;
   },
 
   execute: function execute(direction, ccyCpl, rate, notional) {
@@ -56044,6 +56096,10 @@ module.exports = React.createClass({
 
     // todo...
     //this.props.dispatch(executeTrade(tileId, direction, ccyCpl, rate, notional));
+  },
+
+  remove: function remove(tileId) {
+    this.props.dispatch((0, _systemReduxActionsWorkspace.removeTile)(tileId));
   },
 
   render: function render() {
@@ -56067,6 +56123,13 @@ module.exports = React.createClass({
         'div',
         { className: 'tile-title' },
         this.props.ccyCpl
+      ),
+      React.createElement(
+        'button',
+        { onClick: function () {
+            return _this2.remove(_this2.props.tileId);
+          } },
+        'x'
       ),
       React.createElement(
         'div',
@@ -56111,7 +56174,10 @@ String.prototype.endsWith = function (suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-},{"../system/executeTrade":247,"./OneWayPrice":237,"./Spread":240,"debug":3,"react":175}],239:[function(require,module,exports){
+exports['default'] = PriceTile;
+module.exports = exports['default'];
+
+},{"../system/executeTrade":248,"../system/redux/actions/workspace":256,"./OneWayPrice":238,"./Spread":241,"debug":3,"react":175}],240:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56127,8 +56193,6 @@ var _require = require('react-redux');
 var connect = _require.connect;
 
 var PriceTile = require('./PriceTile');
-var StreamingPriceReceiver = require('./StreamingPriceReceiver');
-var StreamingPriceTile = StreamingPriceReceiver(PriceTile);
 var OptionTile = require('./option/OptionTile');
 
 var PriceTileList = React.createClass({
@@ -56146,7 +56210,7 @@ var PriceTileList = React.createClass({
       if (tile.type == 'option') {
         return React.createElement(OptionTile, _extends({ dispatch: _this.props.dispatch, key: tileId }, tile, { tileId: tileId }));
       } else {
-        return React.createElement(StreamingPriceTile, { ccyCpl: tile.ccyCpl, key: tileId });
+        return React.createElement(PriceTile, { ccyCpl: tile.ccyCpl, key: tileId, dispatch: _this.props.dispatch, tileId: tileId });
       }
     });
   },
@@ -56170,7 +56234,7 @@ function selectWorkspace(state) {
 exports['default'] = connect(selectWorkspace)(PriceTileList);
 module.exports = exports['default'];
 
-},{"./PriceTile":238,"./StreamingPriceReceiver":241,"./option/OptionTile":243,"react":175,"react-redux":14}],240:[function(require,module,exports){
+},{"./PriceTile":239,"./option/OptionTile":244,"react":175,"react-redux":14}],241:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -56211,7 +56275,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"react":175}],241:[function(require,module,exports){
+},{"react":175}],242:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -56245,7 +56309,7 @@ module.exports = function (Child) {
   });
 };
 
-},{"../system/getStreamingPrices":250,"debug":3,"react":175}],242:[function(require,module,exports){
+},{"../system/getStreamingPrices":251,"debug":3,"react":175}],243:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -56281,7 +56345,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"react":175}],243:[function(require,module,exports){
+},{"react":175}],244:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -56509,7 +56573,7 @@ module.exports = _react2['default'].createClass({
   }
 });
 
-},{"../../system/redux/actions/options":252,"debug":3,"react":175,"react-redux":14,"rx":187}],244:[function(require,module,exports){
+},{"../../system/redux/actions/options":253,"debug":3,"react":175,"react-redux":14,"rx":187}],245:[function(require,module,exports){
 'use strict';
 
 var config = {};
@@ -56520,12 +56584,12 @@ config.streamingPrices = 'server'; // (server,fake,oanda)
 
 module.exports = config;
 
-},{}],245:[function(require,module,exports){
+},{}],246:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":246}],246:[function(require,module,exports){
+},{"./server":247}],247:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
@@ -56542,12 +56606,12 @@ var stream = Rx.Observable.create(function (obs) {
 
 module.exports = stream;
 
-},{"../../../config":244,"rx":187,"socket.io-client":188}],247:[function(require,module,exports){
+},{"../../../config":245,"rx":187,"socket.io-client":188}],248:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":248}],248:[function(require,module,exports){
+},{"./server":249}],249:[function(require,module,exports){
 'use strict';
 
 var debug = require('debug')('trader:server:executeTrade');
@@ -56592,7 +56656,7 @@ module.exports = function (action, ccyCpl, rate, notional, success, error) {
   });
 };
 
-},{"../../../config":244,"debug":3,"jquery":7}],249:[function(require,module,exports){
+},{"../../../config":245,"debug":3,"jquery":7}],250:[function(require,module,exports){
 'use strict';
 
 var Rx = require('rx');
@@ -56609,7 +56673,7 @@ module.exports = function (ccyCpl) {
    });
 };
 
-},{"rx":187}],250:[function(require,module,exports){
+},{"rx":187}],251:[function(require,module,exports){
 'use strict';
 
 var config = require('../../config');
@@ -56627,28 +56691,34 @@ if (config.streamingPrices == 'server') {
   module.exports = require('./fake');
 }
 
-},{"../../config":244,"./fake":249,"./server":251}],251:[function(require,module,exports){
+},{"../../config":245,"./fake":250,"./server":252}],252:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
 var Rx = require('rx');
 var config = require('../../../config');
 
-var socket = io.connect(config.serverUrl);
-
-var stream = Rx.Observable.create(function (obs) {
-  socket.on('tick', function (tick) {
-    obs.onNext(tick);
-  });
-}).publish().refCount();
+var stream = undefined;
 
 module.exports = function (ccyCpl) {
+
+  if (!stream) {
+    (function () {
+      var socket = io.connect(config.serverUrl);
+      stream = Rx.Observable.create(function (obs) {
+        socket.on('tick', function (tick) {
+          obs.onNext(tick);
+        });
+      }).publish().refCount();
+    })();
+  }
+
   return stream.where(function (x) {
     return x.ccyCpl == ccyCpl;
   });
 };
 
-},{"../../../config":244,"rx":187,"socket.io-client":188}],252:[function(require,module,exports){
+},{"../../../config":245,"rx":187,"socket.io-client":188}],253:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56752,7 +56822,7 @@ function quoteTimedOut(tileId) {
   };
 }
 
-},{"../../requestOptionPrice":258,"rx":187}],253:[function(require,module,exports){
+},{"../../requestOptionPrice":262,"rx":187}],254:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56786,7 +56856,7 @@ function receivePosition(position) {
   };
 }
 
-},{"../../blotter":245}],254:[function(require,module,exports){
+},{"../../blotter":246}],255:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56816,109 +56886,62 @@ function tradeBooked(trade) {
   };
 }
 
-},{}],255:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-exports.addTile = addTile;
-var ADD_TILE = 'ADD_TILE';
-
-exports.ADD_TILE = ADD_TILE;
-
-function addTile(tile) {
-  return {
-    type: ADD_TILE,
-    tile: tile
-  };
-}
-
 },{}],256:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+exports.addTile = addTile;
+exports.removeTile = removeTile;
+var ADD_TILE = 'ADD_TILE';
+exports.ADD_TILE = ADD_TILE;
+var REMOVE_TILE = 'REMOVE_TILE';
+
+exports.REMOVE_TILE = REMOVE_TILE;
+
+function addTile(product) {
+  return {
+    type: ADD_TILE,
+    product: product
+  };
+}
+
+function removeTile(tileId) {
+  return {
+    type: REMOVE_TILE,
+    tileId: tileId
+  };
+}
+
+},{}],257:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+                                  value: true
+});
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
-
-var _options = require('./options');
-
-var _options2 = _interopRequireDefault(_options);
-
-var _actionsOptions = require('../actions/options');
-
-var _actionsSpot = require('../actions/spot');
-
-var _actionsPositions = require('../actions/positions');
-
-var _actionsWorkspace = require('../actions/workspace');
-
 var _redux = require('redux');
 
-var _workspace = require('../../workspace');
+var _workspace = require('./workspace');
 
 var _workspace2 = _interopRequireDefault(_workspace);
 
+var _positions = require('./positions');
+
+var _positions2 = _interopRequireDefault(_positions);
+
 var debug = require('debug')('trader:redux:reducers');
 
-var initialWorkspace = _workspace2['default'].get();
-
-function workspace(state, action) {
-  if (state === undefined) state = initialWorkspace;
-
-  switch (action.type) {
-
-    //case ADD_TILE:
-    //return Object.assign({}, state.tiles);
-
-    case _actionsOptions.UPDATE_STRIKE:
-    case _actionsOptions.UPDATE_NOTIONAL:
-    case _actionsOptions.OPTION_PRICE_REQUESTED:
-    case _actionsOptions.OPTION_PRICE_RECEIVED:
-    case _actionsOptions.QUOTE_TIMED_OUT:
-      var tiles = state.get('tiles');
-      var tile = tiles.get(action.tileId);
-
-      tiles = tiles.set(action.tileId, (0, _options2['default'])(tile, action));
-      state = state.set('tiles', tiles);
-
-      return state;
-
-    default:
-      return state;
-  }
-}
-
-function positions(state, action) {
-  if (state === undefined) state = [];
-
-  debug(action);
-
-  switch (action.type) {
-    case _actionsPositions.RECEIVE_POSITION:
-
-      var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
-
-      debug('newState', newState);
-
-      return newState;
-
-    default:
-      return [].concat(_toConsumableArray(state));
-  }
-}
-
 exports['default'] = (0, _redux.combineReducers)({
-  workspace: workspace,
-  positions: positions
+                                  workspace: _workspace2['default'],
+                                  positions: _positions2['default']
 });
 module.exports = exports['default'];
 
-},{"../../workspace":260,"../actions/options":252,"../actions/positions":253,"../actions/spot":254,"../actions/workspace":255,"./options":257,"debug":3,"redux":179}],257:[function(require,module,exports){
+},{"./positions":259,"./workspace":260,"debug":3,"redux":179}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56927,6 +56950,8 @@ Object.defineProperty(exports, '__esModule', {
 exports['default'] = option;
 
 var _actionsOptions = require('../actions/options');
+
+var debug = require('debug')('trader:redux:reducers:options');
 
 function legfn(leg, action) {
   switch (action.type) {
@@ -56982,7 +57007,147 @@ function option(state, action) {
 
 module.exports = exports['default'];
 
-},{"../actions/options":252}],258:[function(require,module,exports){
+},{"../actions/options":253,"debug":3}],259:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports['default'] = positions;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } }
+
+var _actionsPositions = require('../actions/positions');
+
+var debug = require('debug')('trader:redux:reducers:positions');
+
+function positions(state, action) {
+  if (state === undefined) state = [];
+
+  debug(action);
+
+  switch (action.type) {
+    case _actionsPositions.RECEIVE_POSITION:
+
+      var newState = [].concat(_toConsumableArray(state), [Object.assign({}, action.position)]);
+
+      debug('newState', newState);
+
+      return newState;
+
+    default:
+      return state;
+  }
+}
+
+module.exports = exports['default'];
+
+},{"../actions/positions":254,"debug":3}],260:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports['default'] = workspace;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _actionsWorkspace = require('../actions/workspace');
+
+var _actionsSpot = require('../actions/spot');
+
+var _workspaceDataStructures = require('../../workspace/data-structures');
+
+var _actionsOptions = require('../actions/options');
+
+var _options = require('./options');
+
+var _options2 = _interopRequireDefault(_options);
+
+var _workspace = require('../../workspace');
+
+var _workspace2 = _interopRequireDefault(_workspace);
+
+var initialWorkspace = _workspace2['default'].get();
+
+function workspace(state, action) {
+  if (state === undefined) state = initialWorkspace;
+
+  var tiles = state.tiles;
+
+  switch (action.type) {
+
+    case _actionsWorkspace.ADD_TILE:
+
+      if (action.product == 'spot') {
+        tiles = tiles.push(new _workspaceDataStructures.SpotTile({ ccyCpl: 'EURUSD' }));
+      } else if (action.product == 'option') {
+        tiles = tiles.push(new _workspaceDataStructures.OptionTile({ ccyCpl: 'EURUSD' }));
+      }
+
+      state = state.set('tiles', tiles);
+
+      return state;
+
+    case _actionsWorkspace.REMOVE_TILE:
+      tiles = tiles['delete'](action.tileId);
+      state = state.set('tiles', tiles);
+
+      return state;
+
+    case _actionsOptions.UPDATE_STRIKE:
+    case _actionsOptions.UPDATE_NOTIONAL:
+    case _actionsOptions.OPTION_PRICE_REQUESTED:
+    case _actionsOptions.OPTION_PRICE_RECEIVED:
+    case _actionsOptions.QUOTE_TIMED_OUT:
+
+      var tile = tiles.get(action.tileId);
+
+      tiles = tiles.set(action.tileId, (0, _options2['default'])(tile, action));
+      state = state.set('tiles', tiles);
+
+      return state;
+
+    default:
+      return state;
+  }
+}
+
+module.exports = exports['default'];
+
+},{"../../workspace":265,"../../workspace/data-structures":263,"../actions/options":253,"../actions/spot":255,"../actions/workspace":256,"./options":258}],261:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _reduxThunk = require('redux-thunk');
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+var _reduxLogger = require('redux-logger');
+
+var _reduxLogger2 = _interopRequireDefault(_reduxLogger);
+
+var _redux = require('redux');
+
+var _reducers = require('./reducers');
+
+var _reducers2 = _interopRequireDefault(_reducers);
+
+var loggerMiddleware = (0, _reduxLogger2['default'])();
+
+var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxThunk2['default'], loggerMiddleware)(_redux.createStore);
+
+var store = createStoreWithMiddleware(_reducers2['default']);
+
+exports['default'] = store;
+module.exports = exports['default'];
+
+},{"./reducers":257,"redux":179,"redux-logger":176,"redux-thunk":177}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57009,58 +57174,77 @@ exports['default'] = function (option, success, error) {
 
 module.exports = exports['default'];
 
-},{"../../config":244,"jquery":7}],259:[function(require,module,exports){
+},{"../../config":245,"jquery":7}],263:[function(require,module,exports){
 'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _immutable = require('immutable');
+
+var _immutable2 = _interopRequireDefault(_immutable);
+
+var Workspace = _immutable2['default'].Record({ tiles: _immutable2['default'].List() });
+exports.Workspace = Workspace;
+var SpotTile = _immutable2['default'].Record({ type: 'spot', ccyCpl: '' });
+exports.SpotTile = SpotTile;
+var OptionTile = _immutable2['default'].Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', quoteValidForInSeconds: 10, legs: _immutable2['default'].List() });
+exports.OptionTile = OptionTile;
+var Leg = _immutable2['default'].Record({ strike: 0, notional: 0, expiryDate: undefined, callPut: 'call', type: 'buy' });
+exports.Leg = Leg;
+
+},{"immutable":6}],264:[function(require,module,exports){
+'use strict';
+
+var _dataStructures = require('../data-structures');
 
 var Immutable = require('immutable');
 
-var Workspace = Immutable.Record({ tiles: Immutable.List() });
-var SpotTile = Immutable.Record({ type: 'spot', ccyCpl: '' });
-var OptionTile = Immutable.Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', quoteValidForInSeconds: 10, legs: Immutable.List() });
-var Leg = Immutable.Record({ strike: 0, notional: 0, expiryDate: undefined, callPut: 'call', type: 'buy' });
-
 module.exports.get = function () {
 
-  var workspace = new Workspace();
+  var workspace = new _dataStructures.Workspace();
   var tiles = Immutable.List();
 
-  tiles = tiles.set(0, new SpotTile({ ccyCpl: 'EURUSD' }));
-  tiles = tiles.set(1, new SpotTile({ ccyCpl: 'EURGBP' }));
+  tiles = tiles.set(0, new _dataStructures.SpotTile({ ccyCpl: 'EURUSD' }));
+  tiles = tiles.set(1, new _dataStructures.SpotTile({ ccyCpl: 'EURGBP' }));
 
-  var optionTile = new OptionTile({ ccyCpl: 'EURUSD' });
+  var optionTile = new _dataStructures.OptionTile({ ccyCpl: 'EURUSD' });
 
   var legs = Immutable.List();
-  legs = legs.set(0, new Leg({ strike: 1.234, expiryDate: new Date(), notional: 100000 }));
-  legs = legs.set(1, new Leg({ strike: 2.345, expiryDate: new Date(), notional: 200000 }));
+  legs = legs.set(0, new _dataStructures.Leg({ strike: 1.234, expiryDate: new Date(), notional: 100000 }));
+  legs = legs.set(1, new _dataStructures.Leg({ strike: 2.345, expiryDate: new Date(), notional: 200000 }));
 
   optionTile = optionTile.set('legs', legs);
 
   tiles = tiles.set(2, optionTile);
 
-  var optionTile2 = new OptionTile({ ccyCpl: 'EURGBP' });
+  var optionTile2 = new _dataStructures.OptionTile({ ccyCpl: 'EURGBP' });
 
   var legs2 = Immutable.List();
-  legs2 = legs2.set(0, new Leg({ strike: 2.456, expiryDate: new Date(), notional: 2000 }));
-  legs2 = legs2.set(1, new Leg({ strike: 3.456, expiryDate: new Date(), notional: 3000 }));
+  legs2 = legs2.set(0, new _dataStructures.Leg({ strike: 2.456, expiryDate: new Date(), notional: 2000 }));
+  legs2 = legs2.set(1, new _dataStructures.Leg({ strike: 3.456, expiryDate: new Date(), notional: 3000 }));
 
   optionTile2 = optionTile2.set('legs', legs2);
 
   tiles = tiles.set(3, optionTile2);
 
-  tiles = tiles.set(4, new SpotTile({ ccyCpl: 'AUDCHF' }));
-  tiles = tiles.set(5, new SpotTile({ ccyCpl: 'GBPCHF' }));
-  tiles = tiles.set(6, new SpotTile({ ccyCpl: 'AUDUSD' }));
-  tiles = tiles.set(7, new SpotTile({ ccyCpl: 'EURHKD' }));
+  tiles = tiles.set(4, new _dataStructures.SpotTile({ ccyCpl: 'AUDCHF' }));
+  tiles = tiles.set(5, new _dataStructures.SpotTile({ ccyCpl: 'GBPCHF' }));
+  tiles = tiles.set(6, new _dataStructures.SpotTile({ ccyCpl: 'AUDUSD' }));
+  tiles = tiles.set(7, new _dataStructures.SpotTile({ ccyCpl: 'EURHKD' }));
 
   workspace = workspace.set('tiles', tiles);
 
   return workspace;
 };
 
-},{"immutable":6}],260:[function(require,module,exports){
+},{"../data-structures":263,"immutable":6}],265:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./fake');
 
-},{"./fake":259}]},{},[1])
+},{"./fake":264}]},{},[1])
 //# sourceMappingURL=bundle.js.map

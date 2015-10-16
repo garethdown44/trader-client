@@ -2,8 +2,6 @@ const React = require('react');
 const {connect} = require('react-redux');
 
 const PriceTile = require('./PriceTile');
-const StreamingPriceReceiver = require('./StreamingPriceReceiver');
-const StreamingPriceTile = StreamingPriceReceiver(PriceTile);
 const OptionTile = require('./option/OptionTile');
 
 const PriceTileList = React.createClass({
@@ -16,11 +14,10 @@ const PriceTileList = React.createClass({
 
       tile = tile.toJS();
 
-
       if (tile.type == 'option') {
         return <OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} />;
       } else {
-        return <StreamingPriceTile ccyCpl={tile.ccyCpl} key={tileId} />;
+        return <PriceTile ccyCpl={tile.ccyCpl} key={tileId} dispatch={this.props.dispatch} tileId={tileId} />;
       }
     });
   },

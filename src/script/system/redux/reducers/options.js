@@ -1,3 +1,5 @@
+const debug = require('debug')('trader:redux:reducers:options');
+
 import { UPDATE_STRIKE, 
          UPDATE_NOTIONAL, 
          PRICE_OPTION, 
