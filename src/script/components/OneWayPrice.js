@@ -16,7 +16,7 @@ module.exports = React.createClass({
   },
 
   execute: function() {
-    this.props.execute(this.state.price);
+    this.props.execute(this.props.price);
   },
 
   extractPrice: function(price) {

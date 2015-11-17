@@ -55975,7 +55975,7 @@ module.exports = React.createClass({
   },
 
   execute: function execute() {
-    this.props.execute(this.state.price);
+    this.props.execute(this.props.price);
   },
 
   extractPrice: function extractPrice(price) {
@@ -56085,7 +56085,7 @@ var PriceAndSpread = _react2['default'].createClass({
       _react2['default'].createElement(_OneWayPrice2['default'], { side: 'sell',
         price: this.state.bid,
         execute: function () {
-          return _this2.execute('sell', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
+          return _this2.props.execute('sell', _this2.state.bid);
         },
         nonTradeable: this.state.nonTradeable }),
       _react2['default'].createElement(
@@ -56097,7 +56097,7 @@ var PriceAndSpread = _react2['default'].createClass({
       _react2['default'].createElement(_OneWayPrice2['default'], { side: 'buy',
         price: this.state.ask,
         execute: function () {
-          return _this2.execute('buy', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
+          return _this2.props.execute('buy', _this2.state.ask);
         },
         nonTradeable: this.state.nonTradeable })
     );
@@ -56154,15 +56154,14 @@ var PriceTile = React.createClass({
     return nextProps.bid != this.state.bid;
   },
 
-  execute: function execute(direction, ccyCpl, rate, notional) {
+  execute: function execute(direction, rate) {
     var _this = this;
 
     if (this.state.executing) return;
 
     this.setState({ executing: true });
 
-    executeTrade(direction, ccyCpl, rate, notional, function () {
-      debug(ccyCpl);
+    executeTrade(direction, this.props.ccyCpl, rate, this.state.notional, function () {
       _this.setState({ executing: false, bid: _this.props.bid, ask: _this.props.ask });
     });
 
@@ -56195,7 +56194,7 @@ var PriceTile = React.createClass({
         { className: 'tile-title' },
         this.props.ccyCpl
       ),
-      React.createElement(_PriceAndSpread2['default'], { ccyCpl: this.props.ccyCpl }),
+      React.createElement(_PriceAndSpread2['default'], { ccyCpl: this.props.ccyCpl, execute: this.execute }),
       React.createElement(
         'div',
         { className: 'notional-container' },

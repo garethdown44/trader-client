@@ -31,7 +31,7 @@ var PriceAndSpread = React.createClass({
     return  <div>
               <OneWayPrice side='sell'
                            price={this.state.bid}
-                           execute={() => this.execute('sell', this.props.ccyCpl, this.state.bid, this.state.notional)}
+                           execute={() => this.props.execute('sell', this.state.bid)}
                            nonTradeable={this.state.nonTradeable} />
 
               <div className='spread'>
@@ -41,7 +41,7 @@ var PriceAndSpread = React.createClass({
 
               <OneWayPrice side='buy'
                            price={this.state.ask}
-                           execute={() => this.execute('buy', this.props.ccyCpl, this.state.bid, this.state.notional)}
+                           execute={() => this.props.execute('buy', this.state.ask)}
                            nonTradeable={this.state.nonTradeable} />
             </div>;
   }

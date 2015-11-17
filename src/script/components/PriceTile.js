@@ -36,15 +36,14 @@ var PriceTile = React.createClass({
     return nextProps.bid != this.state.bid;
   },
 
-  execute: function(direction, ccyCpl, rate, notional) {
+  execute: function(direction, rate) {
 
     if (this.state.executing)
       return;
 
     this.setState({executing: true});
 
-    executeTrade(direction, ccyCpl, rate, notional, () => {
-      debug(ccyCpl);
+    executeTrade(direction, this.props.ccyCpl, rate, this.state.notional, () => {
       this.setState({executing: false, bid: this.props.bid, ask: this.props.ask});
     });
 
@@ -73,7 +72,7 @@ var PriceTile = React.createClass({
                 <div className='tile-title'>{this.props.ccyCpl}</div>
                 {/*<button onClick={() => this.remove(this.props.tileId)}>x</button>*/}
 
-                <PriceAndSpread ccyCpl={this.props.ccyCpl} />
+                <PriceAndSpread ccyCpl={this.props.ccyCpl} execute={this.execute} />
                 
                 <div className='notional-container'>
                   <span className='notional-ccy'>{firstCcy}</span>
