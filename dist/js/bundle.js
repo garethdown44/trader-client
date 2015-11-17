@@ -68,7 +68,7 @@ var Root = React.createClass({
 
 ReactDOM.render(React.createElement(Root, null), document.getElementById('cont'));
 
-},{"./components/Blotter":236,"./components/Header":237,"./components/PriceTile":239,"./components/PriceTileList":240,"./components/StreamingPriceReceiver":242,"./system/redux/actions/positions":254,"./system/redux/store":261,"debug":3,"react":175,"react-addons-perf":9,"react-dom":10,"react-redux":14}],2:[function(require,module,exports){
+},{"./components/Blotter":236,"./components/Header":237,"./components/PriceTile":240,"./components/PriceTileList":241,"./components/StreamingPriceReceiver":243,"./system/redux/actions/positions":255,"./system/redux/store":262,"debug":3,"react":175,"react-addons-perf":9,"react-dom":10,"react-redux":14}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -55906,7 +55906,7 @@ var Blotter = React.createClass({
 exports['default'] = connect(select)(Blotter);
 module.exports = exports['default'];
 
-},{"../system/blotter":246,"./StreamingPriceReceiver":242,"./Value":243,"debug":3,"moment":8,"react":175,"react-redux":14}],237:[function(require,module,exports){
+},{"../system/blotter":247,"./StreamingPriceReceiver":243,"./Value":244,"debug":3,"moment":8,"react":175,"react-redux":14}],237:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -55953,7 +55953,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../system/redux/actions/workspace":256,"react":175}],238:[function(require,module,exports){
+},{"../system/redux/actions/workspace":257,"react":175}],238:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -56032,32 +56032,26 @@ module.exports = React.createClass({
 },{"react":175}],239:[function(require,module,exports){
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _systemReduxActionsWorkspace = require('../system/redux/actions/workspace');
+var _react = require('react');
 
-var React = require('react');
-var executeTrade = require('../system/executeTrade');
-var OneWayPrice = require('./OneWayPrice');
-var Spread = require('./Spread');
-var debug = require('debug')('trader:components:PriceTile');
-var getStreamingPrices = require('../system/getStreamingPrices');
+var _react2 = _interopRequireDefault(_react);
 
-var PriceAndSpread = React.createClass({
+var _OneWayPrice = require('./OneWayPrice');
+
+var _OneWayPrice2 = _interopRequireDefault(_OneWayPrice);
+
+var _Spread = require('./Spread');
+
+var _Spread2 = _interopRequireDefault(_Spread);
+
+var _systemGetStreamingPrices = require('../system/getStreamingPrices');
+
+var _systemGetStreamingPrices2 = _interopRequireDefault(_systemGetStreamingPrices);
+
+var PriceAndSpread = _react2['default'].createClass({
   displayName: 'PriceAndSpread',
-
-  // getInitialState: function() {
-  //   let state = {
-  //       first: '1.0',
-  //       bigFigures: '00',
-  //       tenthOfPips: '0',
-  //       nonTradeable: true,
-  //       bid: p['bid'],
-  //       ask: p['ask']
-  //     }
-  // },
 
   getInitialState: function getInitialState() {
     return {
@@ -56070,9 +56064,7 @@ var PriceAndSpread = React.createClass({
   componentDidMount: function componentDidMount() {
     var _this = this;
 
-    //let side = this.props.side == 'buy' ? 'ask' : 'bid';
-
-    this.subscription = getStreamingPrices(this.props.ccyCpl).subscribe((function (p) {
+    this.subscription = (0, _systemGetStreamingPrices2['default'])(this.props.ccyCpl).subscribe((function (p) {
 
       var state = {
         nonTradeable: p.nonTradeable,
@@ -56087,22 +56079,22 @@ var PriceAndSpread = React.createClass({
   render: function render() {
     var _this2 = this;
 
-    return React.createElement(
+    return _react2['default'].createElement(
       'div',
       null,
-      React.createElement(OneWayPrice, { side: 'sell',
+      _react2['default'].createElement(_OneWayPrice2['default'], { side: 'sell',
         price: this.state.bid,
         execute: function () {
           return _this2.execute('sell', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
         },
         nonTradeable: this.state.nonTradeable }),
-      React.createElement(
+      _react2['default'].createElement(
         'div',
         { className: 'spread' },
-        React.createElement(Spread, { bid: this.state.bid,
+        _react2['default'].createElement(_Spread2['default'], { bid: this.state.bid,
           ask: this.state.ask })
       ),
-      React.createElement(OneWayPrice, { side: 'buy',
+      _react2['default'].createElement(_OneWayPrice2['default'], { side: 'buy',
         price: this.state.ask,
         execute: function () {
           return _this2.execute('buy', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
@@ -56111,6 +56103,25 @@ var PriceAndSpread = React.createClass({
     );
   }
 });
+
+module.exports = PriceAndSpread;
+
+},{"../system/getStreamingPrices":252,"./OneWayPrice":238,"./Spread":242,"react":175}],240:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _systemReduxActionsWorkspace = require('../system/redux/actions/workspace');
+
+var _PriceAndSpread = require('./PriceAndSpread');
+
+var _PriceAndSpread2 = _interopRequireDefault(_PriceAndSpread);
+
+var React = require('react');
+var executeTrade = require('../system/executeTrade');
+var OneWayPrice = require('./OneWayPrice');
+var Spread = require('./Spread');
+var debug = require('debug')('trader:components:PriceTile');
 
 var PriceTile = React.createClass({
   displayName: 'PriceTile',
@@ -56144,7 +56155,7 @@ var PriceTile = React.createClass({
   },
 
   execute: function execute(direction, ccyCpl, rate, notional) {
-    var _this3 = this;
+    var _this = this;
 
     if (this.state.executing) return;
 
@@ -56152,7 +56163,7 @@ var PriceTile = React.createClass({
 
     executeTrade(direction, ccyCpl, rate, notional, function () {
       debug(ccyCpl);
-      _this3.setState({ executing: false, bid: _this3.props.bid, ask: _this3.props.ask });
+      _this.setState({ executing: false, bid: _this.props.bid, ask: _this.props.ask });
     });
 
     // todo...
@@ -56164,7 +56175,6 @@ var PriceTile = React.createClass({
   },
 
   render: function render() {
-    var _this4 = this;
 
     var nonTradeable = false;
 
@@ -56185,14 +56195,7 @@ var PriceTile = React.createClass({
         { className: 'tile-title' },
         this.props.ccyCpl
       ),
-      React.createElement(
-        'button',
-        { onClick: function () {
-            return _this4.remove(_this4.props.tileId);
-          } },
-        'x'
-      ),
-      React.createElement(PriceAndSpread, { ccyCpl: this.props.ccyCpl }),
+      React.createElement(_PriceAndSpread2['default'], { ccyCpl: this.props.ccyCpl }),
       React.createElement(
         'div',
         { className: 'notional-container' },
@@ -56214,10 +56217,10 @@ String.prototype.endsWith = function (suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-exports['default'] = PriceTile;
-module.exports = exports['default'];
+module.exports = PriceTile;
+/*<button onClick={() => this.remove(this.props.tileId)}>x</button>*/
 
-},{"../system/executeTrade":248,"../system/getStreamingPrices":251,"../system/redux/actions/workspace":256,"./OneWayPrice":238,"./Spread":241,"debug":3,"react":175}],240:[function(require,module,exports){
+},{"../system/executeTrade":249,"../system/redux/actions/workspace":257,"./OneWayPrice":238,"./PriceAndSpread":239,"./Spread":242,"debug":3,"react":175}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56274,7 +56277,7 @@ function selectWorkspace(state) {
 exports['default'] = connect(selectWorkspace)(PriceTileList);
 module.exports = exports['default'];
 
-},{"./PriceTile":239,"./option/OptionTile":244,"react":175,"react-redux":14}],241:[function(require,module,exports){
+},{"./PriceTile":240,"./option/OptionTile":245,"react":175,"react-redux":14}],242:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -56315,7 +56318,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"react":175}],242:[function(require,module,exports){
+},{"react":175}],243:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -56349,7 +56352,7 @@ module.exports = function (Child) {
   });
 };
 
-},{"../system/getStreamingPrices":251,"debug":3,"react":175}],243:[function(require,module,exports){
+},{"../system/getStreamingPrices":252,"debug":3,"react":175}],244:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -56385,7 +56388,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"react":175}],244:[function(require,module,exports){
+},{"react":175}],245:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -56613,7 +56616,7 @@ module.exports = _react2['default'].createClass({
   }
 });
 
-},{"../../system/redux/actions/options":253,"debug":3,"react":175,"react-redux":14,"rx":187}],245:[function(require,module,exports){
+},{"../../system/redux/actions/options":254,"debug":3,"react":175,"react-redux":14,"rx":187}],246:[function(require,module,exports){
 'use strict';
 
 var config = {};
@@ -56624,12 +56627,12 @@ config.streamingPrices = 'server'; // (server,fake,oanda)
 
 module.exports = config;
 
-},{}],246:[function(require,module,exports){
+},{}],247:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":247}],247:[function(require,module,exports){
+},{"./server":248}],248:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
@@ -56646,12 +56649,12 @@ var stream = Rx.Observable.create(function (obs) {
 
 module.exports = stream;
 
-},{"../../../config":245,"rx":187,"socket.io-client":188}],248:[function(require,module,exports){
+},{"../../../config":246,"rx":187,"socket.io-client":188}],249:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./server');
 
-},{"./server":249}],249:[function(require,module,exports){
+},{"./server":250}],250:[function(require,module,exports){
 'use strict';
 
 var debug = require('debug')('trader:server:executeTrade');
@@ -56696,7 +56699,7 @@ module.exports = function (action, ccyCpl, rate, notional, success, error) {
   });
 };
 
-},{"../../../config":245,"debug":3,"jquery":7}],250:[function(require,module,exports){
+},{"../../../config":246,"debug":3,"jquery":7}],251:[function(require,module,exports){
 'use strict';
 
 var Rx = require('rx');
@@ -56713,7 +56716,7 @@ module.exports = function (ccyCpl) {
    });
 };
 
-},{"rx":187}],251:[function(require,module,exports){
+},{"rx":187}],252:[function(require,module,exports){
 'use strict';
 
 var config = require('../../config');
@@ -56731,7 +56734,7 @@ if (config.streamingPrices == 'server') {
   module.exports = require('./fake');
 }
 
-},{"../../config":245,"./fake":250,"./server":252}],252:[function(require,module,exports){
+},{"../../config":246,"./fake":251,"./server":253}],253:[function(require,module,exports){
 'use strict';
 
 var io = require('socket.io-client');
@@ -56758,7 +56761,7 @@ module.exports = function (ccyCpl) {
   });
 };
 
-},{"../../../config":245,"rx":187,"socket.io-client":188}],253:[function(require,module,exports){
+},{"../../../config":246,"rx":187,"socket.io-client":188}],254:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56862,7 +56865,7 @@ function quoteTimedOut(tileId) {
   };
 }
 
-},{"../../requestOptionPrice":262,"rx":187}],254:[function(require,module,exports){
+},{"../../requestOptionPrice":263,"rx":187}],255:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56896,7 +56899,7 @@ function receivePosition(position) {
   };
 }
 
-},{"../../blotter":246}],255:[function(require,module,exports){
+},{"../../blotter":247}],256:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56926,7 +56929,7 @@ function tradeBooked(trade) {
   };
 }
 
-},{}],256:[function(require,module,exports){
+},{}],257:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56954,7 +56957,7 @@ function removeTile(tileId) {
   };
 }
 
-},{}],257:[function(require,module,exports){
+},{}],258:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56981,7 +56984,7 @@ exports['default'] = (0, _redux.combineReducers)({
 });
 module.exports = exports['default'];
 
-},{"./positions":259,"./workspace":260,"debug":3,"redux":179}],258:[function(require,module,exports){
+},{"./positions":260,"./workspace":261,"debug":3,"redux":179}],259:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57047,7 +57050,7 @@ function option(state, action) {
 
 module.exports = exports['default'];
 
-},{"../actions/options":253,"debug":3}],259:[function(require,module,exports){
+},{"../actions/options":254,"debug":3}],260:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57082,7 +57085,7 @@ function positions(state, action) {
 
 module.exports = exports['default'];
 
-},{"../actions/positions":254,"debug":3}],260:[function(require,module,exports){
+},{"../actions/positions":255,"debug":3}],261:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57155,7 +57158,7 @@ function workspace(state, action) {
 
 module.exports = exports['default'];
 
-},{"../../workspace":265,"../../workspace/data-structures":263,"../actions/options":253,"../actions/spot":255,"../actions/workspace":256,"./options":258}],261:[function(require,module,exports){
+},{"../../workspace":266,"../../workspace/data-structures":264,"../actions/options":254,"../actions/spot":256,"../actions/workspace":257,"./options":259}],262:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57187,7 +57190,7 @@ var store = createStoreWithMiddleware(_reducers2['default']);
 exports['default'] = store;
 module.exports = exports['default'];
 
-},{"./reducers":257,"redux":179,"redux-logger":176,"redux-thunk":177}],262:[function(require,module,exports){
+},{"./reducers":258,"redux":179,"redux-logger":176,"redux-thunk":177}],263:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57214,7 +57217,7 @@ exports['default'] = function (option, success, error) {
 
 module.exports = exports['default'];
 
-},{"../../config":245,"jquery":7}],263:[function(require,module,exports){
+},{"../../config":246,"jquery":7}],264:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57236,7 +57239,7 @@ exports.OptionTile = OptionTile;
 var Leg = _immutable2['default'].Record({ strike: 0, notional: 0, expiryDate: undefined, callPut: 'call', type: 'buy' });
 exports.Leg = Leg;
 
-},{"immutable":6}],264:[function(require,module,exports){
+},{"immutable":6}],265:[function(require,module,exports){
 'use strict';
 
 var _dataStructures = require('../data-structures');
@@ -57281,10 +57284,10 @@ module.exports.get = function () {
   return workspace;
 };
 
-},{"../data-structures":263,"immutable":6}],265:[function(require,module,exports){
+},{"../data-structures":264,"immutable":6}],266:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./fake');
 
-},{"./fake":264}]},{},[1])
+},{"./fake":265}]},{},[1])
 //# sourceMappingURL=bundle.js.map

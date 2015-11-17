@@ -3,67 +3,10 @@ const executeTrade = require('../system/executeTrade');
 const OneWayPrice = require('./OneWayPrice');
 const Spread = require('./Spread');
 const debug = require('debug')('trader:components:PriceTile');
-const getStreamingPrices = require('../system/getStreamingPrices');
 import {removeTile} from '../system/redux/actions/workspace';
+import PriceAndSpread from './PriceAndSpread';
 
-const PriceAndSpread = React.createClass({
-
-  // getInitialState: function() {
-  //   let state = {
-  //       first: '1.0',
-  //       bigFigures: '00',
-  //       tenthOfPips: '0',
-  //       nonTradeable: true,
-  //       bid: p['bid'],
-  //       ask: p['ask']
-  //     }
-  // },
-
-  getInitialState: function() {
-    return {
-      bid: 0,
-      ask: 0,
-      nonTradeable: true
-    }
-  },
-
-  componentDidMount: function() {
-
-    //let side = this.props.side == 'buy' ? 'ask' : 'bid';
-
-    this.subscription = getStreamingPrices(this.props.ccyCpl).subscribe(p => {
-      
-      let state = {
-        nonTradeable: p.nonTradeable,
-        bid: p.bid,
-        ask: p.ask
-      }
-
-      this.setState(state);
-    }.bind(this));
-  },
-
-  render: function() {
-    return  <div>
-              <OneWayPrice side='sell'
-                           price={this.state.bid}
-                           execute={() => this.execute('sell', this.props.ccyCpl, this.state.bid, this.state.notional)}
-                           nonTradeable={this.state.nonTradeable} />
-
-              <div className='spread'>
-                <Spread bid={this.state.bid} 
-                        ask={this.state.ask} />
-              </div>
-
-              <OneWayPrice side='buy'
-                           price={this.state.ask}
-                           execute={() => this.execute('buy', this.props.ccyCpl, this.state.bid, this.state.notional)}
-                           nonTradeable={this.state.nonTradeable} />
-            </div>;
-  }
-})
-
-const PriceTile = React.createClass({
+var PriceTile = React.createClass({
 
   getInitialState: function() {
     return { executing: false, notional: 1000000, tradeable: false };
@@ -128,7 +71,7 @@ const PriceTile = React.createClass({
 
     return (<div className='tile'>
                 <div className='tile-title'>{this.props.ccyCpl}</div>
-                <button onClick={() => this.remove(this.props.tileId)}>x</button>
+                {/*<button onClick={() => this.remove(this.props.tileId)}>x</button>*/}
 
                 <PriceAndSpread ccyCpl={this.props.ccyCpl} />
                 
@@ -147,4 +90,4 @@ String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
-export default PriceTile;
+module.exports = PriceTile;
