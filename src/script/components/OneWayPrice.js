@@ -1,6 +1,4 @@
 const React = require('react');
-const getStreamingPrices = require('../system/getStreamingPrices');
-
 
 module.exports = React.createClass({
 
@@ -13,36 +11,31 @@ module.exports = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-
-    let side = this.props.side == 'buy' ? 'ask' : 'bid';
-
-    this.subscription = getStreamingPrices('EURUSD').subscribe(p => {
-      let priceStr = p[side].toString();
-
-      let first = priceStr.substr(0, 4);
-      let bigFigures = priceStr.substr(4, 2);
-      let tenthOfPips = priceStr.substr(6) || 0;
-
-      let state = {
-        first: first,
-        bigFigures: bigFigures,
-        tenthOfPips: tenthOfPips,
-        nonTradeable: p.nonTradeable,
-        price: p[side]
-      }
-
-      this.setState(state);
-    }.bind(this));
+  componentWillReceiveProps: function(newProps) {
+    this.setState(this.extractPrice(newProps.price));
   },
 
   execute: function() {
     this.props.execute(this.state.price);
   },
 
+  extractPrice: function(price) {
+    let priceStr = price.toString();
+
+    let first = priceStr.substr(0, 4);
+    let bigFigures = priceStr.substr(4, 2);
+    let tenthOfPips = priceStr.substr(6) || 0;
+
+    return {
+      first: first,
+      bigFigures: bigFigures,
+      tenthOfPips: tenthOfPips
+    }
+  },
+
   render: function() {
 
-    let tradeable = this.state.nonTradeable ? 'non-tradeable' : '';
+    let tradeable = this.props.nonTradeable ? 'non-tradeable' : '';
 
     let classes = 
       ['one-way-price', tradeable, this.props.side].join(' ');

@@ -55957,7 +55957,6 @@ module.exports = exports['default'];
 'use strict';
 
 var React = require('react');
-var getStreamingPrices = require('../system/getStreamingPrices');
 
 module.exports = React.createClass({
   displayName: 'exports',
@@ -55971,37 +55970,31 @@ module.exports = React.createClass({
     };
   },
 
-  componentDidMount: function componentDidMount() {
-    var _this = this;
-
-    var side = this.props.side == 'buy' ? 'ask' : 'bid';
-
-    this.subscription = getStreamingPrices('EURUSD').subscribe((function (p) {
-      var priceStr = p[side].toString();
-
-      var first = priceStr.substr(0, 4);
-      var bigFigures = priceStr.substr(4, 2);
-      var tenthOfPips = priceStr.substr(6) || 0;
-
-      var state = {
-        first: first,
-        bigFigures: bigFigures,
-        tenthOfPips: tenthOfPips,
-        nonTradeable: p.nonTradeable,
-        price: p[side]
-      };
-
-      _this.setState(state);
-    }).bind(this));
+  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
+    this.setState(this.extractPrice(newProps.price));
   },
 
   execute: function execute() {
     this.props.execute(this.state.price);
   },
 
+  extractPrice: function extractPrice(price) {
+    var priceStr = price.toString();
+
+    var first = priceStr.substr(0, 4);
+    var bigFigures = priceStr.substr(4, 2);
+    var tenthOfPips = priceStr.substr(6) || 0;
+
+    return {
+      first: first,
+      bigFigures: bigFigures,
+      tenthOfPips: tenthOfPips
+    };
+  },
+
   render: function render() {
 
-    var tradeable = this.state.nonTradeable ? 'non-tradeable' : '';
+    var tradeable = this.props.nonTradeable ? 'non-tradeable' : '';
 
     var classes = ['one-way-price', tradeable, this.props.side].join(' ');
 
@@ -56036,7 +56029,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"../system/getStreamingPrices":251,"react":175}],239:[function(require,module,exports){
+},{"react":175}],239:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56050,6 +56043,74 @@ var executeTrade = require('../system/executeTrade');
 var OneWayPrice = require('./OneWayPrice');
 var Spread = require('./Spread');
 var debug = require('debug')('trader:components:PriceTile');
+var getStreamingPrices = require('../system/getStreamingPrices');
+
+var PriceAndSpread = React.createClass({
+  displayName: 'PriceAndSpread',
+
+  // getInitialState: function() {
+  //   let state = {
+  //       first: '1.0',
+  //       bigFigures: '00',
+  //       tenthOfPips: '0',
+  //       nonTradeable: true,
+  //       bid: p['bid'],
+  //       ask: p['ask']
+  //     }
+  // },
+
+  getInitialState: function getInitialState() {
+    return {
+      bid: 0,
+      ask: 0,
+      nonTradeable: true
+    };
+  },
+
+  componentDidMount: function componentDidMount() {
+    var _this = this;
+
+    //let side = this.props.side == 'buy' ? 'ask' : 'bid';
+
+    this.subscription = getStreamingPrices(this.props.ccyCpl).subscribe((function (p) {
+
+      var state = {
+        nonTradeable: p.nonTradeable,
+        bid: p.bid,
+        ask: p.ask
+      };
+
+      _this.setState(state);
+    }).bind(this));
+  },
+
+  render: function render() {
+    var _this2 = this;
+
+    return React.createElement(
+      'div',
+      null,
+      React.createElement(OneWayPrice, { side: 'sell',
+        price: this.state.bid,
+        execute: function () {
+          return _this2.execute('sell', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
+        },
+        nonTradeable: this.state.nonTradeable }),
+      React.createElement(
+        'div',
+        { className: 'spread' },
+        React.createElement(Spread, { bid: this.state.bid,
+          ask: this.state.ask })
+      ),
+      React.createElement(OneWayPrice, { side: 'buy',
+        price: this.state.ask,
+        execute: function () {
+          return _this2.execute('buy', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
+        },
+        nonTradeable: this.state.nonTradeable })
+    );
+  }
+});
 
 var PriceTile = React.createClass({
   displayName: 'PriceTile',
@@ -56083,7 +56144,7 @@ var PriceTile = React.createClass({
   },
 
   execute: function execute(direction, ccyCpl, rate, notional) {
-    var _this = this;
+    var _this3 = this;
 
     if (this.state.executing) return;
 
@@ -56091,7 +56152,7 @@ var PriceTile = React.createClass({
 
     executeTrade(direction, ccyCpl, rate, notional, function () {
       debug(ccyCpl);
-      _this.setState({ executing: false, bid: _this.props.bid, ask: _this.props.ask });
+      _this3.setState({ executing: false, bid: _this3.props.bid, ask: _this3.props.ask });
     });
 
     // todo...
@@ -56103,7 +56164,7 @@ var PriceTile = React.createClass({
   },
 
   render: function render() {
-    var _this2 = this;
+    var _this4 = this;
 
     var nonTradeable = false;
 
@@ -56127,32 +56188,11 @@ var PriceTile = React.createClass({
       React.createElement(
         'button',
         { onClick: function () {
-            return _this2.remove(_this2.props.tileId);
+            return _this4.remove(_this4.props.tileId);
           } },
         'x'
       ),
-      React.createElement(
-        'div',
-        null,
-        React.createElement(OneWayPrice, { side: 'sell',
-          price: this.state.bid,
-          execute: function () {
-            return _this2.execute('sell', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
-          },
-          nonTradeable: nonTradeable }),
-        React.createElement(
-          'div',
-          { className: 'spread' },
-          React.createElement(Spread, { bid: this.state.bid,
-            ask: this.state.ask })
-        ),
-        React.createElement(OneWayPrice, { side: 'buy',
-          price: this.state.ask,
-          execute: function () {
-            return _this2.execute('buy', _this2.props.ccyCpl, _this2.state.bid, _this2.state.notional);
-          },
-          nonTradeable: nonTradeable })
-      ),
+      React.createElement(PriceAndSpread, { ccyCpl: this.props.ccyCpl }),
       React.createElement(
         'div',
         { className: 'notional-container' },
@@ -56177,7 +56217,7 @@ String.prototype.endsWith = function (suffix) {
 exports['default'] = PriceTile;
 module.exports = exports['default'];
 
-},{"../system/executeTrade":248,"../system/redux/actions/workspace":256,"./OneWayPrice":238,"./Spread":241,"debug":3,"react":175}],240:[function(require,module,exports){
+},{"../system/executeTrade":248,"../system/getStreamingPrices":251,"../system/redux/actions/workspace":256,"./OneWayPrice":238,"./Spread":241,"debug":3,"react":175}],240:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
