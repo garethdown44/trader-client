@@ -7,10 +7,10 @@ let url = config.serverUrl + '/trades/execute';
 module.exports = (action, ccyCpl, rate, notional, success, error) => {
 
   let payload = {
-    ccyCpl: ccyCpl,
     action: action,
-    notional: notional,
-    rate: rate
+    ccyCpl: ccyCpl,
+    rate: rate,
+    notional: notional
   };
 
   payload = JSON.stringify(payload);

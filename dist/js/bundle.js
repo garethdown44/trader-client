@@ -56168,9 +56168,6 @@ var PriceTile = _react2['default'].createClass({
 
   render: function render() {
 
-    debug('this.props', this.props);
-    debug('this.props.ccyCpl', this.props.ccyCpl);
-
     var firstCcy = '';
     if (this.props.ccyCpl) {
       var _firstCcy = this.props.ccyCpl.substr(0, 3);
@@ -56665,10 +56662,10 @@ var url = config.serverUrl + '/trades/execute';
 module.exports = function (action, ccyCpl, rate, notional, success, error) {
 
   var payload = {
-    ccyCpl: ccyCpl,
     action: action,
-    notional: notional,
-    rate: rate
+    ccyCpl: ccyCpl,
+    rate: rate,
+    notional: notional
   };
 
   payload = JSON.stringify(payload);
@@ -56945,8 +56942,7 @@ function bookSpotTrade(tileId, direction, ccyCpl, rate, notional) {
   return function (dispatch) {
     dispatch(bookSpotTradeRequested(tileId, direction, ccyCpl, rate, notional));
 
-    // action, ccyCpl, rate, notional, success, error) => {
-    (0, _executeTrade2['default'])(direction, ccyCpl, notional, function () {
+    (0, _executeTrade2['default'])(direction, ccyCpl, rate, notional, function () {
       return dispatch(tradeBooked(tileId));
     }, function () {
       return dispatch(tradeBookingFailed(tileId));

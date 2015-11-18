@@ -39,7 +39,7 @@ const PriceTileList = React.createClass({
 });
 
 function selectWorkspace(state) {
-  return {workspace: state.workspace};
+  return { workspace: state.workspace };
 }
 
 export default connect(selectWorkspace)(PriceTileList);

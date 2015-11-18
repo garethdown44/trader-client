@@ -28,11 +28,9 @@ export function bookSpotTrade(tileId, direction, ccyCpl, rate, notional) {
   return function (dispatch) {
     dispatch(bookSpotTradeRequested(tileId, direction, ccyCpl, rate, notional));
 
-    // action, ccyCpl, rate, notional, success, error) => {
-    executeTrade(direction, ccyCpl, notional, () => dispatch(tradeBooked(tileId)), () => dispatch(tradeBookingFailed(tileId)));
+    executeTrade(direction, ccyCpl, rate, notional, () => dispatch(tradeBooked(tileId)), () => dispatch(tradeBookingFailed(tileId)));
   }
 }
-
 
 function tradeBookingFailed(tileId) {
   return {

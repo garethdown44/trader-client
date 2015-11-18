@@ -35,9 +35,6 @@ var PriceTile = React.createClass({
 
   render: function() {
 
-    debug('this.props', this.props);
-    debug('this.props.ccyCpl', this.props.ccyCpl);
-
     let firstCcy = '';
     if (this.props.ccyCpl) {
       let firstCcy = this.props.ccyCpl.substr(0, 3);
