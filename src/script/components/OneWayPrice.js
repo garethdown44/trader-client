@@ -1,4 +1,5 @@
 const React = require('react');
+const debug = require('debug')('trader:OneWayPrice');
 
 module.exports = React.createClass({
 
@@ -35,7 +36,9 @@ module.exports = React.createClass({
 
   render: function() {
 
-    let tradeable = this.props.nonTradeable ? 'non-tradeable' : '';
+    //debug('this.props.executing', this.props.executing);
+
+    let tradeable = this.props.nonTradeable || this.props.executing ? 'non-tradeable' : '';
 
     let classes = 
       ['one-way-price', tradeable, this.props.side].join(' ');

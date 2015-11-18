@@ -7,7 +7,7 @@ module.exports.get = () => {
   let workspace = new Workspace();
   let tiles = Immutable.List();
 
-  tiles = tiles.set(0, new SpotTile({ ccyCpl: 'EURUSD'}));
+  tiles = tiles.set(0, new SpotTile({ ccyCpl: 'EURUSD' }));
   tiles = tiles.set(1, new SpotTile({ ccyCpl: 'EURGBP'}));
 
   let optionTile = new OptionTile({ ccyCpl: 'EURUSD'})
@@ -30,7 +30,7 @@ module.exports.get = () => {
 
   tiles = tiles.set(3, optionTile2);
 
-  tiles = tiles.set(4, new SpotTile({ ccyCpl: 'AUDCHF'}));
+  tiles = tiles.set(4, new SpotTile({ ccyCpl: 'AUDCHF',}));
   tiles = tiles.set(5, new SpotTile({ ccyCpl: 'GBPCHF'}));
   tiles = tiles.set(6, new SpotTile({ ccyCpl: 'AUDUSD'}));
   tiles = tiles.set(7, new SpotTile({ ccyCpl: 'EURHKD'}));

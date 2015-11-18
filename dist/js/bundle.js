@@ -55957,6 +55957,7 @@ module.exports = exports['default'];
 'use strict';
 
 var React = require('react');
+var debug = require('debug')('trader:OneWayPrice');
 
 module.exports = React.createClass({
   displayName: 'exports',
@@ -55994,7 +55995,9 @@ module.exports = React.createClass({
 
   render: function render() {
 
-    var tradeable = this.props.nonTradeable ? 'non-tradeable' : '';
+    //debug('this.props.executing', this.props.executing);
+
+    var tradeable = this.props.nonTradeable || this.props.executing ? 'non-tradeable' : '';
 
     var classes = ['one-way-price', tradeable, this.props.side].join(' ');
 
@@ -56029,7 +56032,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"react":175}],239:[function(require,module,exports){
+},{"debug":3,"react":175}],239:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -56087,7 +56090,8 @@ var PriceAndSpread = _react2['default'].createClass({
         execute: function () {
           return _this2.props.execute('sell', _this2.state.bid);
         },
-        nonTradeable: this.state.nonTradeable }),
+        nonTradeable: this.state.nonTradeable,
+        executing: this.props.executing }),
       _react2['default'].createElement(
         'div',
         { className: 'spread' },
@@ -56099,7 +56103,8 @@ var PriceAndSpread = _react2['default'].createClass({
         execute: function () {
           return _this2.props.execute('buy', _this2.state.ask);
         },
-        nonTradeable: this.state.nonTradeable })
+        nonTradeable: this.state.nonTradeable,
+        executing: this.props.executing })
     );
   }
 });
@@ -56111,30 +56116,33 @@ module.exports = PriceAndSpread;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _OneWayPrice = require('./OneWayPrice');
+
+var _OneWayPrice2 = _interopRequireDefault(_OneWayPrice);
+
+var _Spread = require('./Spread');
+
+var _Spread2 = _interopRequireDefault(_Spread);
+
 var _systemReduxActionsWorkspace = require('../system/redux/actions/workspace');
+
+var _systemReduxActionsSpot = require('../system/redux/actions/spot');
 
 var _PriceAndSpread = require('./PriceAndSpread');
 
 var _PriceAndSpread2 = _interopRequireDefault(_PriceAndSpread);
 
-var React = require('react');
-var executeTrade = require('../system/executeTrade');
-var OneWayPrice = require('./OneWayPrice');
-var Spread = require('./Spread');
 var debug = require('debug')('trader:components:PriceTile');
 
-var PriceTile = React.createClass({
+var PriceTile = _react2['default'].createClass({
   displayName: 'PriceTile',
 
   getInitialState: function getInitialState() {
-    return { executing: false, notional: 1000000, tradeable: false };
-  },
-
-  componentWillReceiveProps: function componentWillReceiveProps(newProps) {
-
-    if (newProps.bid != this.state.bid) {
-      this.setState({ bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable });
-    }
+    return { notional: 1000000 };
   },
 
   notionalChanged: function notionalChanged(e) {
@@ -56150,23 +56158,8 @@ var PriceTile = React.createClass({
     this.setState({ notional: val });
   },
 
-  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.bid != this.state.bid;
-  },
-
   execute: function execute(direction, rate) {
-    var _this = this;
-
-    if (this.state.executing) return;
-
-    this.setState({ executing: true });
-
-    executeTrade(direction, this.props.ccyCpl, rate, this.state.notional, function () {
-      _this.setState({ executing: false, bid: _this.props.bid, ask: _this.props.ask });
-    });
-
-    // todo...
-    //this.props.dispatch(executeTrade(tileId, direction, ccyCpl, rate, notional));
+    this.props.dispatch((0, _systemReduxActionsSpot.bookSpotTrade)(this.props.tileId, direction, this.props.ccyCpl, rate, this.state.notional));
   },
 
   remove: function remove(tileId) {
@@ -56175,35 +56168,34 @@ var PriceTile = React.createClass({
 
   render: function render() {
 
-    var nonTradeable = false;
+    debug('this.props', this.props);
+    debug('this.props.ccyCpl', this.props.ccyCpl);
 
     var firstCcy = '';
     if (this.props.ccyCpl) {
       var _firstCcy = this.props.ccyCpl.substr(0, 3);
     }
 
-    if (this.state.executing || !this.state.tradeable) {
-      nonTradeable = true;
-    }
-
-    return React.createElement(
+    return _react2['default'].createElement(
       'div',
       { className: 'tile' },
-      React.createElement(
+      _react2['default'].createElement(
         'div',
         { className: 'tile-title' },
         this.props.ccyCpl
       ),
-      React.createElement(_PriceAndSpread2['default'], { ccyCpl: this.props.ccyCpl, execute: this.execute }),
-      React.createElement(
+      _react2['default'].createElement(_PriceAndSpread2['default'], { ccyCpl: this.props.ccyCpl,
+        execute: this.execute,
+        executing: this.props.executing }),
+      _react2['default'].createElement(
         'div',
         { className: 'notional-container' },
-        React.createElement(
+        _react2['default'].createElement(
           'span',
           { className: 'notional-ccy' },
           firstCcy
         ),
-        React.createElement('input', { type: 'text',
+        _react2['default'].createElement('input', { type: 'text',
           value: this.state.notional,
           onChange: this.notionalChanged,
           className: 'notional' })
@@ -56219,7 +56211,7 @@ String.prototype.endsWith = function (suffix) {
 module.exports = PriceTile;
 /*<button onClick={() => this.remove(this.props.tileId)}>x</button>*/
 
-},{"../system/executeTrade":249,"../system/redux/actions/workspace":257,"./OneWayPrice":238,"./PriceAndSpread":239,"./Spread":242,"debug":3,"react":175}],241:[function(require,module,exports){
+},{"../system/redux/actions/spot":256,"../system/redux/actions/workspace":257,"./OneWayPrice":238,"./PriceAndSpread":239,"./Spread":242,"debug":3,"react":175}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56250,9 +56242,17 @@ var PriceTileList = React.createClass({
       tile = tile.toJS();
 
       if (tile.type == 'option') {
-        return React.createElement(OptionTile, _extends({ dispatch: _this.props.dispatch, key: tileId }, tile, { tileId: tileId }));
+        return React.createElement(OptionTile, _extends({
+          dispatch: _this.props.dispatch,
+          key: tileId }, tile, {
+          tileId: tileId }));
       } else {
-        return React.createElement(PriceTile, { ccyCpl: tile.ccyCpl, key: tileId, dispatch: _this.props.dispatch, tileId: tileId });
+        return React.createElement(PriceTile, {
+          ccyCpl: tile.ccyCpl,
+          executing: tile.executing,
+          key: tileId,
+          dispatch: _this.props.dispatch,
+          tileId: tileId });
       }
     });
   },
@@ -56904,31 +56904,64 @@ function receivePosition(position) {
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
-exports.bookSpotTrade = bookSpotTrade;
 exports.tradeBooked = tradeBooked;
+exports.bookSpotTrade = bookSpotTrade;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _executeTrade = require('../../executeTrade');
+
+var _executeTrade2 = _interopRequireDefault(_executeTrade);
+
 var BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
 exports.BOOK_SPOT_TRADE = BOOK_SPOT_TRADE;
-var TRADE_BOOKED = 'TRADE_BOOKED';
+var SPOT_TRADE_BOOKED = 'SPOT_TRADE_BOOKED';
+exports.SPOT_TRADE_BOOKED = SPOT_TRADE_BOOKED;
+var BOOK_SPOT_TRADE_REQUESTED = 'BOOK_SPOT_TRADE_REQUESTED';
+exports.BOOK_SPOT_TRADE_REQUESTED = BOOK_SPOT_TRADE_REQUESTED;
+var SPOT_TRADE_BOOKING_FAILED = 'SPOT_TRADE_BOOKING_FAILED';
 
-exports.TRADE_BOOKED = TRADE_BOOKED;
-
-function bookSpotTrade(ccyCpl, notional, rate) {
+exports.SPOT_TRADE_BOOKING_FAILED = SPOT_TRADE_BOOKING_FAILED;
+function bookSpotTradeRequested(tileId, direction, ccyCpl, rate, notional) {
   return {
-    type: BOOK_SPOT_TRADE,
+    tileId: tileId,
+    direction: direction,
+    type: BOOK_SPOT_TRADE_REQUESTED,
     ccyCpl: ccyCpl,
-    notional: notional,
-    rate: rate
+    rate: rate,
+    notional: notional
   };
 }
 
-function tradeBooked(trade) {
+function tradeBooked(tileId) {
   return {
-    type: TRADE_BOOKED,
-    trade: trade
+    type: SPOT_TRADE_BOOKED,
+    tileId: tileId
   };
 }
 
-},{}],257:[function(require,module,exports){
+function bookSpotTrade(tileId, direction, ccyCpl, rate, notional) {
+
+  return function (dispatch) {
+    dispatch(bookSpotTradeRequested(tileId, direction, ccyCpl, rate, notional));
+
+    // action, ccyCpl, rate, notional, success, error) => {
+    (0, _executeTrade2['default'])(direction, ccyCpl, notional, function () {
+      return dispatch(tradeBooked(tileId));
+    }, function () {
+      return dispatch(tradeBookingFailed(tileId));
+    });
+  };
+}
+
+function tradeBookingFailed(tileId) {
+  return {
+    type: SPOT_TRADE_BOOKING_FAILED,
+    tileId: tileId
+  };
+}
+
+},{"../../executeTrade":249}],257:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -57088,7 +57121,7 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+      value: true
 });
 exports['default'] = workspace;
 
@@ -57113,46 +57146,63 @@ var _workspace2 = _interopRequireDefault(_workspace);
 var initialWorkspace = _workspace2['default'].get();
 
 function workspace(state, action) {
-  if (state === undefined) state = initialWorkspace;
+      if (state === undefined) state = initialWorkspace;
 
-  var tiles = state.tiles;
+      var tiles = state.tiles;
 
-  switch (action.type) {
+      switch (action.type) {
 
-    case _actionsWorkspace.ADD_TILE:
+            case _actionsWorkspace.ADD_TILE:
 
-      if (action.product == 'spot') {
-        tiles = tiles.push(new _workspaceDataStructures.SpotTile({ ccyCpl: 'EURUSD' }));
-      } else if (action.product == 'option') {
-        tiles = tiles.push(new _workspaceDataStructures.OptionTile({ ccyCpl: 'EURUSD' }));
+                  if (action.product == 'spot') {
+                        tiles = tiles.push(new _workspaceDataStructures.SpotTile({ ccyCpl: 'EURUSD' }));
+                  } else if (action.product == 'option') {
+                        tiles = tiles.push(new _workspaceDataStructures.OptionTile({ ccyCpl: 'EURUSD' }));
+                  }
+
+                  state = state.set('tiles', tiles);
+
+                  return state;
+
+            case _actionsWorkspace.REMOVE_TILE:
+                  tiles = tiles['delete'](action.tileId);
+                  state = state.set('tiles', tiles);
+
+                  return state;
+
+            case _actionsSpot.BOOK_SPOT_TRADE_REQUESTED:
+                  var tile = tiles.get(action.tileId);
+                  tile = tile.set('executing', true);
+                  tiles = tiles.set(action.tileId, tile);
+                  state = state.set('tiles', tiles);
+
+                  return state;
+
+            case _actionsSpot.SPOT_TRADE_BOOKED:
+            case _actionsSpot.SPOT_TRADE_BOOKING_FAILED:
+                  tile = tiles.get(action.tileId);
+                  tile = tile.set('executing', false);
+                  tiles = tiles.set(action.tileId, tile);
+                  state = state.set('tiles', tiles);
+
+                  return state;
+
+            case _actionsOptions.UPDATE_STRIKE:
+            case _actionsOptions.UPDATE_NOTIONAL:
+            case _actionsOptions.OPTION_PRICE_REQUESTED:
+            case _actionsOptions.OPTION_PRICE_RECEIVED:
+            case _actionsOptions.QUOTE_TIMED_OUT:
+
+                  var tile = tiles.get(action.tileId);
+
+                  tiles = tiles.set(action.tileId, (0, _options2['default'])(tile, action));
+                  state = state.set('tiles', tiles);
+
+                  return state;
+
+            default:
+                  return state;
       }
-
-      state = state.set('tiles', tiles);
-
-      return state;
-
-    case _actionsWorkspace.REMOVE_TILE:
-      tiles = tiles['delete'](action.tileId);
-      state = state.set('tiles', tiles);
-
-      return state;
-
-    case _actionsOptions.UPDATE_STRIKE:
-    case _actionsOptions.UPDATE_NOTIONAL:
-    case _actionsOptions.OPTION_PRICE_REQUESTED:
-    case _actionsOptions.OPTION_PRICE_RECEIVED:
-    case _actionsOptions.QUOTE_TIMED_OUT:
-
-      var tile = tiles.get(action.tileId);
-
-      tiles = tiles.set(action.tileId, (0, _options2['default'])(tile, action));
-      state = state.set('tiles', tiles);
-
-      return state;
-
-    default:
-      return state;
-  }
 }
 
 module.exports = exports['default'];
@@ -57231,7 +57281,7 @@ var _immutable2 = _interopRequireDefault(_immutable);
 
 var Workspace = _immutable2['default'].Record({ tiles: _immutable2['default'].List() });
 exports.Workspace = Workspace;
-var SpotTile = _immutable2['default'].Record({ type: 'spot', ccyCpl: '' });
+var SpotTile = _immutable2['default'].Record({ type: 'spot', ccyCpl: '', executing: false });
 exports.SpotTile = SpotTile;
 var OptionTile = _immutable2['default'].Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', quoteValidForInSeconds: 10, legs: _immutable2['default'].List() });
 exports.OptionTile = OptionTile;

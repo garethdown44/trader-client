@@ -15,9 +15,17 @@ const PriceTileList = React.createClass({
       tile = tile.toJS();
 
       if (tile.type == 'option') {
-        return <OptionTile dispatch={this.props.dispatch} key={tileId} {...tile} tileId={tileId} />;
+        return <OptionTile 
+                  dispatch={this.props.dispatch} 
+                  key={tileId} {...tile} 
+                  tileId={tileId} />;
       } else {
-        return <PriceTile ccyCpl={tile.ccyCpl} key={tileId} dispatch={this.props.dispatch} tileId={tileId} />;
+        return <PriceTile 
+                  ccyCpl={tile.ccyCpl} 
+                  executing={tile.executing}
+                  key={tileId} 
+                  dispatch={this.props.dispatch} 
+                  tileId={tileId} />;
       }
     });
   },

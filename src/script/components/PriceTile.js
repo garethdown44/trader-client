@@ -1,22 +1,15 @@
-const React = require('react');
-const executeTrade = require('../system/executeTrade');
-const OneWayPrice = require('./OneWayPrice');
-const Spread = require('./Spread');
 const debug = require('debug')('trader:components:PriceTile');
+import React from 'react';
+import OneWayPrice from './OneWayPrice';
+import Spread from './Spread';
 import {removeTile} from '../system/redux/actions/workspace';
+import {bookSpotTrade} from '../system/redux/actions/spot';
 import PriceAndSpread from './PriceAndSpread';
 
 var PriceTile = React.createClass({
 
   getInitialState: function() {
-    return { executing: false, notional: 1000000, tradeable: false };
-  },
-
-  componentWillReceiveProps: function(newProps) {
-
-    if (newProps.bid != this.state.bid) {
-      this.setState({bid: newProps.bid, ask: newProps.ask, tradeable: newProps.tradeable});
-    }
+    return { notional: 1000000 };
   },
 
   notionalChanged: function(e) {
@@ -32,23 +25,8 @@ var PriceTile = React.createClass({
     this.setState({notional: val});
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
-    return nextProps.bid != this.state.bid;
-  },
-
   execute: function(direction, rate) {
-
-    if (this.state.executing)
-      return;
-
-    this.setState({executing: true});
-
-    executeTrade(direction, this.props.ccyCpl, rate, this.state.notional, () => {
-      this.setState({executing: false, bid: this.props.bid, ask: this.props.ask});
-    });
-
-    // todo...
-    //this.props.dispatch(executeTrade(tileId, direction, ccyCpl, rate, notional));
+    this.props.dispatch(bookSpotTrade(this.props.tileId, direction, this.props.ccyCpl, rate, this.state.notional));
   },
 
   remove: function(tileId) {
@@ -57,22 +35,21 @@ var PriceTile = React.createClass({
 
   render: function() {
 
-    let nonTradeable = false;
+    debug('this.props', this.props);
+    debug('this.props.ccyCpl', this.props.ccyCpl);
 
     let firstCcy = '';
     if (this.props.ccyCpl) {
       let firstCcy = this.props.ccyCpl.substr(0, 3);
     } 
 
-    if (this.state.executing || !this.state.tradeable) {
-      nonTradeable = true;
-    }
-
     return (<div className='tile'>
                 <div className='tile-title'>{this.props.ccyCpl}</div>
                 {/*<button onClick={() => this.remove(this.props.tileId)}>x</button>*/}
 
-                <PriceAndSpread ccyCpl={this.props.ccyCpl} execute={this.execute} />
+                <PriceAndSpread ccyCpl={this.props.ccyCpl} 
+                                execute={this.execute} 
+                                executing={this.props.executing} />
                 
                 <div className='notional-container'>
                   <span className='notional-ccy'>{firstCcy}</span>
