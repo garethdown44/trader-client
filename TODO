@@ -1,6 +1,6 @@
 == TODO ==
 
-1. fix the PnL value. 
+1. DONE fix the PnL value. 
    - a) if it's a buy then PnL = (bid - r) * notional
    - b) if it's a sell then PnL = (r - ask) * notional
 
