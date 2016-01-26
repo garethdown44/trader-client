@@ -57575,14 +57575,7 @@ exports.SpotTile = SpotTile;
 var OptionTile = _immutable2['default'].Record({ type: 'option', price: 0, status: '', valid: true, ccyCpl: '', quoteValidForInSeconds: 10, legs: _immutable2['default'].List() });
 exports.OptionTile = OptionTile;
 var Leg = _immutable2['default'].Record({ strike: 0, notional: 0, expiryDate: undefined, callPut: 'call', type: 'buy' });
-
 exports.Leg = Leg;
-OptionTile.prototype.addLeg = function () {
-  var leg = new Leg();
-  this.add('legs', leg);
-
-  return this;
-};
 
 },{"immutable":5}],274:[function(require,module,exports){
 'use strict';
