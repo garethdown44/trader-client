@@ -21,7 +21,7 @@ function legfn(leg, action) {
   return leg;
 }
 
-export default function option(state = {}, action) {
+export default function option(state, action) {
 
   state = state.set('valid', true);
   let legs = state.get('legs');

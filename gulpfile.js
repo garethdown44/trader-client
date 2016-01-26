@@ -8,6 +8,7 @@ var browserify  = require('browserify');
 var browserSync = require('browser-sync').create();
 var nodemon     = require('nodemon');
 var stylus      = require('gulp-stylus');
+var karma       = require('karma');
 
 // Input file.
 watchify.args.debug = true;
@@ -76,10 +77,13 @@ gulp.task('default', ['views', 'lib', 'bundle', 'stylus'], function () {
   gulp.watch([ 'src/**/*.styl' ], [ 'stylus', browserSync.reload]);
 });
 
-// gulp.task('serve', function() {
-//   nodemon({
-//     script: 'server.coffee',
-//     ext: 'json js coffee',
-//     ignore: [ 'dist/*', 'src/*' ] })
-//     .on('change', function() {})
-//     .on('restart', function() { console.log('Restarted webserver') }) });
+gulp.task('test', function (done) {
+  new karma.Server({
+    configFile: __dirname + '/karma.conf.js',
+    singleRun: false
+  }, done).start()
+});
+
+gulp.task('tdd', ['test'], function() {
+  gulp.watch(['src/**/*.js'], ['test']);
+});
