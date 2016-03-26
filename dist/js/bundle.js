@@ -55933,7 +55933,7 @@ var Blotter = React.createClass({
 
     return React.createElement(
       'table',
-      { className: 'table' },
+      null,
       React.createElement(
         'thead',
         null,
@@ -55943,37 +55943,72 @@ var Blotter = React.createClass({
           React.createElement(
             'th',
             null,
-            'Date'
+            'Date',
+            React.createElement(
+              'div',
+              null,
+              'Date'
+            )
           ),
           React.createElement(
             'th',
             null,
-            'Direction'
+            'Direction',
+            React.createElement(
+              'div',
+              null,
+              'Direction'
+            )
           ),
           React.createElement(
             'th',
             null,
-            'CCY'
+            'CCY',
+            React.createElement(
+              'div',
+              null,
+              'CCY'
+            )
           ),
           React.createElement(
             'th',
             null,
-            'Notional'
+            'Notional',
+            React.createElement(
+              'div',
+              null,
+              'Notional'
+            )
           ),
           React.createElement(
             'th',
             null,
-            'Rate'
+            'Rate',
+            React.createElement(
+              'div',
+              null,
+              'Rate'
+            )
           ),
           React.createElement(
             'th',
             null,
-            'PnL'
+            'PnL',
+            React.createElement(
+              'div',
+              null,
+              'PnL'
+            )
           ),
           React.createElement(
             'th',
             null,
-            'Status'
+            'Status',
+            React.createElement(
+              'div',
+              null,
+              'Status'
+            )
           )
         )
       ),
@@ -56016,20 +56051,34 @@ exports['default'] = _react2['default'].createClass({
 
     return _react2['default'].createElement(
       'div',
-      null,
+      { className: 'header' },
       _react2['default'].createElement(
-        'button',
-        { onClick: function () {
-            return _this.add('spot');
-          } },
-        'add spot'
+        'div',
+        { className: 'buttons' },
+        _react2['default'].createElement(
+          'button',
+          { className: 'btn btn-info btn-sm', onClick: function () {
+              return _this.add('spot');
+            } },
+          'add spot'
+        ),
+        _react2['default'].createElement(
+          'button',
+          { className: 'btn btn-success btn-sm', onClick: function () {
+              return _this.add('option');
+            } },
+          'add option'
+        )
       ),
       _react2['default'].createElement(
-        'button',
-        { onClick: function () {
-            return _this.add('option');
-          } },
-        'add option'
+        'div',
+        { className: 'title' },
+        'react',
+        _react2['default'].createElement(
+          'strong',
+          null,
+          'trader'
+        )
       )
     );
   }
@@ -56883,21 +56932,64 @@ var Component = React.createClass({
   render: function render() {
     return React.createElement(
       'div',
-      { className: 'container' },
+      null,
+      React.createElement(Header, { dispatch: _systemReduxStore2['default'].dispatch }),
       React.createElement(
         'div',
         { className: 'row' },
         React.createElement(
           'div',
           { className: 'col-lg-12 tiles' },
-          React.createElement(Header, { dispatch: _systemReduxStore2['default'].dispatch }),
           React.createElement(PriceTileList, null)
         )
       ),
       React.createElement(
         'div',
-        { className: 'blotter row' },
-        React.createElement(Blotter, null)
+        { className: 'blotter-container' },
+        React.createElement(
+          'div',
+          null,
+          React.createElement(
+            'ul',
+            { className: 'nav nav-tabs tab-sm' },
+            React.createElement(
+              'li',
+              { role: 'presentation', className: 'active' },
+              React.createElement(
+                'a',
+                { href: '#' },
+                'team trades'
+              )
+            ),
+            React.createElement(
+              'li',
+              { role: 'presentation' },
+              React.createElement(
+                'a',
+                { href: '#' },
+                'my trades'
+              )
+            ),
+            React.createElement(
+              'li',
+              { role: 'presentation' },
+              React.createElement(
+                'a',
+                { href: '#' },
+                'my orders'
+              )
+            )
+          )
+        ),
+        React.createElement(
+          'section',
+          { 'class': '' },
+          React.createElement(
+            'div',
+            { className: 'blotter' },
+            React.createElement(Blotter, null)
+          )
+        )
       )
     );
   }

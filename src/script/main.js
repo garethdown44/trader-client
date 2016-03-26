@@ -18,17 +18,31 @@ store.dispatch(subscribePositions());
 
 var Component = React.createClass({
   render: function() {
-    return (<div className='container'>
+    return (<div>
+
+              <Header dispatch={store.dispatch} />
       
               <div className='row'>
                 <div className='col-lg-12 tiles'>
-                  <Header dispatch={store.dispatch} />
                   <PriceTileList />
                 </div>
               </div>
 
-              <div className='blotter row'>
-                  <Blotter />
+              <div className="blotter-container">
+
+                <div>
+                  <ul className="nav nav-tabs tab-sm">
+                    <li role="presentation" className="active"><a href="#">team trades</a></li>
+                    <li role="presentation"><a href="#">my trades</a></li>
+                    <li role="presentation"><a href="#">my orders</a></li>
+                  </ul>
+                </div>
+
+                <section class="">
+                  <div className='blotter'>
+                    <Blotter />
+                  </div>
+                </section>
               </div>
             </div>);
   }

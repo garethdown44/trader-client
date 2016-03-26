@@ -38,16 +38,37 @@ const Blotter = React.createClass({
 
     let rows = this.renderRows(this.props.positions);
 
-    return (<table className='table'>
+    return (<table>
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Direction</th>
-                  <th>CCY</th>
-                  <th>Notional</th>
-                  <th>Rate</th>
-                  <th>PnL</th>
-                  <th>Status</th>
+                  <th>
+                    Date
+                    <div>Date</div>
+                  </th>
+                  <th>
+                    Direction
+                    <div>Direction</div>
+                  </th>
+                  <th>
+                    CCY
+                    <div>CCY</div>
+                  </th>
+                  <th>
+                    Notional
+                    <div>Notional</div>
+                  </th>
+                  <th>
+                    Rate
+                    <div>Rate</div>
+                  </th>
+                  <th>
+                    PnL
+                    <div>PnL</div>
+                  </th>
+                  <th>
+                    Status
+                    <div>Status</div>
+                  </th>
                 </tr>
               </thead>
 

@@ -9,9 +9,15 @@ export default React.createClass({
 
   render: function() {
 
-    return <div>
-             <button onClick={() => this.add('spot')}>add spot</button>
-             <button onClick={() => this.add('option')}>add option</button>
+    return  <div className="header">
+              <div className="buttons">
+                <button className="btn btn-info btn-sm" onClick={() => this.add('spot')}>add spot</button>
+                <button className="btn btn-success btn-sm" onClick={() => this.add('option')}>add option</button>
+              </div>
+
+              <div className="title">
+                react<strong>trader</strong>
+              </div>
            </div>;
   }
 });
