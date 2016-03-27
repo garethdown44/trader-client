@@ -15,8 +15,7 @@ var PriceAndSpread = React.createClass({
 
   componentDidMount: function() {
 
-    this.subscription = getStreamingPrices(this.props.ccyCpl).subscribe(p => {
-      
+    let onNewPrice = p => {
       let state = {
         nonTradeable: p.nonTradeable,
         bid: p.bid,
@@ -24,7 +23,9 @@ var PriceAndSpread = React.createClass({
       }
 
       this.setState(state);
-    }.bind(this));
+    }
+
+    this.subscription = getStreamingPrices(this.props.ccyCpl).subscribe(onNewPrice);
   },
 
   render: function() {

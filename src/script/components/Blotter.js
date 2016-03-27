@@ -1,14 +1,16 @@
-const React = require('react');
-const {connect} = require('react-redux');
-const StreamingPriceReceiver = require('./StreamingPriceReceiver');
-const blotter = require('../system/blotter');
-const moment = require('moment');
 const debug = require('debug')('trader:blotter');
-const Value = require('./Value');
-const StreamingValue = StreamingPriceReceiver(Value);
+
+import React from 'react'
+import {connect} from 'react-redux'
+import StreamingPriceReceiver from './StreamingPriceReceiver'
+import blotter from '../system/blotter'
+import moment from 'moment'
+import Value from './Value'
+
+const StreamingValue = StreamingPriceReceiver(Value)
 
 function select(state) {
-  return {positions: state.positions};
+  return { positions: state.positions };
 }
 
 const Blotter = React.createClass({

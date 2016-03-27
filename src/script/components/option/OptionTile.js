@@ -5,6 +5,8 @@ import OptionLeg from './OptionLeg';
 import Button from './Button';
 import Countdown from './Countdown';
 
+require('./option.styl');
+
 export default React.createClass({
 
   handleStrikeChange: function(value, legIndex) {

@@ -1,8 +1,8 @@
 const debug = require('debug')('trader:StreamingPriceReceiver');
-const React = require('react');
-const getStreamingPrices = require('../system/getStreamingPrices');
+import React from 'react'
+import getStreamingPrices from '../system/getStreamingPrices'
 
-module.exports = Child => React.createClass({
+export default Child => React.createClass({
 
   componentDidMount: function() {
     var priceStream = getStreamingPrices(this.props.ccyCpl);

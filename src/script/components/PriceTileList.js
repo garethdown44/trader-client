@@ -1,8 +1,7 @@
-const React = require('react');
-const {connect} = require('react-redux');
-
-const PriceTile = require('./PriceTile');
-const OptionTile = require('./option/OptionTile');
+import React from 'react'
+import {connect} from  'react-redux'
+import PriceTile from './PriceTile'
+import OptionTile from './option/OptionTile'
 
 const PriceTileList = React.createClass({
 

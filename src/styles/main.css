@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #272b30;
+  background-color: #1c1e22; //272b30
   font-family: Proxima Nova, Helvetica, Arial;
 }
 
@@ -15,7 +15,7 @@ body {
 }
 
 .header {
-  background-color: #1c1e22;
+  background-color: #272b30;
   color: white;
   font-size: 15pt;
   text-align: center;
@@ -45,6 +45,16 @@ body {
 .row {
   padding-left: 0;
   margin-left: 0;
+}
+
+.spot-tile {
+  width: 250px;
+}
+
+.spot-tile .heading {
+  font-size: 12pt;
+  padding: 2px;
+  text-align: center;
 }
 
 .tiles {

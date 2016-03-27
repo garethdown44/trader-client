@@ -1,10 +1,15 @@
-var express = require('express');
-var app = express();
+var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
+var config = require('./webpack.config');
 
-app.use('/', express.static(__dirname + '/dist'));
+new WebpackDevServer(webpack(config), {
+  publicPath: config.output.publicPath,
+  hot: true,
+  historyApiFallback: false
+}).listen(8080, 'localhost', function (err, result) {
+  if (err) {
+    return console.log(err);
+  }
 
-app.set('port', (process.env.PORT || 8080));
-
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+  console.log('Listening at http://localhost:8080/');
 });
