@@ -24,9 +24,13 @@ module.exports = function(env) {
       {
         test: /(\.css|\.scss|\.styl)$/,
         include: path.join(__dirname),
-        //exclude: /node_modules/,
-        loaders: ['style', 'css?sourceMap', 'sass?sourceMap', 'stylus']
-      }]
+        loaders: ['style', 'raw', 'css?sourceMap', 'sass?sourceMap', 'stylus']
+      },
+      {
+        test   : /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        loader : 'file-loader'
+      }
+      ]
     }
   };  
 }

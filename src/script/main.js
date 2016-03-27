@@ -14,7 +14,12 @@ window.Perf = require('react-addons-perf');
 import store from './system/redux/store';
 import { subscribePositions, subscribeTeamTrades } from './system/redux/actions/positions';
 
+require('style!raw!../styles/bootstrap2.css');
+require('style!raw!../../lib/font-awesome/css/font-awesome.css');
 require('../styles/main.css');
+
+require('jquery');
+require('bootstrap');
 
 store.dispatch(subscribePositions());
 store.dispatch(subscribeTeamTrades());
