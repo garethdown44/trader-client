@@ -4,6 +4,7 @@ import teamTrades from '../../teamTrades'
 
 export const RECEIVE_POSITION = 'RECEIVE_POSITION';
 export const RECEIVE_TEAM_TRADE = 'RECEIVE_TEAM_TRADE';
+export const RECEIVE_TEAM_TRADE_BATCH = 'RECEIVE_TEAM_TRADE_BATCH';
 export const CHANGE_TAB = 'CHANGE_TAB';
 
 export function subscribePositions() {
@@ -27,6 +28,15 @@ export function subscribeTeamTrades() {
       return dispatch(receiveTeamTrade(trade));
     })
   };
+}
+
+// todo: buffer and dispatch a batch
+export function receiveTeamTradeBatch(trades) {
+  debug('receiveTeamTradeBatch()');
+  return {
+    type: RECEIVE_TEAM_TRADE_BATCH,
+    trades
+  }
 }
 
 export function receiveTeamTrade(trade) {

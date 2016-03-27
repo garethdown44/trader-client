@@ -33,8 +33,8 @@ module.exports = {
     },
     {
       test: /(\.css|\.scss|\.styl)$/,
-      include: path.join(__dirname, 'src'),
-      exclude: /node_modules/,
+      include: path.join(__dirname),
+      //exclude: /node_modules/,
       loaders: ['style', 'css?sourceMap', 'sass?sourceMap', 'stylus']
     }]
   }
