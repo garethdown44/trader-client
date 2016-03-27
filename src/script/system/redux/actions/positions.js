@@ -24,9 +24,9 @@ export function receivePosition(position) {
 
 export function subscribeTeamTrades() {
   return function (dispatch) {
-    return teamTrades.subscribe(trade => {
-      return dispatch(receiveTeamTrade(trade));
-    })
+    teamTrades.buffer(teamTrades.debounce(75)).subscribe(trades => {
+      return dispatch(receiveTeamTradeBatch(trades));
+    });
   };
 }
 

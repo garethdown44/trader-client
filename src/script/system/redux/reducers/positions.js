@@ -1,6 +1,9 @@
 const debug = require('debug')('trader:reducers:positions');
 
-import { RECEIVE_POSITION, RECEIVE_TEAM_TRADE, CHANGE_TAB } from '../actions/positions';
+import { RECEIVE_POSITION, 
+         RECEIVE_TEAM_TRADE, 
+         CHANGE_TAB,
+         RECEIVE_TEAM_TRADE_BATCH } from '../actions/positions';
 
 const initialState = {
   activeTab: 'myTrades',
@@ -23,6 +26,15 @@ export default function positions(state = initialState, action) {
     case RECEIVE_TEAM_TRADE:
 
       state.teamTrades = [...state.teamTrades, Object.assign({}, action.trade)];
+      state = Object.assign({}, state);
+      
+      break;
+
+    case RECEIVE_TEAM_TRADE_BATCH:
+
+      debug('receive team trade batch', action.trades);
+
+      state.teamTrades = [...state.teamTrades, ...action.trades];
       state = Object.assign({}, state);
       
       break;
