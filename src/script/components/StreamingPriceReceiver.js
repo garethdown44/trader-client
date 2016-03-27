@@ -7,9 +7,13 @@ export default Child => React.createClass({
   componentDidMount: function() {
     var priceStream = getStreamingPrices(this.props.ccyCpl);
 
-    priceStream.subscribe(p => {
+    this.subscription = priceStream.subscribe(p => {
       this.setState({bid: p.bid, ask: p.ask, tradeable: true});
     });
+  },
+
+  componentWillUnmount: function() {
+    this.subscription.dispose();
   },
 
   getInitialState: function() {

@@ -235,7 +235,7 @@ body {
   width: 100%;
   height: 200px;
   border-top: 3px solid #93a1a1;*/
-  background-color: #000;
+  background-color: #3e444c;
   height: 200px;
   overflow-y: auto;
   font-size: 11px;
@@ -251,7 +251,8 @@ body {
 
 table {
   border-spacing: 0;
-  width:100%;
+  width: 100%;
+  margin: 0px;
 }
 
 td, th {
@@ -267,7 +268,7 @@ th {
   padding-top: 0;
   padding-bottom: 0;
   color: transparent;
-  border: none;
+  border: 1px solid black;
   white-space: nowrap;
 }
 th div{
@@ -286,13 +287,11 @@ th:first-child div{
 }
 
 section {
+  border: none;
   position: relative;
-  border: 1px solid #000;
-  padding-top: 37px;
-  background-color: #000;
+  padding-top: 30px;
+  background-color: #3e444c;
 }
-
-
 
 
 

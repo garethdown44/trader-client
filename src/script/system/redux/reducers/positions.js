@@ -1,21 +1,38 @@
-const debug = require('debug')('trader:redux:reducers:positions');
+const debug = require('debug')('trader:reducers:positions');
 
-import { RECEIVE_POSITION } from '../actions/positions';
+import { RECEIVE_POSITION, RECEIVE_TEAM_TRADE, CHANGE_TAB } from '../actions/positions';
 
-export default function positions(state = [], action) {
+const initialState = {
+  activeTab: 'myTrades',
+  positions: [],
+  teamTrades: []
+}
+
+export default function positions(state = initialState, action) {
 
   debug(action);
 
   switch (action.type) {
     case RECEIVE_POSITION:
 
-      let newState = [...state, Object.assign({}, action.position)];
+      state.positions = [...state.positions, Object.assign({}, action.position)];
+      state = Object.assign({}, state);
+      
+      break;
 
-      debug('newState', newState);
+    case RECEIVE_TEAM_TRADE:
 
-      return newState;
+      state.teamTrades = [...state.teamTrades, Object.assign({}, action.trade)];
+      state = Object.assign({}, state);
+      
+      break;
 
-    default:
-      return state;
+    case CHANGE_TAB:
+
+      state.activeTab = action.value;
+      state = Object.assign({}, state);
+      break;
   }
+
+  return state;
 }

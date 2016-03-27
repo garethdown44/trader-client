@@ -3,83 +3,61 @@ const debug = require('debug')('trader:blotter');
 import React from 'react'
 import {connect} from 'react-redux'
 import StreamingPriceReceiver from './StreamingPriceReceiver'
-import blotter from '../system/blotter'
+//import blotter from '../system/blotter'
 import moment from 'moment'
 import Value from './Value'
+import MyTrades from './MyTrades'
+import TeamTrades from './TeamTrades'
 
-const StreamingValue = StreamingPriceReceiver(Value)
+import { changeTab } from '../system/redux/actions/positions'
 
-function select(state) {
-  return { positions: state.positions };
+const mapStateToProps = state => {
+  //return { myTrades = state.myTrades, teamTrades = state.teamTrades }
+
+  debug('state', state);
+
+  return {  activeTab: state.positions.activeTab, 
+            positions: state.positions.positions,
+            teamTrades: state.positions.teamTrades };
+};
+
+const props = {
+  changeTab
 }
 
-const Blotter = React.createClass({
+const tabs = {
+  myTrades: { label: 'my trades', component: MyTrades },
+  teamTrades: { label: 'team trades', component: TeamTrades },
+}
 
-  renderRows: function(rows) {
+// function getComponent(name, props) {
+//   var component = tabs[name].component;
+//   return React.createElement(component, props); 
+// }
 
-    return rows.map((row, index) => {
+//<li role="presentation"><a href="#">my positions</a></li>
+//<li role="presentation"><a href="#">my orders</a></li>
+//<li role="presentation" onClick={_ => changeTab('teamTrades')}><a href="#">team trades</a></li>
 
-      return (<tr key={index}>
-                <td>{moment(row.date).format('D MMM YYYY h:mm:ss')}</td>
-                <td><span className={row.direction}>{row.direction}</span></td>
-                <td>{row.ccyCpl}</td>
-                <td>{row.notional}</td>
-                <td>{row.rate}</td>
-                <td><StreamingValue notional={row.notional} 
-                                    direction={row.direction} 
-                                    rate={row.rate} 
-                                    ccyCpl={row.ccyCpl} /></td>
-                <td>{row.status}</td>
-              </tr>);
-    });
-  },
+export default connect(mapStateToProps, props)(( { activeTab, positions, teamTrades, changeTab }) => {
+  return  <div className="blotter-container">
+            <div>
+              <ul className="nav nav-tabs tab-sm">
 
-  render: function() {
+              {Object.keys(tabs).map(name => <li key={name} role="presentation" className={name == activeTab ? 'active':''} onClick={_ => changeTab(name)}><a href="#">{tabs[name].label}</a></li>)}
+                
+              </ul>
+            </div>
 
-    debug('render, props', this.props);
-
-    let rows = this.renderRows(this.props.positions);
-
-    return (<table>
-              <thead>
-                <tr>
-                  <th>
-                    Date
-                    <div>Date</div>
-                  </th>
-                  <th>
-                    Direction
-                    <div>Direction</div>
-                  </th>
-                  <th>
-                    CCY
-                    <div>CCY</div>
-                  </th>
-                  <th>
-                    Notional
-                    <div>Notional</div>
-                  </th>
-                  <th>
-                    Rate
-                    <div>Rate</div>
-                  </th>
-                  <th>
-                    PnL
-                    <div>PnL</div>
-                  </th>
-                  <th>
-                    Status
-                    <div>Status</div>
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {rows}
-              </tbody>
-
-            </table>);
-  }
+            <section className="">
+              <div className='blotter'>
+                {(() => {
+                  switch(activeTab) {
+                    case 'myTrades': return <MyTrades positions={positions} />;
+                    case 'teamTrades': return <TeamTrades teamTrades={teamTrades} />;
+                  }
+                })()}
+              </div>
+            </section>
+          </div>;
 });
-
-export default connect(select)(Blotter);
