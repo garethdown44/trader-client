@@ -59,8 +59,6 @@
   },
   "scripts": {
     "start": "webpack-dev-server --history-api-fallback --open",
-    "build:js": "node build.js",
-    "build:html": "node build-html.js",
-    "build": "npm-run-all --parallel build:html build:js"
+    "postinstall": "node build-html.js & node build.js"
   }
 }
