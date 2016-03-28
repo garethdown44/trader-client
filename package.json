@@ -54,6 +54,7 @@
     "redux-devtools": "^3.1.0",
     "redux-devtools-dock-monitor": "^1.0.1",
     "redux-devtools-log-monitor": "^1.0.4",
+    "remove": "^0.1.5",
     "stylus-loader": "^1.5.1",
     "webpack": "^1.12.13",
     "webpack-dev-server": "^1.14.1"
