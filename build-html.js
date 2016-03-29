@@ -49,7 +49,7 @@ fs.createReadStream('./lib/bootstrap-slate.css').pipe(fs.createWriteStream('./di
 
 ncp.limit = 16;
  
-ncp('./lib/font-awesome', './dist/lib/', function (err) {
+ncp('./lib/font-awesome', './dist/lib/font-awesome', function (err) {
  if (err) {
    return console.error(err);
  }
