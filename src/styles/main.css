@@ -71,29 +71,36 @@ body {
   overflow:hidden;
 }
 
-.spot-tile {
+.new-tile {
   width: 250px;
+  float: left;
+  margin: 2px;
 }
 
-.spot-tile .heading {
+.tile-body {
+  position: relative;
+  height: 150px;
+
+}
+
+.new-tile .heading {
   font-size: 12pt;
   padding: 2px;
   text-align: center;
 }
 
-.tile {
+/*.tile {
   background-color: #073642;
   margin: 5px;
   width: 250px;
   height: 150px;
-  /*border: 1px dashed green;*/
   padding: 0 8px 0 8px;
   position: relative;
   float: left;
   border: 1px solid #455861;
-}
+}*/
 
-.tile:hover {
+/*.tile:hover {
   background-color: #001E27;
 }
 
@@ -109,6 +116,7 @@ body {
 .tile-content {
   color: #93a1a1;
 }
+*/
 
 .one-way-price {
   cursor: pointer;
@@ -129,21 +137,17 @@ body {
 }
 
 .one-way-price.buy {
-  color: #268bd2;  
+  color: #53be53;  
   right: 10px;
   /*border: 1px dashed blue;*/
   float: right;
 }
 
 .one-way-price.sell {
-  color: #2aa198;
+  color: #4ab9db;
   /*border: 1px dashed white;*/
   left: 10px;
   float: left;
-}
-
-.one-way-price.sell {
-  color: #2aa198;
   right: 0;
 }
 
@@ -204,8 +208,8 @@ body {
   display: block;
   clear: both;
   position: absolute;
-  top: 120px;
-  margin-left: 1px;
+  top: 110px;
+  margin-left: -5px;
 }
 
 .notional-ccy {
@@ -217,7 +221,7 @@ body {
   background-color: transparent;
   border-style: none;
   display: inline-block;
-  width: 100px;
+  width: 80px;
   color: #657b83;
 }
 
@@ -226,7 +230,7 @@ body {
   height: 0;
   border-style: solid;
   border-width: 0 5px 5px 5px;
-  border-color: transparent transparent #859900 transparent;
+  border-color: transparent transparent #53be53 transparent;
   display: inline-block;
 }
 

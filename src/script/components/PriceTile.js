@@ -37,24 +37,25 @@ var PriceTile = React.createClass({
 
     let firstCcy = '';
     if (this.props.ccyCpl) {
-      let firstCcy = this.props.ccyCpl.substr(0, 3);
+      firstCcy = this.props.ccyCpl.substr(0, 3);
     } 
 
-    return (<div className='tile'>
-                <div className='tile-title'>{this.props.ccyCpl}</div>
-                {/*<button onClick={() => this.remove(this.props.tileId)}>x</button>*/}
-
+    return (<div className="panel panel-primary new-tile">
+              <div className="panel-heading heading">{this.props.ccyCpl}</div>
+              <div className="panel-body tile-body">
                 <PriceAndSpread ccyCpl={this.props.ccyCpl} 
                                 execute={this.execute} 
                                 executing={this.props.executing} />
-                
+
                 <div className='notional-container'>
+
                   <span className='notional-ccy'>{firstCcy}</span>
                   <input type="text" 
                          value={this.state.notional} 
                          onChange={this.notionalChanged}
                          className='notional' />
                 </div>
+              </div>
             </div>);
   }
 });

@@ -21,6 +21,8 @@ require('../styles/main.css');
 // require('expose?$!expose?jQuery!jquery');
 // require('bootstrap');
 
+var PriceAndSpread = require('./components/PriceAndSpread');
+
 store.dispatch(subscribePositions());
 store.dispatch(subscribeTeamTrades());
 
@@ -32,11 +34,6 @@ var Component = React.createClass({
       
               <div className='price-tile-list'>
                 <PriceTileList />
-
-                {/*<div className="panel panel-default spot-tile">
-                  <div className="panel-heading heading">EURUSD</div>
-                  <div className="panel-body">the body here</div>
-                </div>*/}
               </div>
 
               <Blotter />

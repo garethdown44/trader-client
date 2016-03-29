@@ -61,10 +61,12 @@ export default React.createClass({
                  </div>);
     }
 
-    return <div className='tile option-tile'>
-              <div className='tile-title'>{this.props.ccyCpl}</div>
-              <div>{legs}</div>
-              {buttons}
+    return <div className='panel panel-primary new-tile option-tile'>
+              <div className='panel-heading heading'>OPTION: {this.props.ccyCpl}</div>
+              <div className='panel-body tile-body'>
+                <div>{legs}</div>
+                {buttons}
+              </div>
             </div>;
   }
 });
