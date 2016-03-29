@@ -7,7 +7,7 @@ const trackJsToken = ''; // If you choose to use TrackJS, insert your unique tok
 
 const remove = require('remove');
 
-remove.removeSync('./dist');
+remove.removeSync('./dist', { ignoreErrors: true });
 
 fs.mkdirSync('./dist');
 fs.mkdirSync('./dist/lib');
