@@ -23,7 +23,7 @@ fs.readFile('index.html', 'utf8', (err, markup) => {
   const $ = cheerio.load(markup);
 
   // since a separate spreadsheet is only utilized for the production build, need to dynamically add this here.
-  $('head').prepend('<link rel="stylesheet" href="styles.css">');
+  //$('head').prepend('<link rel="stylesheet" href="styles.css">');
 
   if (useTrackJs) {
     if (trackJsToken) {
