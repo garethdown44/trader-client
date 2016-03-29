@@ -8,6 +8,11 @@ module.exports = React.createClass({
 
   componentWillReceiveProps: function(newProps) {
     let value;
+
+    if (newProps.bid == 0 && newProps.ask == 0) {
+      this.setState({ value: NaN });
+      return;
+    }
     
     if (newProps.direction == 'buy') {
       value = (newProps.bid - newProps.rate) * newProps.notional;
@@ -22,6 +27,8 @@ module.exports = React.createClass({
 
     let className = this.state.value < 0 ? 'negative' : 'positive';
 
-    return <span className={className}>{this.state.value}</span>;
+    let value = Number.isNaN(this.state.value) ? 'please wait...' : this.state.value;
+
+    return <span className={className}>{value}</span>;
   }
 });

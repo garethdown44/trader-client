@@ -33,7 +33,7 @@ const PriceTileList = React.createClass({
 
     let view = this.renderTiles().toJS();
 
-    return <div className='row'>{view}</div>;
+    return <div>{view}</div>;
   }
 });
 
