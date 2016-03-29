@@ -57,10 +57,6 @@ body {
   text-align: center;
 }
 
-.tiles {
-  padding: 15px 0px 15px 0px;
-}
-
 .tile {
   background-color: #073642;
   margin: 5px;

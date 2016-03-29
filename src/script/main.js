@@ -30,15 +30,13 @@ var Component = React.createClass({
 
               {<Header dispatch={store.dispatch} />}
       
-              <div className='row'>
-                <div className='col-lg-12 tiles'>
-                  <PriceTileList />
+              <div className='price-tile-list'>
+                <PriceTileList />
 
-                  <div className="panel panel-default spot-tile">
-                    <div className="panel-heading heading">EURUSD</div>
-                    <div className="panel-body">the body here</div>
-                  </div>
-                </div>
+                {/*<div className="panel panel-default spot-tile">
+                  <div className="panel-heading heading">EURUSD</div>
+                  <div className="panel-body">the body here</div>
+                </div>*/}
               </div>
 
               <Blotter />
