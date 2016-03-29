@@ -12,8 +12,7 @@ import TeamTrades from './TeamTrades'
 import { changeTab } from '../system/redux/actions/positions'
 
 const mapStateToProps = state => {
-  //return { myTrades = state.myTrades, teamTrades = state.teamTrades }
-
+  
   debug('state', state);
 
   return {  activeTab: state.positions.activeTab, 
@@ -29,15 +28,6 @@ const tabs = {
   myTrades: { label: 'my trades', component: MyTrades },
   teamTrades: { label: 'team trades', component: TeamTrades },
 }
-
-// function getComponent(name, props) {
-//   var component = tabs[name].component;
-//   return React.createElement(component, props); 
-// }
-
-//<li role="presentation"><a href="#">my positions</a></li>
-//<li role="presentation"><a href="#">my orders</a></li>
-//<li role="presentation" onClick={_ => changeTab('teamTrades')}><a href="#">team trades</a></li>
 
 export default connect(mapStateToProps, props)(( { activeTab, positions, teamTrades, changeTab }) => {
   return  <div className="blotter-container">
