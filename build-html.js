@@ -6,6 +6,7 @@ const useTrackJs = false; // If you choose not to use TrackJS, just set this to 
 const trackJsToken = ''; // If you choose to use TrackJS, insert your unique token here. To get a token, go to https://trackjs.com
 
 const remove = require('remove');
+const ncp = require('ncp').ncp;
 
 remove.removeSync('./dist', { ignoreErrors: true });
 
@@ -44,7 +45,16 @@ fs.readFile('index.html', 'utf8', (err, markup) => {
 });
 
 fs.createReadStream('./lib/bootstrap-slate.css').pipe(fs.createWriteStream('./dist/lib/bootstrap-slate.css'));
-fs.createReadStream('./lib/font-awesome/css/font-awesome.css').pipe(fs.createWriteStream('./dist/lib/font-awesome/css/font-awesome.css'));
+//fs.createReadStream('./lib/font-awesome/css/font-awesome.css').pipe(fs.createWriteStream('./dist/lib/font-awesome/css/font-awesome.css'));
+
+ncp.limit = 16;
+ 
+ncp('./lib/font-awesome', './dist/lib/', function (err) {
+ if (err) {
+   return console.error(err);
+ }
+ console.log('done!');
+});
 
 fs.createReadStream('./lib/js/jquery.min.js').pipe(fs.createWriteStream('./dist/lib/js/jquery.min.js'));
 fs.createReadStream('./lib/js/bootstrap.min.js').pipe(fs.createWriteStream('./dist/lib/js/bootstrap.min.js'));
