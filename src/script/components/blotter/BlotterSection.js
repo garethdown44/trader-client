@@ -20,8 +20,11 @@ const props = {
   changeTab
 }
 
-const labelFn = function(label, count) {
-  return <span>{label} ({count})</span>;
+function TabLabel({ changeTab, activeTab, name, tabs }) {
+  return <li key={name} 
+             role="presentation" 
+             className={name == activeTab ? 'active':''} 
+             onClick={_ => changeTab(name)}><a href="#">{tabs[name].label} ({tabs[name].data.length})</a></li>
 }
 
 export default connect(mapStateToProps, props)(( { activeTab, positions, teamTrades, changeTab }) => {
@@ -35,10 +38,7 @@ export default connect(mapStateToProps, props)(( { activeTab, positions, teamTra
             <div>
               <ul className="nav nav-tabs tab-sm">
 
-              {Object.keys(tabs).map(name => <li key={name} 
-                                                 role="presentation" 
-                                                 className={name == activeTab ? 'active':''} 
-                                                 onClick={_ => changeTab(name)}><a href="#">{labelFn(tabs[name].label, tabs[name].data.length)}</a></li>)}
+              {Object.keys(tabs).map(name => <TabLabel name={name} tabs={tabs} activeTab={activeTab} changeTab={changeTab} /> )}
                 
               </ul>
             </div>
