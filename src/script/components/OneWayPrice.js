@@ -1,7 +1,7 @@
-const React = require('react');
 const debug = require('debug')('trader:OneWayPrice');
+import React from 'react'
 
-module.exports = React.createClass({
+export default React.createClass({
 
   getInitialState: function() {
     return {
@@ -35,8 +35,6 @@ module.exports = React.createClass({
   },
 
   render: function() {
-
-    //debug('this.props.executing', this.props.executing);
 
     let tradeable = this.props.nonTradeable || this.props.executing ? 'non-tradeable' : '';
 

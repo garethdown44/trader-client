@@ -1,27 +1,23 @@
 == TODO ==
 
-1. DONE fix the PnL value. 
-   - a) if it's a buy then PnL = (bid - r) * notional
-   - b) if it's a sell then PnL = (r - ask) * notional
+1. JEST tests
 
-2. option add flip icon for buy/sell call/put
+2. positions
 
-3. add a bar across the top and have an add tile dropdown - spot/fwd, option
+3. should order status - requested/filled/rejected
 
-4. fix notional currency
+4. option styling
 
-5. add reducer for book trade
+5. add a bar across the top and have an add tile dropdown - spot/fwd, option
 
-6. add reducer for add tile
+6. load workspace from the server
 
-7. load workspace from the server
+7. option - set expiry (+ using tenor dates)
 
-8. option - set expiry (+ using tenor dates)
-
-9. add option leg
+8. add option leg
 
 10. remove tile
 
 == NEXT ==
 
-2. drag and drop tiles
+1. drag and drop tiles

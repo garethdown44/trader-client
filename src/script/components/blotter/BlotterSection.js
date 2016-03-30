@@ -20,17 +20,25 @@ const props = {
   changeTab
 }
 
-const tabs = {
-  myTrades: { label: 'my trades', component: MyTrades },
-  teamTrades: { label: 'team trades', component: TeamTrades },
+const labelFn = function(label, count) {
+  return <span>{label} ({count})</span>;
 }
 
 export default connect(mapStateToProps, props)(( { activeTab, positions, teamTrades, changeTab }) => {
+
+  const tabs = {
+    myTrades: { label: 'my trades', component: MyTrades, data: positions },
+    teamTrades: { label: 'team trades', component: TeamTrades, data: teamTrades },
+  }
+
   return  <div className="blotter-container">
             <div>
               <ul className="nav nav-tabs tab-sm">
 
-              {Object.keys(tabs).map(name => <li key={name} role="presentation" className={name == activeTab ? 'active':''} onClick={_ => changeTab(name)}><a href="#">{tabs[name].label}</a></li>)}
+              {Object.keys(tabs).map(name => <li key={name} 
+                                                 role="presentation" 
+                                                 className={name == activeTab ? 'active':''} 
+                                                 onClick={_ => changeTab(name)}><a href="#">{labelFn(tabs[name].label, tabs[name].data.length)}</a></li>)}
                 
               </ul>
             </div>
