@@ -29,21 +29,44 @@ function renderContent(teamTrades) {
           <FlexColumn
             label='Date'
             dataKey='date'
+            width={200}
 
           />
           <FlexColumn
             label='Direction'
             dataKey='direction'
+            width={100}
+          />
+
+          <FlexColumn
+            label='CCY'
+            dataKey='ccyCpl'
+            width={100}
+          />
+
+          <FlexColumn
+            label='Notional'
+            dataKey='notional'
+            width={100}
           />
 
           <FlexColumn
             label='Rate'
-            dataKey='rate' />
+            dataKey='rate'
+            width={100} 
+          />
 
           <FlexColumn
             label='PnL'
             dataKey='rate'
+            width={100}
             cellRenderer={ (cellData, cellDataKey, rowData, rowIndex, columnData) => <StreamingValue notional={rowData.notional} rate={rowData.rate} direction={rowData.direction} ccyCpl={rowData.ccyCpl} /> }
+          />
+
+          <FlexColumn
+            label='Status'
+            dataKey='status'
+            width={100} 
           />
         </FlexTable>};
 }
