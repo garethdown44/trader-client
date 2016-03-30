@@ -16,7 +16,7 @@ const mapStateToProps = state => {
             teamTrades: state.positions.teamTrades };
 };
 
-const props = {
+const mapOwnProps = {
   changeTab
 }
 
@@ -27,7 +27,7 @@ function TabLabel({ changeTab, activeTab, name, tabs }) {
              onClick={_ => changeTab(name)}><a href="#">{tabs[name].label} ({tabs[name].data.length})</a></li>
 }
 
-export default connect(mapStateToProps, props)(( { activeTab, positions, teamTrades, changeTab }) => {
+export default connect(mapStateToProps, mapOwnProps)(( { activeTab, positions, teamTrades, changeTab }) => {
 
   const tabs = {
     myTrades: { label: 'my trades', component: MyTrades, data: positions },

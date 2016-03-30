@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bootstrap": "^3.3.6",
+    "compression": "^1.6.1",
     "debug": "^2.2.0",
     "express": "^4.13.4",
     "isomorphic-fetch": "^2.2.1",
@@ -44,6 +45,8 @@
     "eslint-plugin-react": "^3.16.1",
     "expose-loader": "^0.7.1",
     "file-loader": "^0.8.5",
+    "karma": "^0.13.22",
+    "karma-cli": "^0.1.2",
     "ncp": "^2.0.0",
     "node-sass": "^3.4.2",
     "raw-loader": "^0.5.1",
