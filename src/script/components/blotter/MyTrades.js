@@ -1,14 +1,12 @@
 const debug = require('debug')('trader:blotter');
 
 import React from 'react'
-import {connect} from 'react-redux'
-import StreamingPriceReceiver from './StreamingPriceReceiver'
-import blotter from '../system/blotter'
+import StreamingPriceReceiver from '../StreamingPriceReceiver'
+import blotter from '../../system/blotter'
 import moment from 'moment'
-import Value from './Value'
+import Value from '../Value'
 
 const StreamingValue = StreamingPriceReceiver(Value);
-//const StreamingValue = Value
 
 function renderRows(rows) {
   return rows.map((row, index) => {

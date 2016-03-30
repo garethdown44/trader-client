@@ -1,15 +1,11 @@
 const debug = require('debug')('trader:blotter');
 
 import React from 'react'
-import {connect} from 'react-redux'
-import StreamingPriceReceiver from './StreamingPriceReceiver'
-//import blotter from '../system/blotter'
-import moment from 'moment'
-import Value from './Value'
+import { connect } from 'react-redux'
 import MyTrades from './MyTrades'
 import TeamTrades from './TeamTrades'
 
-import { changeTab } from '../system/redux/actions/positions'
+import { changeTab } from '../../system/redux/actions/positions'
 
 const mapStateToProps = state => {
   
@@ -39,7 +35,7 @@ export default connect(mapStateToProps, props)(( { activeTab, positions, teamTra
               </ul>
             </div>
 
-            <section className="">
+            <section>
               <div className='blotter'>
                 {(() => {
                   switch(activeTab) {

@@ -4,7 +4,7 @@ import {Provider} from'react-redux'
 import PriceTile from'./components/PriceTile'
 import StreamingPriceReceiver from './components/StreamingPriceReceiver'
 import PriceTileList from './components/PriceTileList'
-import Blotter from './components/Blotter'
+import BlotterSection from './components/blotter/BlotterSection'
 import Header from './components/Header'
 
 window.myDebug = require('debug');
@@ -36,7 +36,7 @@ var Component = React.createClass({
                 <PriceTileList />
               </div>
 
-              <Blotter />
+              <BlotterSection />
             </div>);
   }
 });
