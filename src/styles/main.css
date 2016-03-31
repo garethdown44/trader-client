@@ -28,8 +28,7 @@ body {
   left: 0;
   height: 50px;
   right: 0;
-  overflow: hidden;
-
+  
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: space-between;

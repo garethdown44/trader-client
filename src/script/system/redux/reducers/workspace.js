@@ -23,9 +23,9 @@ export default function workspace(state = initialWorkspace, action) {
     case ADD_TILE:
 
       if (action.product == 'spot') {
-        tiles = tiles.push(new SpotTile({ccyCpl: 'EURUSD'}));
+        tiles = tiles.push(new SpotTile({ccyCpl: action.ccyCpl}));
       } else if (action.product == 'option') {
-        tiles = tiles.push(new OptionTile({ccyCpl: 'EURUSD'}));
+        tiles = tiles.push(new OptionTile({ccyCpl: action.ccyCpl}));
       }
       
       state = state.set('tiles', tiles);
