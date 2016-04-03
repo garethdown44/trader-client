@@ -10,9 +10,6 @@ describe('option tile', function () {
 
     var tile = TestUtils.renderIntoDocument(<OptionTile legs={[leg]} />);
 
-    console.dir(tile);
-    console.log(tile);
-
     expect(tile).toExist();
   });
 });

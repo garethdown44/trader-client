@@ -24,7 +24,7 @@ describe('options reducer', () => {
 
     var newState = reducer(state, action);
 
-    expect(newState.get('valid')).toEqual(true);
+    expect(newState.get('status')).toEqual('PRICEABLE');
   });
 
   it('sets the option invalid if the strike is 3', () => {
@@ -33,7 +33,7 @@ describe('options reducer', () => {
 
     var newState = reducer(state, action);
 
-    expect(newState.get('valid')).toEqual(false);
+    expect(newState.get('status')).toEqual('INVALID');
   });
 
   it('sets the option invalid if the strike is greater than 3', () => {
@@ -42,7 +42,7 @@ describe('options reducer', () => {
 
     var newState = reducer(state, action);
 
-    expect(newState.get('valid')).toEqual(false);
+    expect(newState.get('status')).toEqual('INVALID');
   });
 
   it('sets the strike price', function() {
