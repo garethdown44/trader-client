@@ -23,15 +23,20 @@ function legfn(leg, action) {
 
 export default function option(state, action) {
 
-  state = state.set('valid', true);
+  state = state.set('status', 'PRICEABLE');
   let legs = state.get('legs');
 
   switch (action.type) {
 
     case UPDATE_STRIKE:
 
-      state = state.set('valid', action.value < 3); // contrived validation for demonstation purposes
-
+      // contrived validation for demonstation purposes
+      if (action.value < 3) {
+        state = state.set('status', 'PRICEABLE');
+      } else {
+        state = state.set('status', 'INVALID');
+      }
+      
     case UPDATE_NOTIONAL:
       let leg = legs.get(action.legIndex);
 
@@ -42,17 +47,17 @@ export default function option(state, action) {
       break;
 
     case OPTION_PRICE_REQUESTED:
-      state = state.set('status', 'IS_PRICING');
+      state = state.set('status', 'PRICING');
       break;
 
     case OPTION_PRICE_RECEIVED:
-      state = state.set('status', 'IS_PRICED');
+      state = state.set('status', 'PRICED');
       state = state.set('price', action.option.price);
       state = state.set('quoteValidForInSeconds', 12); // arbitrary
       break;
 
     case QUOTE_TIMED_OUT:
-      state = state.set('status', '');
+      state = state.set('status', 'PRICEABLE');
   }
 
   return state;

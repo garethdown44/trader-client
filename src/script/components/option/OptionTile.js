@@ -7,6 +7,37 @@ import Countdown from './Countdown';
 
 require('./option.styl');
 
+export function PricingSection(props) {
+
+  debug(props);
+
+  let { valid, status, price, ccyCpl, handlePrice, buy, sell, quoteValidForInSeconds } = props;
+
+  switch (status) {
+    case 'PRICEABLE':
+      return <Button className='btn-info' valid={true} text='PRICE' onClick={handlePrice} />;
+
+    case 'INVALID':
+      return <Button valid={false} text='INVALID' />;
+
+    case 'PRICING':
+      return <div>Please wait...</div>;
+
+    case 'PRICED':
+      let formattedPrice = price.toFixed(2);
+      let price = `${ccyCpl.substr(0, 3)} ${formattedPrice}`;
+
+      return  <div>
+                 <Countdown from={quoteValidForInSeconds} />
+                 <Button className='btn-success' valid={true} text={'BUY - you pay ' + price} onClick={buy} />
+                 <Button className='btn-info' valid={true} text={'SELL - we pay ' + price} onClick={sell} />
+              </div>;
+
+    default:
+      return <div>unknown status: {status}</div>;
+  }
+}
+
 export default React.createClass({
 
   handleStrikeChange: function(value, legIndex) {
@@ -42,30 +73,15 @@ export default React.createClass({
 
     debug('OptionTile.render(), props', this.props);
 
-    let canPrice = this.props.valid && this.props.status != 'IS_PRICING';
-    let buttons;
-
-    if (!this.props.status) {
-      buttons = <Button valid={canPrice} text='PRICE' onClick={this.handlePrice} />;
-    } else if (this.props.status == 'IS_PRICED') {
-
-      let formattedPrice = this.props.price.toFixed(2);
-      let price = `${this.props.ccyCpl.substr(0, 3)} ${formattedPrice}`;
-
-      buttons = (<div>
-                   <Button valid={true} text={'BUY - you pay ' + price} onClick={this.buy} style={{float: 'left'}} />
-                   <Button valid={true} text={'SELL - we pay ' + price} onClick={this.sell} style={{float: 'left', marginLeft: '10px'}} />
-
-                   <Countdown from={this.props.quoteValidForInSeconds} />
-                   
-                 </div>);
-    }
-
     return <div className='panel panel-primary new-tile option-tile'>
               <div className='panel-heading heading'>OPTION: {this.props.ccyCpl}</div>
               <div className='panel-body tile-body'>
                 <div>{legs}</div>
-                {buttons}
+
+                <PricingSection {...this.props} 
+                                handlePrice={this.handlePrice}
+                                buy={this.buy}
+                                sell={this.sell} />
               </div>
             </div>;
   }

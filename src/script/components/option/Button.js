@@ -1,18 +1,11 @@
 import React from 'react'
 
-export default React.createClass({
+export default function(props) {
 
-  shouldComponentUpdate: function() {
-    return true;
-  },
+  let { className, text } = props;
 
-  render: function() {
+  let classNames = 'btn btn-xs ' + className;
 
-    let classNames = 'button';
-    if (!this.props.valid) {
-      classNames += ' invalid';
-    }
-
-    return <div {...this.props} className={classNames}>{this.props.text}</div>;
-  }
-});
+  return <button  {...props}
+                  className={classNames}>{text}</button>;
+}

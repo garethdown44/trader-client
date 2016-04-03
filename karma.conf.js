@@ -11,6 +11,10 @@ module.exports = function(config) {
       'src/script/**/__tests__/*.js'
     ],
 
+    client: {
+      captureConsole: true
+    },
+
     browsers: ['PhantomJS'],
 
     frameworks: ['jasmine'],

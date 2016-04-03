@@ -9,7 +9,7 @@ export default React.createClass({
   render: function() {
 
     return (<div className='leg'>
-              <TwoChoice first='buy' second='sell' selected='buy' style={{ width: '44px' }} />
+              <ToggleButton first='buy' second='sell' selected='buy' style={{ width: '44px' }} />
               <NotionalTextBox value={this.props.notional} onChange={this.props.handleNotionalChange} />
               <DateChooser className='expiryDate' value={this.props.expiryDate} onChange={this.props.handleExpiryDateChange} />
               <StrikePriceTextBox className='strike' value={this.props.strike} onChange={this.props.handleStrikeChange} key='43' />
