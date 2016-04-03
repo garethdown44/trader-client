@@ -1,9 +1,12 @@
+const debug = require('debug')('trader:actions:options');
+
 export const UPDATE_STRIKE = 'UPDATE_STRIKE';
 export const UPDATE_NOTIONAL = 'UPDATE_NOTIONAL';
 export const PRICE_OPTION = 'PRICE_OPTION';
 export const OPTION_PRICE_REQUESTED = 'OPTION_PRICE_REQUESTED';
 export const OPTION_PRICE_RECEIVED = 'OPTION_PRICE_RECEIVED';
 export const QUOTE_TIMED_OUT = 'QUOTE_TIMED_OUT';
+export const QUOTE_TIME_TICKED = 'QUOTE_TIME_TICKED';
 
 import requestOptionPrice from '../../requestOptionPrice';
 import Rx from 'rx'
@@ -45,12 +48,37 @@ export function optionPriceReceived(tileId, option) {
   }
 }
 
+export function quoteTimeTicked(tileId, secondsRemaining) {
+  return {
+    type: QUOTE_TIME_TICKED,
+    tileId,
+    secondsRemaining
+  }
+}
+
 export function initiateQuoteExpiry(tileId, option) {
 
-  return function(dispatch) {
-    Rx.Observable.timer(option.quoteValidForInSeconds * 1000).take(1).subscribe(_ => {
-      dispatch(quoteTimedOut(tileId, option));
-    });
+  return dispatch => {
+
+    let start = 10; // todo
+
+    Rx.Observable
+      .timer(0, 1000)
+      .map(i => start - i)
+      .take(start + 1)
+      .subscribe(i => {
+
+        debug('tick', i);
+
+          if (i > 0) {
+            debug('dispatching....');
+            dispatch(quoteTimeTicked(tileId, i));
+
+          } else {
+
+            return dispatch(quoteTimedOut(tileId));
+          }
+        });
   }
 }
 

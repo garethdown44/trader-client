@@ -1,11 +1,12 @@
-const debug = require('debug')('trader:redux:reducers:options');
+const debug = require('debug')('trader:reducers:options');
 
 import { UPDATE_STRIKE, 
          UPDATE_NOTIONAL, 
          PRICE_OPTION, 
          OPTION_PRICE_REQUESTED, 
          OPTION_PRICE_RECEIVED,
-         QUOTE_TIMED_OUT } from '../actions/options'
+         QUOTE_TIMED_OUT, 
+         QUOTE_TIME_TICKED } from '../actions/options'
 
 function legfn(leg, action) {
   switch (action.type) {
@@ -23,7 +24,6 @@ function legfn(leg, action) {
 
 export default function option(state, action) {
 
-  state = state.set('status', 'PRICEABLE');
   let legs = state.get('legs');
 
   switch (action.type) {
@@ -53,11 +53,16 @@ export default function option(state, action) {
     case OPTION_PRICE_RECEIVED:
       state = state.set('status', 'PRICED');
       state = state.set('price', action.option.price);
-      state = state.set('quoteValidForInSeconds', 12); // arbitrary
+      state = state.set('secondsRemaining', 10); // arbitrary
       break;
 
     case QUOTE_TIMED_OUT:
       state = state.set('status', 'PRICEABLE');
+      break;
+
+    case QUOTE_TIME_TICKED:
+      state = state.set('secondsRemaining', action.secondsRemaining);
+      break;
   }
 
   return state;

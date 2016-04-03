@@ -7,7 +7,8 @@ import { UPDATE_STRIKE,
          PRICE_OPTION, 
          OPTION_PRICE_REQUESTED, 
          OPTION_PRICE_RECEIVED,
-         QUOTE_TIMED_OUT } from '../actions/options'
+         QUOTE_TIMED_OUT, 
+         QUOTE_TIME_TICKED } from '../actions/options'
 
 import option from './options'
 import ws from '../../workspace';
@@ -60,6 +61,7 @@ export default function workspace(state = initialWorkspace, action) {
     case OPTION_PRICE_REQUESTED:
     case OPTION_PRICE_RECEIVED:
     case QUOTE_TIMED_OUT:
+    case QUOTE_TIME_TICKED:
       
       var tile = tiles.get(action.tileId);
 

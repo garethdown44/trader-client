@@ -13,8 +13,6 @@ const initialState = {
 
 export default function positions(state = initialState, action) {
 
-  debug(action);
-
   switch (action.type) {
     case RECEIVE_POSITION:
 
