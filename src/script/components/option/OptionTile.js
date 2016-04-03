@@ -3,11 +3,7 @@ import React from 'react';
 import {updateStrike, updateNotional, priceOption, quoteTimedOut} from '../../system/redux/actions/options';
 import OptionLeg from './OptionLeg';
 import Button from './Button';
-//import Countdown from './Countdown';
-
-function Countdown2( { secondsRemaining } ) {
-  return <div>quote valid for {secondsRemaining} seconds</div>;
-}
+import Countdown from './Countdown';
 
 require('./option.styl');
 
@@ -32,7 +28,7 @@ export function PricingSection(props) {
       let price = `${ccyCpl.substr(0, 3)} ${formattedPrice}`;
 
       return  <div>
-                 <Countdown2 secondsRemaining={secondsRemaining} />
+                 <Countdown secondsRemaining={secondsRemaining} />
                  <Button className='btn-success' valid={true} text={'BUY - you pay ' + price} onClick={buy} />
                  <Button className='btn-info' valid={true} text={'SELL - we pay ' + price} onClick={sell} />
               </div>;
