@@ -1,7 +1,5 @@
 import React from 'react'
 
-export default React.createClass({
-  render: function() {
-    return (<input type='text' value={this.props.value} onChange={this.props.onChange} />);
-  }
-});
+export default function NotionalTextBox(props) {
+  return <input className={props.className} type='text' value={props.value} onChange={props.onChange} />;
+}

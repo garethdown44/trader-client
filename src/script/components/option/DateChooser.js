@@ -1,7 +1,9 @@
 import React from 'react'
+import moment from 'moment'
 
-export default React.createClass({
-  render: function() {
-    return (<input type='text' value={this.props.value} onChange={this.props.onChange} />);
-  }
-});
+export default function DateChooser(props) {
+
+  let date = moment(props.expiryDate).format('DD-MM-YY');
+
+  return (<input {...props} value={date} type='text' />);
+}
