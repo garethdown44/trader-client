@@ -18,7 +18,7 @@ export default React.createClass({
 
   render: function() {
     return <button {...this.props} 
-                    className='button' 
+                    className='btn btn-xs btn-success' 
                     onClick={this.toggle}><FontAwesome name='exchange' />{this.state.value}</button>;
   }
 });
