@@ -17,9 +17,8 @@ export default React.createClass({
   },
 
   render: function() {
-    // todo: replace with a button that flips the value
-    //return (<select ><option>{this.props.first}</option><option>{this.props.second}</option></select>);
-
-    return <button {...this.props} className='button' onClick={this.toggle}><FontAwesome name='exchange' />{this.state.value}</button>;
+    return <button {...this.props} 
+                    className='button' 
+                    onClick={this.toggle}><FontAwesome name='exchange' />{this.state.value}</button>;
   }
 });
