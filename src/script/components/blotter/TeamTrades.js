@@ -71,7 +71,7 @@ function renderContent(teamTrades) {
         </FlexTable>};
 }
 
-export default function ( { teamTrades } ) {
+export default function TeamTrades ( { teamTrades } ) {
 
   return  <div className="autosizer-container">
             <AutoSizer disableHeight>

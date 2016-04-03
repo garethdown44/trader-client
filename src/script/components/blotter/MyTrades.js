@@ -26,7 +26,7 @@ function renderRows(rows) {
   });
 }
 
-export default function ( { positions } ) {
+export default function MyTrades ( { positions } ) {
 
   let rows = renderRows(positions);
 

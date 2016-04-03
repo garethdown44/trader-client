@@ -11,7 +11,7 @@ const ccyCpls = [
 ]
 
 function renderCcyList(add, product) {
-  return ccyCpls.map(ccyCpl => <li><a href="#" onClick={_ => add(product, ccyCpl)}>{ccyCpl}</a></li>)
+  return ccyCpls.map(ccyCpl => <li key={ccyCpl}><a href="#" onClick={_ => add(product, ccyCpl)}>{ccyCpl}</a></li>)
 }
 
 export default React.createClass({

@@ -21,8 +21,7 @@ const mapOwnProps = {
 }
 
 function TabLabel({ changeTab, activeTab, name, tabs }) {
-  return <li key={name} 
-             role="presentation" 
+  return <li role="presentation" 
              className={name == activeTab ? 'active':''} 
              onClick={_ => changeTab(name)}><a href="#">{tabs[name].label} ({tabs[name].data.length})</a></li>
 }
@@ -38,7 +37,7 @@ export default connect(mapStateToProps, mapOwnProps)(( { activeTab, positions, t
             <div>
               <ul className="nav nav-tabs tab-sm">
 
-              {Object.keys(tabs).map(name => <TabLabel name={name} tabs={tabs} activeTab={activeTab} changeTab={changeTab} /> )}
+              {Object.keys(tabs).map(name => <TabLabel key={name} name={name} tabs={tabs} activeTab={activeTab} changeTab={changeTab} /> )}
                 
               </ul>
             </div>
