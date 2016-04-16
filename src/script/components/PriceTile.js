@@ -40,7 +40,7 @@ var PriceTile = React.createClass({
       firstCcy = this.props.ccyCpl.substr(0, 3);
     } 
 
-    return (<div className="panel panel-primary new-tile">
+    return (<div className="panel panel-primary tile">
               <div className="panel-heading heading">{this.props.ccyCpl}</div>
               <div className="panel-body tile-body">
                 <PriceAndSpread ccyCpl={this.props.ccyCpl} 

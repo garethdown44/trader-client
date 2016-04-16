@@ -46,8 +46,8 @@ export default connect(mapStateToProps, mapOwnProps)(( { activeTab, positions, t
               <div className='blotter'>
                 {(() => {
                   switch(activeTab) {
-                    case 'myTrades': return <MyTrades positions={positions} />;
-                    case 'teamTrades': return <TeamTrades teamTrades={teamTrades} />;
+                    case 'myTrades'   : return <MyTrades positions={positions} />;
+                    case 'teamTrades' : return <TeamTrades teamTrades={teamTrades} />;
                   }
                 })()}
               </div>

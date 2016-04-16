@@ -73,7 +73,7 @@ export default React.createClass({
 
     debug('OptionTile.render(), props', this.props);
 
-    return <div className='panel panel-primary new-tile option-tile'>
+    return <div className='panel panel-primary tile option-tile'>
               <div className='panel-heading heading'>OPTION: {this.props.ccyCpl}</div>
               <div className='panel-body tile-body'>
                 <div>{legs}</div>

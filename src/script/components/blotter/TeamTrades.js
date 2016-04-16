@@ -21,7 +21,7 @@ function renderContent(teamTrades) {
 
       return <FlexTable
           width={props.width}
-          height={300}
+          height={230}
           headerHeight={20}
           rowHeight={30}
           rowsCount={teamTrades.length}

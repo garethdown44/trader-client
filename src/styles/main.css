@@ -3,7 +3,7 @@
 }
 
 body {
-  background-color: #1c1e22; //272b30
+  background-color: #1c1e22;
   font-family: Proxima Nova, Helvetica, Arial;
   height: 100%;
 }
@@ -66,7 +66,7 @@ body {
   overflow:hidden;
 }
 
-.new-tile {
+.tile {
   width: 250px;
   float: left;
   margin: 2px;
@@ -78,40 +78,11 @@ body {
 
 }
 
-.new-tile .heading {
+.tile .heading {
   font-size: 12pt;
   padding: 2px;
   text-align: center;
 }
-
-/*.tile {
-  background-color: #073642;
-  margin: 5px;
-  width: 250px;
-  height: 150px;
-  padding: 0 8px 0 8px;
-  position: relative;
-  float: left;
-  border: 1px solid #455861;
-}*/
-
-/*.tile:hover {
-  background-color: #001E27;
-}
-
-.tile-title {
-  color: #fdf6e3;
-  font-weight: bold;
-  font-size: 120%;
-  margin-bottom: 4px;
-  margin-top: 5px;
-  margin-left: 2px;
-}
-
-.tile-content {
-  color: #93a1a1;
-}
-*/
 
 .one-way-price {
   cursor: pointer;
@@ -331,16 +302,6 @@ section {
   display: inline-block;
 }
 
-/*.scrollable {
-  scrollbar-face-color: #eee8d5;
-  scrollbar-shadow-color: #839496;
-  scrollbar-highlight-color: #839496;
-  scrollbar-3dlight-color: #839496;
-  scrollbar-darkshadow-color: #839496;
-  scrollbar-track-color: #839496;
-  scrollbar-arrow-color: #839496;  
-}
-*/
 /* Let's get this party started */
 .scrollable::-webkit-scrollbar {
     width: 12px;
