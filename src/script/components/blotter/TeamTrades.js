@@ -30,6 +30,7 @@ function renderContent(teamTrades) {
             label='Date'
             dataKey='date'
             width={200}
+            cellRenderer={ (cellData, cellDataKey, rowData, rowIndex, columnData) => <span>{moment(rowData.date).format('D MMM YYYY h:mm:ss')}</span> }
 
           />
           <FlexColumn
