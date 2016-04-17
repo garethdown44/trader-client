@@ -1,14 +1,19 @@
+const io = require('socket.io-client');
+const Rx = require('rx');
 const config = require('../../config');
 
-// it seems you have to do it in this roundabout way to get
-// browserify to include the files
-//
-// doing:
-//   require('./' + config.streamingPrices);
-// does not work
+let stream;
 
-if (config.streamingPrices == 'server') {
-  module.exports = require('./server');
-} else if (config.streamingPrices == 'fake') {
-  module.exports = require('./fake');
-}
+module.exports = ccyCpl => {
+
+  if (!stream) {
+    let socket = io.connect(config.serverUrl);
+    stream = Rx.Observable.create(obs => {
+      socket.on('tick', function (tick) {
+        obs.onNext(tick);
+      });
+    }).publish().refCount();
+  }
+
+  return stream.where(x => x.ccyCpl == ccyCpl);
+};
