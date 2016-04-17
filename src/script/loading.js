@@ -8,8 +8,10 @@ $(function() {
   $('#cont').html(' <div id="loading"> \
                       <div id="heading">reacttrader</div> \
                       <div class="spinner"> \
-                        <div class="double-bounce1"></div> \
-                        <div class="double-bounce2"></div> \
+                        <div class="rect1"></div> \
+                        <div class="rect2"></div> \
+                        <div class="rect3"></div> \
+                        <div class="rect4"></div> \
                       </div> \
                       <div id="server"></div>\
                       <div id="js"></div>\
@@ -32,7 +34,7 @@ $(function() {
       const React = require('react');
       const render = require('react-dom').render;
 
-//      render(<Main />, document.getElementById('cont'));
+      render(<Main />, document.getElementById('cont'));
 
     }, 'main');
   });
