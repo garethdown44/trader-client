@@ -3,7 +3,7 @@ const debug = require('debug')('trader:blotter');
 import React from 'react'
 import {connect} from 'react-redux'
 import StreamingPriceReceiver from '../StreamingPriceReceiver'
-import blotter from '../../system/blotter'
+import blotter from '../../services/blotter'
 import moment from 'moment'
 import Value from '../Value'
 

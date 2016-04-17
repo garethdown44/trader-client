@@ -2,8 +2,8 @@ const debug = require('debug')('trader:components:PriceTile');
 import React from 'react';
 import OneWayPrice from './OneWayPrice';
 import Spread from './Spread';
-import {removeTile} from '../system/redux/actions/workspace';
-import {bookSpotTrade} from '../system/redux/actions/spot';
+import {removeTile} from '../actions/workspace';
+import {bookSpotTrade} from '../actions/spot';
 import PriceAndSpread from './PriceAndSpread';
 
 var PriceTile = React.createClass({

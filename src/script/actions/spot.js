@@ -1,4 +1,4 @@
-import executeTrade from '../../executeTrade';
+import executeTrade from '../services/executeTrade';
 
 export const BOOK_SPOT_TRADE = 'BOOK_SPOT_TRADE';
 export const SPOT_TRADE_BOOKED = 'SPOT_TRADE_BOOKED';

@@ -1,6 +1,6 @@
 const debug = require('debug')('trader:StreamingPriceReceiver');
 import React from 'react'
-import getStreamingPrices from '../system/getStreamingPrices'
+import getStreamingPrices from '../services/getStreamingPrices'
 
 export default Child => React.createClass({
 

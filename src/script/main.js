@@ -11,8 +11,8 @@ window.myDebug = require('debug');
 window.myDebug.enable('trader*');
 window.Perf = require('react-addons-perf');
 
-import store from './system/redux/store';
-import { subscribePositions, subscribeTeamTrades } from './system/redux/actions/positions';
+import store from './store';
+import { subscribePositions, subscribeTeamTrades } from './actions/positions';
 
 //require('style!raw!../styles/bootstrap2.css');
 // require('style!raw!../../lib/font-awesome/css/font-awesome.css');

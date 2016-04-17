@@ -1,6 +1,6 @@
 const debug = require('debug')('trader:components:option');
 import React from 'react';
-import {updateStrike, updateNotional, priceOption, quoteTimedOut} from '../../system/redux/actions/options';
+import {updateStrike, updateNotional, priceOption, quoteTimedOut} from '../../actions/options';
 import OptionLeg from './OptionLeg';
 import Button from './Button';
 import Countdown from './Countdown';

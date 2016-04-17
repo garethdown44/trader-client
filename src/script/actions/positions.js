@@ -1,6 +1,6 @@
 const debug = require('debug')('trader:actions:positions');
-import positions from '../../blotter'
-import teamTrades from '../../teamTrades'
+import positions from '../services/blotter'
+import teamTrades from '../services/teamTrades'
 
 export const RECEIVE_POSITION = 'RECEIVE_POSITION';
 export const RECEIVE_TEAM_TRADE = 'RECEIVE_TEAM_TRADE';

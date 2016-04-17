@@ -1,7 +1,7 @@
 import * as actions from '../../actions/options';
 import reducer from '../options';
 import {UPDATE_STRIKE} from '../../actions/options';
-import {OptionTile, Leg} from '../../../workspace/data-structures';
+import {OptionTile, Leg} from '../../services/workspace/data-structures';
 
 describe('options reducer', () => {
 

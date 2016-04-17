@@ -1,5 +1,5 @@
 import React from 'react'
-import {addTile} from '../system/redux/actions/workspace';
+import {addTile} from '../actions/workspace';
 
 const ccyCpls = [
   'EURUSD',

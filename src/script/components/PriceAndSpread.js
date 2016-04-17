@@ -1,7 +1,7 @@
 import React from 'react'
 import OneWayPrice from './OneWayPrice'
 import Spread from './Spread'
-import getStreamingPrices from '../system/getStreamingPrices'
+import getStreamingPrices from '../services/getStreamingPrices'
 
 var PriceAndSpread = React.createClass({
 

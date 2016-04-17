@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import MyTrades from './MyTrades'
 import TeamTrades from './TeamTrades'
 
-import { changeTab } from '../../system/redux/actions/positions'
+import { changeTab } from '../../actions/positions'
 
 const mapStateToProps = state => {
   

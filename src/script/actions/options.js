@@ -8,7 +8,7 @@ export const OPTION_PRICE_RECEIVED = 'OPTION_PRICE_RECEIVED';
 export const QUOTE_TIMED_OUT = 'QUOTE_TIMED_OUT';
 export const QUOTE_TIME_TICKED = 'QUOTE_TIME_TICKED';
 
-import requestOptionPrice from '../../requestOptionPrice';
+import requestOptionPrice from '../services/requestOptionPrice';
 import Rx from 'rx'
 
 export function updateStrike(value, tileId, legIndex) {

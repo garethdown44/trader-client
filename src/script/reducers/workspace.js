@@ -1,6 +1,6 @@
 import { ADD_TILE, REMOVE_TILE } from '../actions/workspace';
 import { BOOK_SPOT_TRADE_REQUESTED, SPOT_TRADE_BOOKED, SPOT_TRADE_BOOKING_FAILED } from '../actions/spot';
-import { SpotTile, OptionTile } from '../../workspace/data-structures';
+import { SpotTile, OptionTile } from '../services/workspace/data-structures';
 
 import { UPDATE_STRIKE, 
          UPDATE_NOTIONAL, 
@@ -11,7 +11,7 @@ import { UPDATE_STRIKE,
          QUOTE_TIME_TICKED } from '../actions/options'
 
 import option from './options'
-import ws from '../../workspace';
+import ws from '../services/workspace';
 
 let initialWorkspace = ws.get();
 
