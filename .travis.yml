@@ -11,7 +11,8 @@ node_js:
 #   local_dir: dist  
 #   acl: public_read
 
-provider: heroku
-app: trader-client
-api_key:
+deploy:
+  provider: heroku
+  app: trader-client
+  api_key:
     secure: "B0qYR52SpFJVQd6TXHOn8+VuEVRfMc0oqn5iU/Xc5k5pREVbKg7i2eqIHAUsXFkFVlle9LHRqz2sNjGWWPG/5XYDERcOb9K3hDg4rksuaRCWS7eoUP79s9vPnPxX6xrenEwBBoSd4ivijG+8N/uEsND2qpkRW5MKLxCofLVDjzqVuWRPXj9Oe40QfS96gfaJJ5DAelT6zzTGibbP/bFlZLoxX0jBI1WGrnfo9Se4Sq/Rv7w2Y+3JJrRdrnlsdCX54vHjkM5RdM/IHP6tZyMnmBpGgsRN3W7rcTn3Gl9JVLvwL1bBFMe2BvrO0WTaK98OENzJKTrvDJwAXK3vgtjSidlgZj7LeVFW/QKZur4He1HILVOLD5cavt8jLRX1MM2qRy2bZvlfo3gu+dRYyhB+uFCi9qBYuuo+1jS3jtvHwJALRpxWC/4l0QUDYlWNHlxy5a4ui5UmbShbC+nybd+T5lYwkUP/SSPnMsdR+oTHtPIByib2llLlsYd1co1XgixcsscAJsePyP0VG3eqVngWbjG8fhXLBAGh5bnLSjEPpK673Pu8qk8gPCu32qJc0p+9zI3EZ/Guy3gXO2uKwKCGn73caxey+OfeO6XLwyMtQOgyLwTvjbmeMPC7itAxXaWp2Pc4FuelY97jp/QNSVRXe6r/AMu2+0BoerNSLu03Sto="
