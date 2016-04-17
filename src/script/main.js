@@ -16,7 +16,6 @@ import { subscribePositions, subscribeTeamTrades } from './system/redux/actions/
 
 //require('style!raw!../styles/bootstrap2.css');
 // require('style!raw!../../lib/font-awesome/css/font-awesome.css');
-require('../styles/main.css');
 
 // require('expose?$!expose?jQuery!jquery');
 // require('bootstrap');
@@ -50,4 +49,4 @@ const Root = React.createClass({
   }
 });
 
-ReactDOM.render(<Root />, document.getElementById('cont'));
+export default Root;

@@ -43,7 +43,7 @@ function getEntries(env) {
     entries.push('webpack/hot/only-dev-server');
   }
 
-  entries.push('./src/script/main');
+  entries.push('./src/script/loading');
 
   return entries;
 }

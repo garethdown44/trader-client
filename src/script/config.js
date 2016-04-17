@@ -6,5 +6,6 @@ else
   config.serverUrl = 'http://trader-server.herokuapp.com'; 
 
 config.streamingPrices = 'server'; // (server,fake,oanda)
+config.upUrl = `${config.serverUrl}/up`;
 
 module.exports = config;
