@@ -26,6 +26,7 @@ store.dispatch(subscribePositions());
 store.dispatch(subscribeTeamTrades());
 
 var Component = React.createClass({
+
   render: function() {
     return (<div>
 

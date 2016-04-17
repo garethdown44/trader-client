@@ -30,7 +30,6 @@ export function subscribeTeamTrades() {
   };
 }
 
-// todo: buffer and dispatch a batch
 export function receiveTeamTradeBatch(trades) {
   debug('receiveTeamTradeBatch()');
   return {
