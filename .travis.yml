@@ -7,7 +7,9 @@ deploy:
   access_key_id: AKIAISP66RC2ONQAEQMA
   secret_access_key:
     secure: jMJkSuZutwvP3zTsbX2IljwOQehBg41RTlR8VcYAQKKK8XI764vXcgmHdKp33UWzsZjEngec3s7z5ZVlwY0pnUIFaPN1vTGRkDwUCrFxW6Zb9ri4Vv3sZR4js+SfHYz/NJ8s27oFyFHtH/U0lS6N6KyHS6CUt+2h7FNC5TdInKDPqdoJmt+CLqpGp21X5SXTWpLkv3UKEz6W3P0fq6sc741XTb8dBaNCbKCFA0eIDO/wFl7XW7QYqAh3Qh5CQlPB765DagOOWGB4g0zJtfbedhDI2Q97XOtBsIPZfWjBvR+RVYfm/NtfXJ5W9woPEsZ6gZi2xKQbvHQ01zCZGNkQ4SFpMZqRjHDjA491yA19VGP9EeSqiZhpnQ8V/dhsx8Bk8ALumUOzA36VLW9XhTWZAzPO27Aqa+VOw2RBXz/hmPeIJUAEleP6SM1Dl8XdC+EgYQEtCAWAepQRgH+DE1efzd5z8988AMyaIot9p8zUDEPYelF9ItsrCZnGN/SBxmycupFxHU/P562WdRMLoFvqSAehV5go7c4tUVaVF39di+/cORagYGiPMdFNa+9KsJE0xGL0h1Dx596zYNMER2ZOC9iHdm7FW9UeIDMJawcJCJXuCaasjwWFCVxKzglDRO2XcBK65gbRjN5gKuypIandF42M7qOw/39KVcWQhnBZHGs=
-  bucket: reacttrader.com.s3-website-eu-west-1.amazonaws.com
+  bucket: "reacttrader.com"
+  endpoint: "s3-website-eu-west-1.amazonaws.com"
+  region: "eu-west-1"
   skip_cleanup: true
   local_dir: dist
   acl: public_read
