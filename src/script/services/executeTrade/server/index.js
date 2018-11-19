@@ -2,10 +2,9 @@ const debug = require('debug')('trader:server:executeTrade');
 const $ = require('jquery');
 const config = require('../../../config');
 
-let url = config.serverUrl + '/trades/execute';
+const url = `${config.serverUrl}/${config.contextPath}/trades/execute`;
 
 module.exports = (action, ccyCpl, rate, notional, success, error) => {
-
   let payload = {
     action: action,
     ccyCpl: ccyCpl,

@@ -1,4 +1,4 @@
-require('../styles/loading.scss');
+require('../styles/loading.css');
 require('../styles/main.css');
 
 var config = require('./config');
