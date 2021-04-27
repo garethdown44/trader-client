@@ -29,7 +29,7 @@
     "redux-logger": "^2.6.1",
     "redux-thunk": "^1.0.3",
     "rx": "^4.1.0",
-    "socket.io-client": "^2.1.1"
+    "socket.io-client": "^4.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.4.5",
